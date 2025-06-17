@@ -1,7 +1,7 @@
 function About() {
     return (
-        <div>
-            Discussions
+        <div className="h-screen w-full bg-white flex flex-col justify-center items-center">
+            à propos
         </div>
     )
 }

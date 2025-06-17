@@ -1,7 +1,7 @@
 function New() {
     return (
         <div className="h-screen w-full bg-white flex flex-col justify-center items-center">
-            <h3>à la une</h3>
+            <h3 className="text-3xl">À LA UNE</h3>
             <div className="flex">
                 <div className="w-[50%] flex justify-center">
                     <img className="object-contain h-[30rem]" src="../assets/img/natureDuRéelRéelDeLaNature.avif" alt="couverture du livre Nature Du Réel Réel de la Nature" />
