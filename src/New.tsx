@@ -1,6 +1,6 @@
 function New() {
     return (
-        <div className="h-screen w-full bg-white flex flex-col justify-center items-center">
+        <div className="h-fit w-full bg-white flex flex-col justify-center items-center">
             <h3 className="text-3xl">À LA UNE</h3>
             <div className="flex">
                 <div className="w-[50%] flex justify-center">
