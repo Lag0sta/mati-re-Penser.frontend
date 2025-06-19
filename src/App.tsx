@@ -9,6 +9,7 @@ import SignUp from './SignUp.js'
 
 import { useState } from 'react'
 import { useRef } from 'react'
+import AddComments from './AddComments.js'
 
 function App() {
   const [isAcceuil, setIsAcceuil] = useState(true);
@@ -18,6 +19,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSignIn, setIsSignIn] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isAddComment, setIsAddComment] = useState(false);
 
   //ref initiale = null => ne pointe pas encore vers un él. DOM
   const acceuilRef = useRef(null);
@@ -28,7 +30,7 @@ function App() {
 
 
   return (
-    <main className="max-w-screen lg:min-h-screen mx-auto grid grid-rows-4 grid-cols-4">
+    <main className="max-w-screen  mx-auto grid grid-rows-4 grid-cols-4">
       <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed">
         <Header acceuilRef={acceuilRef} 
                 discussionRef={discussionRef} 
@@ -44,7 +46,7 @@ function App() {
                 setIsModalOpen={setIsModalOpen}
         />
       </header>
-      <div className="row-start-1 row-end-2 col-start-1 col-end-5 h-screen bg-white"
+      <div className="row-start-1 row-end-2 col-start-1 col-end-5 bg-white"
            ref={acceuilRef}
       >
         <div className="h-full w-full flex flex-col justify-center items-center my-4 bg-cover bg-center bg-no-repeat "
@@ -56,7 +58,10 @@ function App() {
 
       <div className="row-start-2 row-end-4 col-start-1 col-end-5"
         ref={discussionRef}>
-        {isAcceuil && <New />}
+        {isAcceuil && 
+          <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)} 
+               setIsAddComment={(value: boolean) => setIsAddComment(value)}
+          />}
         {isDuscussions && <Discussions />}
         {isPublication && <Publications />}
         {isAbout && <About />}
@@ -68,11 +73,25 @@ function App() {
       </footer>
 
 {isModalOpen &&
-          <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="fixed inset-0 bg-black bg-opacity-10 transition-opacity backdrop-filter backdrop-blur-sm" ></div>
-            <div className='z-50 w-[50%] bg-white rounded-md'>
-              {isSignIn && <SignIn setIsModalOpen={(value: boolean) => setIsModalOpen(value)} setIsSignUp={(value: boolean) => setIsSignUp(value)} setIsSignIn={(value: boolean) => setIsSignIn(value)}/>}
-              {isSignUp && <SignUp setIsModalOpen={(value: boolean) => setIsModalOpen(value)}/>}
+          <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 " aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div className="fixed inset-0 bg-black/75 backdrop-blur-xs   " />
+            <div className='z-50 w-1/3 bg-white rounded-lg overflow-hidden'>
+              {isSignIn && 
+                <SignIn setIsModalOpen={(value: boolean) => setIsModalOpen(value)} 
+                      setIsSignUp={(value: boolean) => setIsSignUp(value)} 
+                      setIsSignIn={(value: boolean) => setIsSignIn(value)}
+                />}
+              {isSignUp && 
+                <SignUp setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+                        setIsSignUp={(value: boolean) => setIsSignUp(value)}
+                        setIsSignIn={(value: boolean) => setIsSignIn(value)}
+                />
+              }
+              {isAddComment &&
+                <AddComments setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+                             setIsAddComment={(value: boolean) => setIsAddComment(value)}
+                />
+              }
             
               
             </div>
