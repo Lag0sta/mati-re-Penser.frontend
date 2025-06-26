@@ -110,5 +110,9 @@ h1 {
 }
 
 h3 {
-  font-family: 'Space Grotesk Medium'
+  font-family: 'Lombok'
+}
+
+label {
+  font-family: "Space Grotesk SemiBold"
 }

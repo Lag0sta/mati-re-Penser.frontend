@@ -13,7 +13,7 @@ interface HeaderProps {
   setIsModalOpen: (value: boolean) => any
 }
 
-function Header({ acceuilRef, discussionRef, publicationRef, aboutRef, contactRef, setIsAcceuil, setIsDiscussions, setIsPublication, setIsAbout, setIsSignIn, setIsSignUp, setIsModalOpen }: HeaderProps) {
+function Header({ acceuilRef, discussionRef, publicationRef, aboutRef, contactRef, setIsAcceuil, setIsDiscussions, setIsPublication, setIsAbout, setIsSignIn, setIsSignUp, setIsModalOpen, }: HeaderProps) {
 
   //fonction Click scrollant la page
   const handleScroll = (ref: any) => {
