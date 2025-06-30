@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useAppDispatch } from '../store/hooks.js'
 
 import { handleSignInAction } from "../utils/authActions.js"
 
@@ -14,9 +15,11 @@ interface signInProps {
 function SignIn({ setIsModalOpen, setIsSignIn, setIsSignUp, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signInProps) {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const dispatch = useAppDispatch();
+
 
     const handleSignIn = () => {
-        handleSignInAction({ setErrorMessage, setSuccessMessage, email, setEmail, password, setPassword, setIsMessageModalOpen })
+        handleSignInAction({ dispatch, setErrorMessage, setSuccessMessage, email, setEmail, password, setPassword, setIsMessageModalOpen })
     }
 
     const handleIsSignUp = () => {

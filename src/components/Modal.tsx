@@ -1,5 +1,6 @@
 import SignIn from "./SignIn.js"
 import SignUp from "./SignUp.js"
+import AvatarGallery from "./AvatarGallery.js"
 
 interface modalProps {
     setIsModalOpen: (value: boolean) => any
@@ -7,12 +8,15 @@ interface modalProps {
     setIsSignIn: (value: boolean) => any
     isSignUp: boolean
     setIsSignUp: (value: boolean) => any
+    isAvatarGallery: boolean
+        setIsAvatarGallery: (value: boolean) => any
+
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage : (value : string) => any
     setSuccessMessage: (value : string) => any
 }
 
-function SignInSignUpModal ({ setIsModalOpen, isSignIn, setIsSignIn, isSignUp, setIsSignUp, setIsMessageModalOpen, setErrorMessage, setSuccessMessage}: modalProps) {
+function Modal ({ setIsModalOpen, isSignIn, setIsSignIn, isSignUp, setIsSignUp,isAvatarGallery, setIsAvatarGallery, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, }: modalProps) {
     return (
         <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
           role="dialog"
@@ -38,6 +42,11 @@ function SignInSignUpModal ({ setIsModalOpen, isSignIn, setIsSignIn, isSignUp, s
                 
               />
             }
+            {isAvatarGallery &&
+              <AvatarGallery setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+                setIsAvatarGallery={(value: boolean) => setIsAvatarGallery(value)}
+                setErrorMessage= {(value: string) => setErrorMessage(value)}/>
+              }
             {/* {isAddComment &&
               <AddComments setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
                 setIsAddComment={(value: boolean) => setIsAddComment(value)}
@@ -48,4 +57,4 @@ function SignInSignUpModal ({ setIsModalOpen, isSignIn, setIsSignIn, isSignUp, s
     )
 }
 
-export default SignInSignUpModal
+export default Modal

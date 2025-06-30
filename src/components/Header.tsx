@@ -1,54 +1,58 @@
+import { useSelector } from "react-redux";
+import { useAppSelector } from "../store/hooks.js";
+
 interface HeaderProps {
   acceuilRef: any;
-  discussionRef: any;
-  publicationRef: any;
-  aboutRef: any;
+  mainRef: any;
   contactRef: any;
   setIsAcceuil: (value: boolean) => any
   setIsDiscussions: (value: boolean) => any
   setIsPublication: (value: boolean) => any
+  setIsProfile: (value: boolean) => any
   setIsAbout: (value: boolean) => any
   setIsSignIn: (value: boolean) => any
   setIsSignUp: (value: boolean) => any
   setIsModalOpen: (value: boolean) => any
 }
 
-function Header({ acceuilRef, discussionRef, publicationRef, aboutRef, contactRef, setIsAcceuil, setIsDiscussions, setIsPublication, setIsAbout, setIsSignIn, setIsSignUp, setIsModalOpen, }: HeaderProps) {
+function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussions, setIsPublication, setIsProfile, setIsAbout, setIsSignIn, setIsSignUp, setIsModalOpen, }: HeaderProps) {
+  const token = useAppSelector((state: any) => state.authToken.value);
+  const user = useAppSelector((state: any) => state.user.value);
+  let avatar;
+
 
   //fonction Click scrollant la page
-  const handleScroll = (ref: any) => {
-    if (ref.current) {
-      window.scrollTo({
-        top: ref.current.offsetTop,
-        behavior: 'smooth'
-      })
-    }
+  const handleScroll = (ref: any, refTitle: any) => {
     setIsAcceuil(false)
     setIsDiscussions(false)
     setIsPublication(false)
+    setIsProfile(false)
     setIsAbout(false)
 
+      if (ref.current) {
+      window.scrollTo({
+        top: ref.current.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  
     // MAJ des états en fonction de la ref passée en parametre
-    if (ref === discussionRef) {
+
+    if (ref === mainRef && refTitle === "discussion" ) {
       setIsDiscussions(true)
-    } else if (ref === publicationRef) {
+    } else if (ref === mainRef && refTitle === "publication") {
       setIsPublication(true)
-    } else if (ref === aboutRef) {
+    } else if (ref === mainRef && refTitle === "about") {
       setIsAbout(true)
+    } else if (ref === mainRef && refTitle === "userProfile") {
+      setIsProfile(true)
     } else {
       setIsAcceuil(true)
     }
   }
 
-  //scroll contact
-  const handleScrollContact = () => {
-    if (contactRef.current) {
-      window.scrollTo({
-        top: contactRef.current.offsetTop,
-        behavior: 'smooth'
-      });
-    }
-  }
+ 
+    
 
   const handleClickSign = () => {
     console.log("click")
@@ -57,55 +61,85 @@ function Header({ acceuilRef, discussionRef, publicationRef, aboutRef, contactRe
     setIsSignUp(false);
   }
 
+
+  if (!user.avatar) {
+    const str = user.pseudo;
+    const avatarUrl = str.slice(0, 1).toUpperCase();
+    avatar = (
+      <div className="w-10 h-10 flex justify-center items-center cursor-pointer rounded-full bg-white"
+        onClick={() =>handleScroll(mainRef, "userProfile")}>
+        <span className="text-xl">{avatarUrl}</span>
+      </div>
+    )
+  } else {
+    const avatarUrl = user.avatar
+    avatar = (
+      <div className="w-12 h-12 flex justify-center items-center cursor-pointer rounded-full bg-white"
+        onClick={() =>handleScroll(mainRef, "userProfile")}
+      >
+        <img className="w-14 h-14 flex justify-center items-center cursor-pointer rounded-full" src={avatarUrl} />
+      </div>
+    )
+  }
+
   return (
     <div className="w-screen ">
-      <div className="h-24 flex flex-col justify-evenly items-center bg-black border-b-1 border-white">
-        <div className="w-full flex justify-between items-center">
-          <nav className="ml-10 text-white">
-            <button onClick={() => handleScroll(acceuilRef)}
-                    aria-label="Aller à la section Accueil"
-                    className="cursor-pointer"
+      <div className="h-24 flex  justify-between items-center bg-black border-b-1 border-white">
+        <div className=" flex justify-between items-center ml-10">
+          <nav className=" text-white">
+            <button onClick={() => handleScroll(acceuilRef, "acceuil")}
+              aria-label="Aller à la section Accueil"
+              className="cursor-pointer"
             >
               Logo
             </button>
           </nav>
+
+        </div>
+        <div className="mt-10">
+          <nav className="mr-4">
+            <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
+              onClick={() => handleScroll(mainRef, "discussion")}
+              aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des discussions"
+            >
+              discussions
+            </button>
+            <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
+              onClick={() => handleScroll(mainRef, "publication")}
+              aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des publications de l'auteur"
+            >
+              publications
+            </button>
+            <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
+              onClick={() => handleScroll(mainRef, "about")}
+              aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section à propos de l'auteur"
+            >
+              A propos
+            </button>
+            <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
+              onClick={() =>handleScroll(contactRef, "contact")}
+              aria-label="Faire défiler l'écrant jusqu'à la section contact"
+            >
+              contact
+            </button>
+          </nav>
+        </div>
+        {!token &&
           <button className="mr-10 cursor-pointer"
-                  aria-label="Se connecter ou s'inscrire"
-                  onClick={handleClickSign}
+            aria-label="Se connecter ou s'inscrire"
+            onClick={handleClickSign}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFFFFF" className="size-6 border-2 border-white rounded-full">
               <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
             </svg>
 
           </button>
-        </div>
-
-        <nav className="mr-4">
-          <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-            onClick={() => handleScroll(discussionRef)}
-            aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des discussions"
-          >
-            discussions
-          </button>
-          <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-            onClick={() => handleScroll(publicationRef)}
-            aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des publications de l'auteur"
-          >
-            publications
-          </button>
-          <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-            onClick={() => handleScroll(aboutRef)}
-            aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section à propos de l'auteur"
-          >
-            A propos
-          </button>
-          <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-            onClick={handleScrollContact}
-            aria-label="Faire défiler l'écrant jusqu'à la section contact"
-          >
-            contact
-          </button>
-        </nav>
+        }
+        {token &&
+          <div className="w-14 h-14 mr-10 flex justify-center items-center cursor-pointer rounded-full bg-white">
+            {avatar}
+          </div>
+        }
       </div>
     </div>
   )

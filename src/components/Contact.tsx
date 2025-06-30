@@ -1,8 +1,8 @@
 function Contact() {
     return (
-        <div className="h-full w-full flex flex-col justify-center bg-black text-white ">
+        <div className="h-full w-full flex flex-col bg-black text-white ">
             <div className="w-full flex flex-col justify-evenly items-center ">
-                <h2 className="text-5xl mt-18">Contact</h2>
+                <h2 className="text-5xl mt-4">Contact</h2>
 
             </div>
             <div className="w-full flex flex-col justify-center items-center ">

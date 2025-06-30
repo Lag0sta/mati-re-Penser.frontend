@@ -77,7 +77,11 @@ export async function handleSignUpAction({ setErrorMessage, setSuccessMessage, s
     }
 }
 
+import {save} from '../store/reducers/auth.js'
+import {login} from '../store/reducers/user.js'
+
 interface handleSignInActionProps {
+    dispatch: any;
     setErrorMessage: (value: string) => void;
     setSuccessMessage: (value: string) => void;
     setIsMessageModalOpen: (value: boolean) => void;
@@ -87,10 +91,11 @@ interface handleSignInActionProps {
     setPassword: (value: string) => void;
 }
 
-export async function handleSignInAction({setErrorMessage, setSuccessMessage, email, setEmail, password, setPassword, setIsMessageModalOpen} : handleSignInActionProps) {
+export async function handleSignInAction({dispatch, setErrorMessage, setSuccessMessage, email, setEmail, password, setPassword, setIsMessageModalOpen} : handleSignInActionProps) {
     //réinitialisation des messages
     setErrorMessage("")
     setSuccessMessage("")
+
 
     //vérifications que les champs soient bien remplis
     if (!email || !password) {
@@ -109,8 +114,11 @@ export async function handleSignInAction({setErrorMessage, setSuccessMessage, em
             }),
         });
         const data = await response.json();
+        console.log("data", data)
 
         if (data.result) {
+            dispatch(save(data.accessToken));
+            dispatch(login(data));
             setSuccessMessage("Bonjour " + data.pseudo);
             setIsMessageModalOpen(true);
         } else {
