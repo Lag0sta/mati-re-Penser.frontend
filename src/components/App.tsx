@@ -61,7 +61,7 @@ function App() {
         </div>
       </div>
 
-      <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5 bg-gray-200 h-fit "
+      <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5 black h-fit "
         ref={mainRef}>
         <Suspense fallback={<div>Chargement...</div>}>
 
@@ -78,7 +78,7 @@ function App() {
         </Suspense>
       </div>
 
-      <footer className="h-screen row-start-3 row-end-4 col-start-1 col-end-5 pt-24"
+      <footer className="h-full row-start-3 row-end-4 col-start-1 col-end-5 pt-24"
         ref={contactRef}>
         <Suspense fallback={<div>Chargement...</div>}>
 
