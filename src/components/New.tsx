@@ -1,4 +1,6 @@
-import Comments from "./Comments.js"
+import React from "react"
+
+const Comments = React.lazy(() => import('./Comments.js'));
 
 interface newProps {
     setIsModalOpen: (value: boolean) => any

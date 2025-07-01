@@ -1,16 +1,16 @@
-import Header from './Header.js'
-import Contact from './Contact.js'
-import Discussions from './Discussions.js'
-import Publications from './Publications.js'
-import About from './About.js'
-import New from './New.js'
-import AvatarGallery from './AvatarGallery.js'
-import Modal from './Modal.js'
-import UserProfile from './UserProfile.js'
-import MessageModal from './MessageModal.js'
-
-import { useState } from 'react'
+import React from 'react';
+import { useState, Suspense, } from 'react'
 import { useRef } from 'react'
+
+const Header = React.lazy(() => import('./Header.js'));
+const Contact = React.lazy(() => import('./Contact.js'));
+const Discussions = React.lazy(() => import('./Discussions.js'));
+const Publications = React.lazy(() => import('./Publications.js'));
+const About = React.lazy(() => import('./About.js'));
+const New = React.lazy(() => import('./New.js'));
+const Modal = React.lazy(() => import('./Modal.js'));
+const UserProfile = React.lazy(() => import('./UserProfile.js'));
+const MessageModal = React.lazy(() => import('./MessageModal.js'));
 
 function App() {
   const [isAcceuil, setIsAcceuil] = useState<boolean>(true);
@@ -35,52 +35,55 @@ function App() {
   return (
     <main className="max-w-screen mx-auto grid grid-rows-3 grid-cols-4 bg-gray-200">
       <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed">
-        <Header acceuilRef={acceuilRef}
-          mainRef={mainRef}
-          contactRef={contactRef}
-          isDiscussions={isDuscussions}
-          setIsDiscussions={setIsDiscussions}
-          isPublication={isPublication}
-          setIsPublication={setIsPublication}
-          isAbout={isAbout}
-          setIsAbout={(value: boolean) => setIsAbout(value)}
-          isAcceuil={isAcceuil}
-          setIsAcceuil={(value: boolean) => setIsAcceuil(value)}
-          isProfile={isProfile}
-          setIsProfile={(value: boolean) => setIsProfile(value)}
-          setIsSignIn={(value: boolean) => setIsSignIn(value)}
-          setIsSignUp={(value: boolean) => setIsSignUp(value)}
-          setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+        <Suspense fallback={<div>Chargement...</div>}>
+          <Header acceuilRef={acceuilRef}
+            mainRef={mainRef}
+            contactRef={contactRef}
+            setIsDiscussions={setIsDiscussions}
+            setIsPublication={setIsPublication}
+            setIsAbout={(value: boolean) => setIsAbout(value)}
+            setIsAcceuil={(value: boolean) => setIsAcceuil(value)}
+            setIsProfile={(value: boolean) => setIsProfile(value)}
+            setIsSignIn={(value: boolean) => setIsSignIn(value)}
+            setIsSignUp={(value: boolean) => setIsSignUp(value)}
+            setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+          />
+        </Suspense>
 
-        />
       </header>
       <div className="row-start-1 row-end-2 col-start-1 col-end-5"
         ref={acceuilRef}
       >
-        <div className="h-full w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat "
+        <div className="h-full max-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat "
           style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}>
           <h1 className="text-7xl text-white">MATIÈRE À PENSER</h1>
           <h2 className="text-1xl mt-4 text-white">Site de discussion philosophique et de publication de Jean Christophe Ronnet</h2>
         </div>
       </div>
 
-      <div className="row-start-2 row-end-3 col-start-1 col-end-5 bg-gray-200 h-fit scroll-mt-header pt-24"
+      <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5 bg-gray-200 h-fit "
         ref={mainRef}>
-        {isAcceuil &&
-          <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-            setIsAddComment={(value: boolean) => setIsAddComment(value)}
-          />}
-        {isDuscussions && <Discussions />}
-        {isPublication && <Publications />}
-        {isAbout && <About />}
-        {isProfile &&
-          <UserProfile setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-            setIsAvatarGallery={(value: boolean) => setIsAvatarGallery(value)} />}
+        <Suspense fallback={<div>Chargement...</div>}>
+
+          {isAcceuil &&
+            <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setIsAddComment={(value: boolean) => setIsAddComment(value)}
+            />}
+          {isDuscussions && <Discussions />}
+          {isPublication && <Publications />}
+          {isAbout && <About />}
+          {isProfile &&
+            <UserProfile setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setIsAvatarGallery={(value: boolean) => setIsAvatarGallery(value)} />}
+        </Suspense>
       </div>
 
-        <footer className="row-start-3 row-end-4 col-start-1 col-end-5 border-2 border-green-500 scroll-mt-header pt-24"
+      <footer className="h-screen row-start-3 row-end-4 col-start-1 col-end-5 pt-24"
         ref={contactRef}>
-        <Contact />
+        <Suspense fallback={<div>Chargement...</div>}>
+
+          <Contact />
+        </Suspense>
       </footer>
 
       {isModalOpen &&

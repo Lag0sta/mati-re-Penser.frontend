@@ -1,3 +1,4 @@
+import { startTransition } from "react";
 import { useSelector } from "react-redux";
 import { useAppSelector } from "../store/hooks.js";
 
@@ -23,6 +24,8 @@ function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussion
 
   //fonction Click scrollant la page
   const handleScroll = (ref: any, refTitle: any) => {
+      startTransition(() => {
+
     setIsAcceuil(false)
     setIsDiscussions(false)
     setIsPublication(false)
@@ -49,16 +52,29 @@ function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussion
     } else {
       setIsAcceuil(true)
     }
+  })
   }
 
- 
-    
+ const handleContactScroll = () => {
+    startTransition(() => {
 
+    if (contactRef.current) {
+      window.scrollTo({
+        top: contactRef.current.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+  })
+  }
+    
   const handleClickSign = () => {
+      startTransition(() => {
+
     console.log("click")
     setIsModalOpen(true);
     setIsSignIn(true);
     setIsSignUp(false);
+  })
   }
 
 
@@ -117,7 +133,7 @@ function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussion
               A propos
             </button>
             <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-              onClick={() =>handleScroll(contactRef, "contact")}
+              onClick={handleContactScroll}
               aria-label="Faire défiler l'écrant jusqu'à la section contact"
             >
               contact

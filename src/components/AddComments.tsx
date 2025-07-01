@@ -3,8 +3,6 @@ interface addCommentsProps {
     setIsAddComment: (value: boolean) => any
 }
 
-
-
 function AddComments({ setIsModalOpen, setIsAddComment }: addCommentsProps) {
 
     const handleCloseModal = () => {
