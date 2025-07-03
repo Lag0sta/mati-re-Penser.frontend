@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, Suspense, } from 'react'
 import { useRef } from 'react'
+import Topics from './Topics.js';
 
 const Header = React.lazy(() => import('./Header.js'));
 const Contact = React.lazy(() => import('./Contact.js'));
@@ -13,16 +14,10 @@ const UserProfile = React.lazy(() => import('./UserProfile.js'));
 const MessageModal = React.lazy(() => import('./MessageModal.js'));
 
 function App() {
-  const [isAcceuil, setIsAcceuil] = useState<boolean>(true);
-  const [isDuscussions, setIsDiscussions] = useState<boolean>(false);
-  const [isPublication, setIsPublication] = useState<boolean>(false);
-  const [isAvatarGallery, setIsAvatarGallery] = useState<boolean>(false);
-  const [isAbout, setIsAbout] = useState<boolean>(false);
+  const [mainComponent, setMainComponent] = useState<string>('main')
+  const [modalComponent, setModalComponent] = useState<string>("")
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isSignIn, setIsSignIn] = useState<boolean>(false);
-  const [isSignUp, setIsSignUp] = useState<boolean>(false);
   const [isAddComment, setIsAddComment] = useState<boolean>(false);
-  const [isProfile, setIsProfile] = useState<boolean>(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -39,13 +34,8 @@ function App() {
           <Header acceuilRef={acceuilRef}
             mainRef={mainRef}
             contactRef={contactRef}
-            setIsDiscussions={setIsDiscussions}
-            setIsPublication={setIsPublication}
-            setIsAbout={(value: boolean) => setIsAbout(value)}
-            setIsAcceuil={(value: boolean) => setIsAcceuil(value)}
-            setIsProfile={(value: boolean) => setIsProfile(value)}
-            setIsSignIn={(value: boolean) => setIsSignIn(value)}
-            setIsSignUp={(value: boolean) => setIsSignUp(value)}
+            setMainComponent={(value: string) => setMainComponent(value)}
+            setModalComponent={(value: string) => setModalComponent(value)}
             setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
           />
         </Suspense>
@@ -64,17 +54,19 @@ function App() {
       <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5 black h-fit "
         ref={mainRef}>
         <Suspense fallback={<div>Chargement...</div>}>
-
-          {isAcceuil &&
+          {mainComponent === "acceuil" &&
             <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setIsAddComment={(value: boolean) => setIsAddComment(value)}
             />}
-          {isDuscussions && <Discussions />}
-          {isPublication && <Publications />}
-          {isAbout && <About />}
-          {isProfile &&
+          {mainComponent === "discussion" && 
+            <Discussions setMainComponent={(value: string) => setMainComponent(value)}/>}
+          {mainComponent === "publication" && <Publications />}
+          {mainComponent === "topic" && 
+            <Topics setMainComponent={(value: string) => setMainComponent(value)}/>}
+          {mainComponent === "about" && <About />}
+          {mainComponent === "profile" && 
             <UserProfile setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsAvatarGallery={(value: boolean) => setIsAvatarGallery(value)} />}
+              setMainComponent={(value: string) => setMainComponent(value)} />}
         </Suspense>
       </div>
 
@@ -88,12 +80,8 @@ function App() {
 
       {isModalOpen &&
         <Modal setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-          isSignIn={isSignIn}
-          setIsSignIn={(value: boolean) => setIsSignIn(value)}
-          isSignUp={isSignUp}
-          setIsSignUp={(value: boolean) => setIsSignUp(value)}
-          isAvatarGallery={isAvatarGallery}
-          setIsAvatarGallery={(value: boolean) => setIsAvatarGallery(value)}
+          setModalComponent={(value: string) => setModalComponent(value)}
+          modalComponent={modalComponent}
           setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
           setErrorMessage={(value: string) => setErrorMessage(value)}
           setSuccessMessage={(value: string) => setSuccessMessage(value)}
@@ -107,8 +95,7 @@ function App() {
           setErrorMessage={setErrorMessage}
           setIsMessageModalOpen={setIsMessageModalOpen}
           setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-          setIsSignIn={(value: boolean) => setIsSignIn(value)}
-          setIsSignUp={(value: boolean) => setIsSignUp(value)}
+          setModalComponent={(value: string) => setModalComponent(value)}
         />
       }
 

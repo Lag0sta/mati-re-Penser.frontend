@@ -4,17 +4,15 @@ interface messageModalProps {
     errorMessage: string
     setErrorMessage: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
-    setIsSignIn: (value: boolean) => any
-    setIsSignUp: (value: boolean) => any
+    setModalComponent: (value: string) => any
     setIsModalOpen: (value: boolean) => any
 }
 
-function MessageModal({successMessage, setSuccessMessage, errorMessage, setErrorMessage, setIsMessageModalOpen, setIsSignIn, setIsSignUp, setIsModalOpen}: messageModalProps) {
+function MessageModal({successMessage, setSuccessMessage, errorMessage, setErrorMessage, setIsMessageModalOpen, setModalComponent, setIsModalOpen}: messageModalProps) {
 
     const handleOk = () => {
         if(successMessage) {
-            setIsSignIn(false)
-            setIsSignUp(false)
+            setModalComponent("")
             setIsModalOpen(false)
             setIsMessageModalOpen(false)
         }else {

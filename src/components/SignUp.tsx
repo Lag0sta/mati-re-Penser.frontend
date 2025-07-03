@@ -3,14 +3,13 @@ import { handleSignUpAction } from "../utils/authActions.js"
 
 interface signUpProps {
     setIsModalOpen: (value: boolean) => any
-    setIsSignUp: (value: boolean) => any
-    setIsSignIn: (value: boolean) => any
+    setModalComponent: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage : (value : string) => any
     setSuccessMessage: (value : string) => any
 }
 
-function SignUp({ setIsModalOpen, setIsSignUp, setIsSignIn, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signUpProps) {
+function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signUpProps) {
 
     const [name, setName] = useState("")
     const [surname, setSurname] = useState("")
@@ -20,13 +19,12 @@ function SignUp({ setIsModalOpen, setIsSignUp, setIsSignIn, setIsMessageModalOpe
     const [confirmPassword, setConfirmPassword] = useState("")
 
     const handleReturn = () => {
-        setIsSignUp(false)
-        setIsSignIn(true)
+        setModalComponent("signIn");
         setErrorMessage("")
     }
 
     const handleSignUp = () => {
-        handleSignUpAction({ setErrorMessage, setSuccessMessage, setIsModalOpen, setIsSignUp, setIsSignIn, setIsMessageModalOpen, name, setName, surname, setSurname, pseudo, setPseudo, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword })
+        handleSignUpAction({ setErrorMessage, setSuccessMessage, setIsModalOpen, setModalComponent, setIsMessageModalOpen, name, setName, surname, setSurname, pseudo, setPseudo, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword })
     }
 
     return (

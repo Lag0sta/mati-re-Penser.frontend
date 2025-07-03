@@ -1,14 +1,14 @@
 import { useAppSelector } from "../store/hooks.js"
 interface userProfilProps {
     setIsModalOpen: (value: boolean) => any
-    setIsAvatarGallery: (value: boolean) => any
+    setMainComponent: (value: string) => any
 }
 
-function UserProfile({ setIsModalOpen, setIsAvatarGallery }: userProfilProps) {
+function UserProfile({ setIsModalOpen, setMainComponent }: userProfilProps) {
     const user = useAppSelector(state => state.user.value)
     const handleAvatar = () => {
         setIsModalOpen(true);
-        setIsAvatarGallery(true);
+        setMainComponent("avatarGallery");
     }
 
     return (

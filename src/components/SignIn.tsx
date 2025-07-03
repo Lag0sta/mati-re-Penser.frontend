@@ -4,15 +4,14 @@ import { useAppDispatch } from '../store/hooks.js'
 import { handleSignInAction } from "../utils/authActions.js"
 
 interface signInProps {
-    setIsSignIn: (value: boolean) => any
-    setIsSignUp: (value: boolean) => any
+    setModalComponent: (value: string) => any
     setIsModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
 }
 
-function SignIn({ setIsModalOpen, setIsSignIn, setIsSignUp, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signInProps) {
+function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signInProps) {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const dispatch = useAppDispatch();
@@ -23,13 +22,12 @@ function SignIn({ setIsModalOpen, setIsSignIn, setIsSignUp, setIsMessageModalOpe
     }
 
     const handleIsSignUp = () => {
-        setIsSignIn(false)
-        setIsSignUp(true)
+        setModalComponent("signUp");
     }
 
     const handleCloseModal = () => {
-        setIsModalOpen(false)
-        setIsSignIn(false)
+        setModalComponent("");
+        setIsModalOpen(false);
     }
 
     return (

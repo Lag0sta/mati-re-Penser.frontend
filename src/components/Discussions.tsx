@@ -1,8 +1,16 @@
 import { useEffect, useState } from "react"
+import { useAppDispatch } from "../store/hooks.js"
 
-function Discussions() {
+import { handleTopicThread } from "../utils/topicActions.js"
+
+interface discussionProps {
+    setMainComponent: (value: string) => any
+}
+
+function Discussions({setMainComponent}: discussionProps) {
     const [forum, setForum] = useState([])
     const [loading, setLoading] = useState(true)
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,6 +42,12 @@ function Discussions() {
         }).replace(',', '');
     }
 
+const handleTopic = (title: string) => {
+    console.log('topic')
+    handleTopicThread({dispatch, title})
+    setMainComponent('topic')
+}
+
     return (
         <div className="h-full w-full  flex flex-col items-center mt-24 mb-6">
             <div className="flex justify-center items-center mt-4 mb-4 w-[75%] bg-white rounded-md">
@@ -58,13 +72,17 @@ function Discussions() {
                             </div>
 
                             {forum && forum.map((item: any, index: number) =>
-                            (<div className="bg-white py-1">
-                                <span className="ml-2" key={index}>{item.title}</span>
+                            (<div key={index} className="bg-white py-1">
+                                <span className="ml-2 font-bold text-blue-500"
+                                      onClick={() => handleTopic(item.title)} 
+                                >
+                                    {item.title}
+                                </span>
                             </div>))}
                         </div>
                         <div className="flex flex-col justify-evenly">
                             <div className="bg-gray-600 py-1">
-                                <span className="text-white text-xl">Nombre de Messages :</span>
+                                <span className="text-white text-xl">N° de Messages :</span>
                             </div>
 
                             {forum && forum.map((item: any, index: number) =>

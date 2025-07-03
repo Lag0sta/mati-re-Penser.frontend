@@ -2,8 +2,7 @@ interface handleSignUpProps {
     setErrorMessage: (value: string) => void;
     setSuccessMessage: (value: string) => void;
     setIsModalOpen: (value: boolean) => void;
-    setIsSignUp: (value: boolean) => void;
-    setIsSignIn: (value: boolean) => void;
+    setModalComponent: (value: string) => void;
     setIsMessageModalOpen: (value: boolean) => void;
     name: string;
     setName: (value: string) => void;
@@ -19,7 +18,7 @@ interface handleSignUpProps {
     setConfirmPassword: (value: string) => void;
 }
 
-export async function handleSignUpAction({ setErrorMessage, setSuccessMessage, setIsModalOpen, setIsSignUp, setIsSignIn, setIsMessageModalOpen, name, setName, surname, setSurname, pseudo, setPseudo, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword }: handleSignUpProps) {
+export async function handleSignUpAction({ setErrorMessage, setSuccessMessage, setIsModalOpen, setModalComponent, setIsMessageModalOpen, name, setName, surname, setSurname, pseudo, setPseudo, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword }: handleSignUpProps) {
     //réinitialisation des messages
     setErrorMessage("")
     setSuccessMessage("")

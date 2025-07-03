@@ -6,17 +6,12 @@ interface HeaderProps {
   acceuilRef: any;
   mainRef: any;
   contactRef: any;
-  setIsAcceuil: (value: boolean) => any
-  setIsDiscussions: (value: boolean) => any
-  setIsPublication: (value: boolean) => any
-  setIsProfile: (value: boolean) => any
-  setIsAbout: (value: boolean) => any
-  setIsSignIn: (value: boolean) => any
-  setIsSignUp: (value: boolean) => any
+  setMainComponent: (value: string) => any
+  setModalComponent: (value: string) => any
   setIsModalOpen: (value: boolean) => any
 }
 
-function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussions, setIsPublication, setIsProfile, setIsAbout, setIsSignIn, setIsSignUp, setIsModalOpen, }: HeaderProps) {
+function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalComponent, setIsModalOpen, }: HeaderProps) {
   const token = useAppSelector((state: any) => state.authToken.value);
   const user = useAppSelector((state: any) => state.user.value);
   let avatar;
@@ -24,57 +19,47 @@ function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussion
 
   //fonction Click scrollant la page
   const handleScroll = (ref: any, refTitle: any) => {
-      startTransition(() => {
-
-    setIsAcceuil(false)
-    setIsDiscussions(false)
-    setIsPublication(false)
-    setIsProfile(false)
-    setIsAbout(false)
-
-      if (ref.current) {
-      window.scrollTo({
-        top: ref.current.offsetTop,
-        behavior: 'smooth'
-      });
-    }
-  
-    // MAJ des états en fonction de la ref passée en parametre
-
-    if (ref === mainRef && refTitle === "discussion" ) {
-      setIsDiscussions(true)
-    } else if (ref === mainRef && refTitle === "publication") {
-      setIsPublication(true)
-    } else if (ref === mainRef && refTitle === "about") {
-      setIsAbout(true)
-    } else if (ref === mainRef && refTitle === "userProfile") {
-      setIsProfile(true)
-    } else {
-      setIsAcceuil(true)
-    }
-  })
-  }
-
- const handleContactScroll = () => {
     startTransition(() => {
 
-    if (contactRef.current) {
-      window.scrollTo({
-        top: contactRef.current.offsetTop,
-        behavior: 'smooth'
-      });
-    }
-  })
-  }
-    
-  const handleClickSign = () => {
-      startTransition(() => {
+      if (ref.current) {
+        window.scrollTo({
+          top: ref.current.offsetTop,
+          behavior: 'smooth'
+        });
+      }
 
-    console.log("click")
-    setIsModalOpen(true);
-    setIsSignIn(true);
-    setIsSignUp(false);
-  })
+      // MAJ des états en fonction de la ref passée en parametre
+      if (ref === mainRef && refTitle === "discussion") {
+        setMainComponent("discussion")
+      } else if (ref === mainRef && refTitle === "publication") {
+        setMainComponent("publication")
+      } else if (ref === mainRef && refTitle === "about") {
+        setMainComponent("about")
+      } else if (ref === mainRef && refTitle === "userProfile") {
+        setMainComponent("userProfile")
+      } else {
+        setMainComponent("acceuil")
+      }
+    })
+  }
+
+  const handleContactScroll = () => {
+    startTransition(() => {
+
+      if (contactRef.current) {
+        window.scrollTo({
+          top: contactRef.current.offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    })
+  }
+
+  const handleClickSign = () => {
+    startTransition(() => {
+      setIsModalOpen(true);
+      setModalComponent("signIn");
+    })
   }
 
 
@@ -83,7 +68,7 @@ function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussion
     const avatarUrl = str.slice(0, 1).toUpperCase();
     avatar = (
       <div className="w-10 h-10 flex justify-center items-center cursor-pointer rounded-full bg-white"
-        onClick={() =>handleScroll(mainRef, "userProfile")}>
+        onClick={() => handleScroll(mainRef, "userProfile")}>
         <span className="text-xl">{avatarUrl}</span>
       </div>
     )
@@ -91,7 +76,7 @@ function Header({ acceuilRef, mainRef, contactRef, setIsAcceuil, setIsDiscussion
     const avatarUrl = user.avatar
     avatar = (
       <div className="w-12 h-12 flex justify-center items-center cursor-pointer rounded-full bg-white"
-        onClick={() =>handleScroll(mainRef, "userProfile")}
+        onClick={() => handleScroll(mainRef, "userProfile")}
       >
         <img className="w-14 h-14 flex justify-center items-center cursor-pointer rounded-full" src={avatarUrl} />
       </div>

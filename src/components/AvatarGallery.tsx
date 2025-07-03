@@ -2,11 +2,11 @@ import { changeAvatar } from "../utils/profilActions.js"
 import { useAppSelector, useAppDispatch } from "../store/hooks.js"
 interface avatarGalleryProps {
     setIsModalOpen: (value: boolean) => any
-    setIsAvatarGallery: (value: boolean) => any
+    setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
 }
 
-function AvatarGallery({ setIsModalOpen, setIsAvatarGallery, setErrorMessage }: avatarGalleryProps) {
+function AvatarGallery({ setIsModalOpen, setModalComponent, setErrorMessage }: avatarGalleryProps) {
     const token = useAppSelector((state) => state.authToken.value);
     const dispatch = useAppDispatch();
 
@@ -16,13 +16,13 @@ function AvatarGallery({ setIsModalOpen, setIsAvatarGallery, setErrorMessage }: 
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setIsAvatarGallery(false);
+        setModalComponent("");
     }
 
 const handleChangeAvatar = (style: string, seed:string) => {
     console.log("style", style, "seed", seed)
     setIsModalOpen(false);
-    setIsAvatarGallery(false);
+    setModalComponent("");
     changeAvatar(style, seed, token, setErrorMessage, dispatch)
 }
 

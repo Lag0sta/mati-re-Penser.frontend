@@ -7,19 +7,17 @@ const AvatarGallery = React.lazy(() => import('./AvatarGallery.js'));
 
 interface modalProps {
   setIsModalOpen: (value: boolean) => any
-  isSignIn: boolean
-  setIsSignIn: (value: boolean) => any
-  isSignUp: boolean
-  setIsSignUp: (value: boolean) => any
-  isAvatarGallery: boolean
-  setIsAvatarGallery: (value: boolean) => any
-
+  modalComponent: string
+  setModalComponent: (value: string) => any
   setIsMessageModalOpen: (value: boolean) => any
   setErrorMessage: (value: string) => any
   setSuccessMessage: (value: string) => any
 }
 
-function Modal({ setIsModalOpen, isSignIn, setIsSignIn, isSignUp, setIsSignUp, isAvatarGallery, setIsAvatarGallery, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, }: modalProps) {
+
+function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, }: modalProps) {
+  // console.log("modalComponent", modalComponent)
+
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
       role="dialog"
@@ -29,34 +27,28 @@ function Modal({ setIsModalOpen, isSignIn, setIsSignIn, isSignUp, setIsSignUp, i
       <div className='z-50 w-[20rem]  bg-white rounded-lg overflow-hidden'>
         <Suspense fallback={<div>Chargement...</div>}>
 
-          {isSignIn &&
+          {modalComponent === "signIn" &&
             <SignIn setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsSignUp={(value: boolean) => setIsSignUp(value)}
-              setIsSignIn={(value: boolean) => setIsSignIn(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
             />}
-          {isSignUp &&
+          {modalComponent === "signUp" &&
             <SignUp setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsSignUp={(value: boolean) => setIsSignUp(value)}
-              setIsSignIn={(value: boolean) => setIsSignIn(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
 
             />
           }
-          {isAvatarGallery &&
+          {modalComponent === "avatarGallery" &&
             <AvatarGallery setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsAvatarGallery={(value: boolean) => setIsAvatarGallery(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)} />
           }
-          {/* {isAddComment &&
-              <AddComments setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-                setIsAddComment={(value: boolean) => setIsAddComment(value)}
-              />
-            } */}
+          
         </Suspense>
       </div>
     </div>

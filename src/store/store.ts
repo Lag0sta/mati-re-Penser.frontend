@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authToken from './reducers/auth.js';
 import user from './reducers/user.js';
-
+import topic from './reducers/topic.js';
 
 // Typage du store
 export const store = configureStore({
-  reducer: {authToken, user},
+  reducer: {authToken, user, topic},
 });
 
 // Définition du type RootState
