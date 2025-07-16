@@ -1,17 +1,27 @@
 import React from 'react';
 import { useState, Suspense, } from 'react'
 import { useRef } from 'react'
-import Topics from './Topics.js';
+import TopicThread from './TopicThread.js';
 
-const Header = React.lazy(() => import('./Header.js'));
-const Contact = React.lazy(() => import('./Contact.js'));
-const Discussions = React.lazy(() => import('./Discussions.js'));
-const Publications = React.lazy(() => import('./Publications.js'));
-const About = React.lazy(() => import('./About.js'));
-const New = React.lazy(() => import('./New.js'));
-const Modal = React.lazy(() => import('./Modal.js'));
-const UserProfile = React.lazy(() => import('./UserProfile.js'));
-const MessageModal = React.lazy(() => import('./MessageModal.js'));
+import Header from './Header.js';
+import Contact from './Contact.js';
+import Discussions from './Discussions.js';
+import Publications from './Publications.js';
+import About from './About.js';
+import New from './New.js';
+import Modal from './Modal.js';
+import UserProfile from './UserProfile.js';
+import MessageModal from './MessageModal.js';
+
+// const Header = React.lazy(() => import('./Header.js'));
+// const Contact = React.lazy(() => import('./Contact.js'));
+// const Discussions = React.lazy(() => import('./Discussions.js'));
+// const Publications = React.lazy(() => import('./Publications.js'));
+// const About = React.lazy(() => import('./About.js'));
+// const New = React.lazy(() => import('./New.js'));
+// const Modal = React.lazy(() => import('./Modal.js'));
+// const UserProfile = React.lazy(() => import('./UserProfile.js'));
+// const MessageModal = React.lazy(() => import('./MessageModal.js'));
 
 function App() {
   const [mainComponent, setMainComponent] = useState<string>('main')
@@ -21,7 +31,12 @@ function App() {
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [authType, setAuthType] = useState<string>("");
+  const [isLocked, setIsLocked] = useState<boolean>(false);
 
+
+
+  console.log("mainComponent", mainComponent);
   //ref initiale = null => ne pointe pas encore vers un él. DOM
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
@@ -41,7 +56,7 @@ function App() {
         </Suspense>
 
       </header>
-      <div className="row-start-1 row-end-2 col-start-1 col-end-5"
+      <div className="row-start-1 row-end-2 col-start-1 col-end-5 "
         ref={acceuilRef}
       >
         <div className="h-full max-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat "
@@ -51,22 +66,38 @@ function App() {
         </div>
       </div>
 
-      <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5 black h-fit "
+      <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5  h-fit "
         ref={mainRef}>
         <Suspense fallback={<div>Chargement...</div>}>
           {mainComponent === "acceuil" &&
             <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setIsAddComment={(value: boolean) => setIsAddComment(value)}
             />}
-          {mainComponent === "discussion" && 
-            <Discussions setMainComponent={(value: string) => setMainComponent(value)}/>}
+          {mainComponent === "discussion" &&
+            <Discussions setMainComponent={(value: string) => setMainComponent(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+            />
+          }
           {mainComponent === "publication" && <Publications />}
-          {mainComponent === "topic" && 
-            <Topics setMainComponent={(value: string) => setMainComponent(value)}/>}
+          {mainComponent === "topicThread" &&
+            <TopicThread setMainComponent={(value: string) => setMainComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setAuthType={(value: string) => setAuthType(value)}
+              setIsLocked={(value: boolean) => setIsLocked(value)}
+              isLocked={isLocked}
+            />
+          }
           {mainComponent === "about" && <About />}
-          {mainComponent === "profile" && 
+          {mainComponent === "userProfile" &&
             <UserProfile setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setMainComponent={(value: string) => setMainComponent(value)} />}
+              setModalComponent={(value: string) => setModalComponent(value)} />}
         </Suspense>
       </div>
 
@@ -85,6 +116,10 @@ function App() {
           setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
           setErrorMessage={(value: string) => setErrorMessage(value)}
           setSuccessMessage={(value: string) => setSuccessMessage(value)}
+          setMainComponent={(value: string) => setMainComponent(value)}
+          isLocked={isLocked}
+          setIsLocked={(value: boolean) => setIsLocked(value)}
+          authType={authType}
         />
       }
 
@@ -93,7 +128,7 @@ function App() {
           setSuccessMessage={setSuccessMessage}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
-          setIsMessageModalOpen={setIsMessageModalOpen}
+          setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
           setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
           setModalComponent={(value: string) => setModalComponent(value)}
         />

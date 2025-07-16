@@ -1,12 +1,12 @@
 import { useState } from "react"
-import { handleSignUpAction } from "../utils/authActions.js"
+import { signUp } from "../utils/authActions.js"
 
 interface signUpProps {
     setIsModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
-    setErrorMessage : (value : string) => any
-    setSuccessMessage: (value : string) => any
+    setErrorMessage: (value: string) => any
+    setSuccessMessage: (value: string) => any
 }
 
 function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signUpProps) {
@@ -23,8 +23,34 @@ function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
         setErrorMessage("")
     }
 
-    const handleSignUp = () => {
-        handleSignUpAction({ setErrorMessage, setSuccessMessage, setIsModalOpen, setModalComponent, setIsMessageModalOpen, name, setName, surname, setSurname, pseudo, setPseudo, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword })
+    const handleSignUp = async () => {
+        const authData = { name, surname, pseudo, email, password, confirmPassword }
+        
+        try {
+            //réinitialisation des messages
+            setErrorMessage("")
+            setSuccessMessage("")
+
+            const signUpResponse = await signUp({ authData })
+
+            if (signUpResponse.result) {
+                setName("");
+                setSurname("");
+                setPseudo("");
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
+                setSuccessMessage(signUpResponse.success);
+                setIsMessageModalOpen(true);
+            } else {
+                setErrorMessage(signUpResponse.error);
+                setIsMessageModalOpen(true)
+            }
+        } catch (error) {
+            setErrorMessage(error as string)
+            setIsMessageModalOpen(true)
+        }
+
     }
 
     return (

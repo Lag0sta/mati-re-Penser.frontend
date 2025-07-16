@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react"
-import { useAppDispatch } from "../store/hooks.js"
+import { useAppDispatch, useAppSelector } from "../store/hooks.js"
 
 import { handleTopicThread } from "../utils/topicActions.js"
 
 interface discussionProps {
     setMainComponent: (value: string) => any
+    setModalComponent: (value: string) => any
+    setIsModalOpen: (value: boolean) => any
+    setIsMessageModalOpen: (value: boolean) => any
+    setErrorMessage: (value: string) => any
 }
 
-function Discussions({setMainComponent}: discussionProps) {
+function Discussions({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessageModalOpen, setErrorMessage }: discussionProps) {
     const [forum, setForum] = useState([])
     const [loading, setLoading] = useState(true)
+
+    const token = useAppSelector((state) => state.authToken.value)
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -42,11 +48,25 @@ function Discussions({setMainComponent}: discussionProps) {
         }).replace(',', '');
     }
 
-const handleTopic = (title: string) => {
-    console.log('topic')
-    handleTopicThread({dispatch, title})
-    setMainComponent('topic')
-}
+    const createNewTopic = () => {
+        if (!token) {
+            setIsMessageModalOpen(true);
+            setErrorMessage("Veuillez vous connecter");
+            return
+        }
+
+        setModalComponent('newTopic')
+        setIsModalOpen(true)
+    }
+
+    const handleTopic = (title: string) => {
+        console.log('topic')
+        handleTopicThread({ dispatch, title })
+        setMainComponent('topicThread')
+
+    }
+
+
 
     return (
         <div className="h-full w-full  flex flex-col items-center mt-24 mb-6">
@@ -54,66 +74,37 @@ const handleTopic = (title: string) => {
                 <h2 className=" mx-2 my-1 text-3xl text-center">DISCUSSIONS</h2>
             </div>
             <div className="w-[75%] flex flex-col justify-center items-center px-3 py-1 bg-white rounded-md my-1">
+
                 <div className="w-full flex justify-between items-center">
-                    <button className="ml-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black rounded-md px-2 py-1">Nouveau Sujet:</button>
+                    <button className="ml-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black rounded-md px-2 py-1"
+                        onClick={createNewTopic}>
+                        Nouveau Sujet:
+                    </button>
                     <button className="mr-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black rounded-md px-2 py-1">Actualiser</button>
                 </div>
 
 
             </div>
-            <div className="w-[75%] flex flex-col justify-center items-center px-3 py-1 bg-black rounded-md my-1">
-                <div className="w-full my-2">
-                    <div className="grid-cols-3  grid">
-                        <div className="flex flex-col justify-evenly">
-                            <div className="bg-gray-600 py-1 rounded-tl-md">
-                                <span className=" ml-2  text-white text-xl">
-                                    Sujet :
-                                </span>
-                            </div>
-
-                            {forum && forum.map((item: any, index: number) =>
-                            (<div key={index} className="bg-white py-1">
-                                <span className="ml-2 font-bold text-blue-500"
-                                      onClick={() => handleTopic(item.title)} 
-                                >
-                                    {item.title}
-                                </span>
-                            </div>))}
-                        </div>
-                        <div className="flex flex-col justify-evenly">
-                            <div className="bg-gray-600 py-1">
-                                <span className="text-white text-xl">N° de Messages :</span>
-                            </div>
-
-                            {forum && forum.map((item: any, index: number) =>
-                            (<div className="bg-white py-1">
-                                <span key={index}>
-                                    {item.threadCount}
-                                </span>
-                            </div>))}
-                        </div>
-                        <div className="flex flex-col justify-evenly">
-                            <div className="bg-gray-600 py-1 rounded-tr-md">
-
-                                <span className="text-white text-xl">
-                                    Dernière modifications :
-                                </span>
-                            </div>
-                            {forum && forum.map((item: any, index: number) =>
-                            (<div className="bg-white py-1">
-                                <span key={index}>
-                                    {item.lastModified ? formatDateToBelgium(item.lastModified) : '—'}
-                                </span>
-                            </div>))}
-                        </div>
-
-                    </div>
-
-
+            <div className="w-[75%] flex flex-col justify-center items-center px-3 py-3 bg-black rounded-md my-1">
+                <div className="w-full grid grid-cols-3 gap-2 bg-gray-600 rounded-t-sm py-1 px-2 font-bold text-xl">
+                    <span className="text-white text-left">Sujet :</span>
+                    <span className="text-white text-center">N° de messages :</span>
+                    <span className="text-white text-right">Dernière modification :</span>
                 </div>
-            </div>
-
+                {forum && forum.map((item: any, index: number) => (
+                    <div key={index} className="w-full grid grid-cols-3 gap-2 bg-white  text-black py-1 px-2 border-b border-gray-300">
+                        <span className="font-bold text-blue-500 cursor-pointer text-left"
+                            onClick={() => handleTopic(item.title)}>
+                            {item.title}
+                        </span>
+                        <span className="text-center font-bold">{item.threadCount}</span>
+                        <span className="text-right font-bold text-gray-500">{item.lastModified ? formatDateToBelgium(item.lastModified) : formatDateToBelgium(item.creationDate)}</span>
+                    </div>
+                ))}
+           
         </div>
+
+        </div >
     )
 
     // )

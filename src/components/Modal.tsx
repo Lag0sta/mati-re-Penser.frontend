@@ -1,6 +1,10 @@
 import React from 'react';
 import { useState, Suspense } from 'react'
 import { useRef } from 'react'
+import EditTopic from './EditTopic.js';
+import NewTopic from './NewTopic.js';
+import Auth from './Auth.js';
+import DeleteTopic from './DeleteTopic.js';
 const SignIn = React.lazy(() => import('./SignIn.js'));
 const SignUp = React.lazy(() => import('./SignUp.js'));
 const AvatarGallery = React.lazy(() => import('./AvatarGallery.js'));
@@ -12,10 +16,14 @@ interface modalProps {
   setIsMessageModalOpen: (value: boolean) => any
   setErrorMessage: (value: string) => any
   setSuccessMessage: (value: string) => any
+  setMainComponent: (value: string) => any
+  isLocked: boolean
+  setIsLocked: (value: boolean) => any
+  authType: string
 }
 
 
-function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, }: modalProps) {
+function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent, isLocked , setIsLocked, authType }: modalProps) {
   // console.log("modalComponent", modalComponent)
 
   return (
@@ -45,10 +53,47 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
           }
           {modalComponent === "avatarGallery" &&
             <AvatarGallery setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)} />
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)} />
           }
-          
+          {modalComponent === "newTopic" &&
+            <NewTopic setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+            />
+          }
+          {modalComponent === "editTopic" &&
+            <EditTopic setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)} />
+          }
+          {modalComponent === "auth" &&
+            <Auth setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              isLocked={isLocked}
+              setIsLocked={(value: boolean) => setIsModalOpen(value)}
+              authType={authType} 
+            />
+          }
+          {/* {modalComponent === "deleteTopic" &&
+            <DeleteTopic setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)} />
+          } */}
         </Suspense>
       </div>
     </div>

@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { changeAvatar } from "../../utils/profilActions.js";
-
 
 const initialState = {
     value: {
+        id: "",
         title: "",
         description: "",
-        createdBy: {pseudo: "", avatar: ""},
-        topicThread: [{text: "",
-        createdBy: {pseudo: "", avatar: ""},
-        creationDate: "",
+        isLocked: false,
+        createdBy: { pseudo: "", avatar: "" },
+        topicThread: [{
+            id: "",
+            text: "",
+            createdBy: { pseudo: "", avatar: "" },
+            creationDate: "",
         }]
     },
 };
@@ -18,14 +20,34 @@ const topicSlice = createSlice({
     name: "topic",
     initialState,
     reducers: {
-        
-        get : (state, action) => {
-            state.value = action.payload.discussion;
+        get: (state, action) => {
+            const discussion = action.payload.discussion;
+            const sortedThreads = [...discussion.topicThread].sort((a, b) => 
+        new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime()
+        );
+         state.value = {...discussion, topicThread: sortedThreads};
+        },
+        addThread: (state, action) => {
+            // state.value.topicThread.push(action.payload);
+            const updatedThreads = [...state.value.topicThread, action.payload];
+            state.value.topicThread = updatedThreads.sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime())
+        },
+
+        editTopicInfo: (state, action) => {
+            state.value.title = action.payload.title;
+            state.value.description = action.payload.description;
+        },
+
+        lockTopic: (state, action) => {
+            state.value.isLocked = action.payload;
         },
     },
 });
 
 export const {
-    get
+    get,
+    addThread,
+    editTopicInfo,
+    lockTopic
 } = topicSlice.actions;
 export default topicSlice.reducer;

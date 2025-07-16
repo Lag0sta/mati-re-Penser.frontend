@@ -1,45 +1,49 @@
-import { useState } from "react"
-import { useAppDispatch } from '../store/hooks.js'
+import { useAppSelector } from "../store/hooks.js"
+import { useState } from 'react';
+import { useAppDispatch } from "../store/hooks.js"
 
-import { save } from '../store/reducers/auth.js'
-import { login } from '../store/reducers/user.js'
+import { editTopicInfo } from '../store/reducers/topic.js';
 
-import { signIn } from "../utils/authActions.js"
+import { editTopic, } from "../utils/topicActions.js"
 
-interface signInProps {
+interface topicProps {
+    setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
+    modalComponent: string
     setIsModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
-}
 
-function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signInProps) {
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+}
+function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
     const dispatch = useAppDispatch();
 
-    const handleSignIn = async () => {
-        const authData = { email, password }
+    const topic: any = useAppSelector((state) => state.topic.value);
+    const token = useAppSelector((state) => state.authToken.value);
+    console.log("topic in TOPIC", topic);
+
+    const id = topic.id
+    console.log("Topic id :", id);
+
+    const [title, setTitle] = useState<string>(topic.title);
+    console.log("Topic title :", title);
+
+    const [description, setDescription] = useState<string>(topic.description);
+
+    const handleEditTopic = async () => {
+        const topicData = { token, id, title, description };
 
         try {
-            //réinitialisation des messages
-            setErrorMessage("")
-            setSuccessMessage("")
+            const editTopicResponse = await editTopic({ topicData });
 
-            const signInResponse = await signIn({ authData })
-
-            if (signInResponse) {
-                setEmail("");
-                setPassword("");
-
-                dispatch(save(signInResponse.accessToken));
-                dispatch(login(signInResponse));
-
-                setSuccessMessage(signInResponse.success);
+            if (!editTopicResponse.result) {
+                setErrorMessage(editTopicResponse.error);
                 setIsMessageModalOpen(true);
+                return;
             } else {
-                setErrorMessage(signInResponse.error);
+                dispatch(editTopicInfo(editTopicResponse.topic))
+                setSuccessMessage(editTopicResponse.success);
                 setIsMessageModalOpen(true);
             }
         } catch (error) {
@@ -49,12 +53,8 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
         }
     }
 
-    const handleIsSignUp = () => {
-        setModalComponent("signUp");
-    }
-
     const handleCloseModal = () => {
-        setModalComponent("");
+        setModalComponent('');
         setIsModalOpen(false);
     }
 
@@ -67,56 +67,50 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
             </div>
 
             <h3 className="text-3xl mb-1">
-                SIGN IN
+                EDIT TOPIC
             </h3>
+
             <fieldset className="flex flex-col justify-between items-center">
                 <legend className="text-lg text-center text-gray-600 font-medium mb-2">
-                    Connectez-vous
+                    Modifiez le Sujet
                 </legend>
                 <div className="flex flex-col">
                     <label className="text-base mt-2 -mb-1"
                         htmlFor="email"
                     >
-                        e-mail :
+                        Sujet :
                     </label>
                     <input className="border-2 border-black rounded-md pl-2"
-                        id="email"
+                        id="subject"
                         type="text"
-                        placeholder="e-mail"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="sujet"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
                 <div className="flex flex-col">
                     <label className="text-base mt-2 -mb-1"
-                        htmlFor="password"
+                        htmlFor="description"
                     >
-                        mot-de-passe :
+                        Descriptif :
                     </label>
-                    <input className="border-2 border-black rounded-md pl-2"
-                        id="password"
-                        type="password"
-                        placeholder="mot-de-passe"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                    <textarea className="w-full h-32 border-2 border-black rounded-md px-3"
+                        id="email"
+                        placeholder="descriptif"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                 </div>
-                <p className="text-sm text-center text-blue-600">Mot de passe oublié?</p>
-                <button className="w-fit bg-black border-2 rounded-md px-2 py-1 mt-3 mb-6 border-black text-white hover:bg-white hover:text-black hover:cursor-pointer " onClick={handleSignIn}>
-                    Se Connecter
-                </button>
             </fieldset>
+
             <div className="flex flex-col justify-center items-center">
-                <p className="text-basic text-center text-gray-600">
-                    Pas encore de compte?
-                </p>
                 <button className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer "
-                    onClick={handleIsSignUp}>
-                    Créer un Compte
+                    onClick={handleEditTopic}>
+                    Modifier
                 </button>
             </div>
         </div>
     )
 }
 
-export default SignIn
+export default EditTopic

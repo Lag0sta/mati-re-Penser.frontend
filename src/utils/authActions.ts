@@ -1,43 +1,12 @@
-interface handleSignUpProps {
-    setErrorMessage: (value: string) => void;
-    setSuccessMessage: (value: string) => void;
-    setIsModalOpen: (value: boolean) => void;
-    setModalComponent: (value: string) => void;
-    setIsMessageModalOpen: (value: boolean) => void;
-    name: string;
-    setName: (value: string) => void;
-    surname: string;
-    setSurname: (value: string) => void;
-    pseudo: string;
-    setPseudo: (value: string) => void;
-    email: string;
-    setEmail: (value: string) => void;
-    password: string;
-    setPassword: (value: string) => void;
-    confirmPassword: string;
-    setConfirmPassword: (value: string) => void;
+import { authData } from "../utils/types.js"
+
+interface authProps {
+    authData : authData  
 }
 
-export async function handleSignUpAction({ setErrorMessage, setSuccessMessage, setIsModalOpen, setModalComponent, setIsMessageModalOpen, name, setName, surname, setSurname, pseudo, setPseudo, email, setEmail, password, setPassword, confirmPassword, setConfirmPassword }: handleSignUpProps) {
-    //réinitialisation des messages
-    setErrorMessage("")
-    setSuccessMessage("")
-
-    //vérifications que les champs soient bien remplis
-    if (!name || !surname || !pseudo || !email || !password || !confirmPassword) {
-        setErrorMessage("Veuillez remplir tous les champs avec un *");
-        setIsMessageModalOpen(true);
-        return;
-    }
-
-    //vérifications que les mots de passe correspondent
-    if (password !== confirmPassword) {
-        setErrorMessage("Les mots de passe ne correspondent pas");
-        setIsMessageModalOpen(true);
-
-        return;
-    }
-
+//fonction pour s'inscrire
+export async function signUp({ authData }: authProps) {
+    const {name, surname, pseudo, email, password, confirmPassword} = authData
 
     try {
         const response = await fetch("http://localhost:4000/users/signup", {
@@ -49,62 +18,26 @@ export async function handleSignUpAction({ setErrorMessage, setSuccessMessage, s
                 pseudo: pseudo,
                 email: email,
                 password: password,
+                confirmPassword: confirmPassword
             }),
-
         });
+
         const data = await response.json();
+        console.log("data", data)
 
-        if (data.result) {
-            setName("");
-            setSurname("");
-            setPseudo("");
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
-            setSuccessMessage("Votre compte a bien été créé.");
-            setIsMessageModalOpen(true);
-
-        } else {
-            setErrorMessage("Une erreur est survenue. Veuillez réessayer.");
-            setIsMessageModalOpen(true);
-
-        }
+        return data
+       
     } catch (error) {
-        console.error("Erreur lors de l'inscription :", error);
-        setErrorMessage("Erreur réseau. Veuillez réessayer plus tard.");
-        setIsMessageModalOpen(true);
+        return error
     }
 }
 
-import {save} from '../store/reducers/auth.js'
-import {login} from '../store/reducers/user.js'
+//action pour se connecer
+export async function signIn({ authData }: authProps) {
+    const {email, password} = authData
 
-interface handleSignInActionProps {
-    dispatch: any;
-    setErrorMessage: (value: string) => void;
-    setSuccessMessage: (value: string) => void;
-    setIsMessageModalOpen: (value: boolean) => void;
-    email: string;
-    setEmail: (value: string) => void;
-    password: string;
-    setPassword: (value: string) => void;
-}
-
-export async function handleSignInAction({dispatch, setErrorMessage, setSuccessMessage, email, setEmail, password, setPassword, setIsMessageModalOpen} : handleSignInActionProps) {
-    //réinitialisation des messages
-    setErrorMessage("")
-    setSuccessMessage("")
-
-
-    //vérifications que les champs soient bien remplis
-    if (!email || !password) {
-        setErrorMessage("Veuillez remplir tous les champs");
-        setIsMessageModalOpen(true);
-        return;
-    }
-
-    try{
-        const response = await fetch ("http://localhost:4000/users/signin", {
+    try {
+        const response = await fetch("http://localhost:4000/auths/signin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -115,19 +48,33 @@ export async function handleSignInAction({dispatch, setErrorMessage, setSuccessM
         const data = await response.json();
         console.log("data", data)
 
-        if (data.result) {
-            dispatch(save(data.accessToken));
-            dispatch(login(data));
-            setSuccessMessage("Bonjour " + data.pseudo);
-            setIsMessageModalOpen(true);
-        } else {
-            setErrorMessage("mauvais identifiants");
-            setIsMessageModalOpen(true);
-        }
+        return data
+    
     } catch (error) {
-        setErrorMessage("Erreur réseau. Veuillez réessayer plus tard.");
-        setIsMessageModalOpen(true);
+        return error
     }
-    
-    
+}
+
+//action de 2e auth pour sécuriser la modification
+export async function auth({ authData, }: authProps){
+        const {token, password} = authData
+      
+    try {
+        const response = await fetch("http://localhost:4000/auths/auth", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: token,
+                password: password,
+            }),
+        })
+
+        const data = await response.json()
+
+        return data
+
+    } catch (error) {
+        return false
+    }
+
 }

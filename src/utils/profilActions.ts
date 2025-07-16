@@ -1,20 +1,14 @@
+import { profilData } from "./types.js";
 
+interface profilProps {
+    profilData : profilData
+}
 
-import { update } from "../store/reducers/user.js";
-
-export async function changeAvatar(style: string, seed: string, token: string, setErrorMessage: (value: string) => void, dispatch: any) {
+export async function changeAvatar({profilData}: profilProps) {
+    const {token, style, seed} = profilData
+    
     try {
-        if (!token) {
-            setErrorMessage("Veuillez vous connecter");
-            return
-        }
-
-        if (!style || !seed) {
-            setErrorMessage("Choisissez un avatar");
-            return
-        }
-        
-        const response = await fetch(`http://localhost:4000/users/avatar`, {
+        const AvatarChange = await fetch(`http://localhost:4000/users/avatar`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -22,13 +16,13 @@ export async function changeAvatar(style: string, seed: string, token: string, s
                 avatar: `https://api.dicebear.com/9.x/${style}/svg?seed=${seed}`
             }),
         });
-        const data = await response.json();
-        dispatch(update(data));
-        console.log("data", data)
-
+        const data = await AvatarChange.json();
+        
+        return data 
 
     } catch (error) {
         console.error(error);
+        return false
     }
 }
 

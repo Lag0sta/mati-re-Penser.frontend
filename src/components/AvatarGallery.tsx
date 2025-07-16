@@ -1,12 +1,18 @@
 import { changeAvatar } from "../utils/profilActions.js"
 import { useAppSelector, useAppDispatch } from "../store/hooks.js"
+
+import { update } from "../store/reducers/user.js";
+
+import { setStyle } from "framer-motion"
 interface avatarGalleryProps {
     setIsModalOpen: (value: boolean) => any
+    setIsMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
+    setSuccessMessage: (value: string) => any
 }
 
-function AvatarGallery({ setIsModalOpen, setModalComponent, setErrorMessage }: avatarGalleryProps) {
+function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessage, setErrorMessage, setModalComponent }: avatarGalleryProps) {
     const token = useAppSelector((state) => state.authToken.value);
     const dispatch = useAppDispatch();
 
@@ -19,12 +25,32 @@ function AvatarGallery({ setIsModalOpen, setModalComponent, setErrorMessage }: a
         setModalComponent("");
     }
 
-const handleChangeAvatar = (style: string, seed:string) => {
-    console.log("style", style, "seed", seed)
-    setIsModalOpen(false);
-    setModalComponent("");
-    changeAvatar(style, seed, token, setErrorMessage, dispatch)
-}
+    const handleChangeAvatar = async (style: string, seed: string) => {
+        const profilData = { token, style, seed }
+
+        try {
+            const avatarChangeResponse = await changeAvatar({ profilData })
+
+            if (avatarChangeResponse) {
+                dispatch(update(avatarChangeResponse));
+
+                setIsModalOpen(false);
+                setModalComponent("");
+                setSuccessMessage(avatarChangeResponse.success);
+                setIsMessageModalOpen(true);
+            } else {
+                setErrorMessage(avatarChangeResponse.error);
+                setIsMessageModalOpen(true);
+
+            }
+
+        } catch (error) {
+            setErrorMessage(error as string);
+            setIsMessageModalOpen(true);
+        }
+
+
+    }
 
     return (
         <div className=" bg-white flex flex-col justify-center items-center mt-24  ">
@@ -39,7 +65,7 @@ const handleChangeAvatar = (style: string, seed:string) => {
                         <div className="flex flex-wrap justify-center m-2 ">
                             {seed.map((seed, index) => (
                                 <div key={index} className="flex justify-center items-center h-fit w-fit m-1"
-                                onClick={() => handleChangeAvatar(style, seed)}>
+                                    onClick={() => handleChangeAvatar(style, seed)}>
 
                                     <img src={`https://api.dicebear.com/9.x/${style}/svg?seed=${seed}`} alt="avatar"
                                         className="h-[5rem] w-[5rem] rounded-full border-2 border-black"

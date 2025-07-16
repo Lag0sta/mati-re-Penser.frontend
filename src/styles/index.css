@@ -42,6 +42,15 @@
   font-weight: contours;
 }
 
+@layer utilities {
+  .ql-container {
+    @apply bg-white rounded-md w-[100%]  min-h-[150px] ;
+  }
+
+  .ql-editor {
+    @apply p-4 text-base w-[100%] rounded-t-md;
+  }
+}
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -116,3 +125,4 @@ h3 {
 label {
   font-family: "Space Grotesk SemiBold"
 }
+
