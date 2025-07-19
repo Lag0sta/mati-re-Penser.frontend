@@ -64,7 +64,7 @@ export async function editTopic({ topicData }: topicProps) {
             })
         })
         const editResponse = await editTopic.json()
-
+        console.log("editResponse", editResponse)
         return editResponse
 
     } catch (error) {
