@@ -2,7 +2,10 @@ import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../store/hooks.js"
 
 import { get } from "../store/reducers/topic.js"
+
 import { topicThread } from "../utils/topicActions.js"
+import { formatDateToBelgium } from "../utils/formatDateActions.js";
+
 
 interface discussionProps {
     setMainComponent: (value: string) => any
@@ -34,20 +37,6 @@ function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessa
         }
         fetchData();
     }, [])
-
-    function formatDateToBelgium(dateStr: string | undefined): string {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        return date.toLocaleString('fr-BE', {
-            timeZone: 'Europe/Brussels',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-        }).replace(',', '');
-    }
 
     const createNewTopic = () => {
         if (!token) {

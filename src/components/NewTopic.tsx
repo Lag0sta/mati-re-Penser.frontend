@@ -4,6 +4,8 @@ import { useAppDispatch } from "../store/hooks.js"
 
 import { get } from '../store/reducers/topic.js';
 import { newTopic } from "../utils/topicActions.js"
+import { formatDateToBelgium } from "../utils/formatDateActions.js";
+
 
 
 interface topicProps {

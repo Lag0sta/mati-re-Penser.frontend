@@ -4,7 +4,6 @@ import { useRef } from 'react'
 import EditTopic from './EditTopic.js';
 import NewTopic from './NewTopic.js';
 import Auth from './Auth.js';
-import DeleteTopic from './DeleteTopic.js';
 const SignIn = React.lazy(() => import('./SignIn.js'));
 const SignUp = React.lazy(() => import('./SignUp.js'));
 const AvatarGallery = React.lazy(() => import('./AvatarGallery.js'));
