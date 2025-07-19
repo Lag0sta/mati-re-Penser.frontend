@@ -29,8 +29,8 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
       }
 
       // MAJ des états en fonction de la ref passée en parametre
-      if (ref === mainRef && refTitle === "discussion") {
-        setMainComponent("discussion")
+      if (ref === mainRef && refTitle === "forum") {
+        setMainComponent("forum")
       } else if (ref === mainRef && refTitle === "publication") {
         setMainComponent("publication")
       } else if (ref === mainRef && refTitle === "about") {
@@ -100,8 +100,8 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
         <div className="mt-10">
           <nav className="mr-4">
             <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-              onClick={() => handleScroll(mainRef, "discussion")}
-              aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des discussions"
+              onClick={() => handleScroll(mainRef, "forum")}
+              aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des forum"
             >
               discussions
             </button>

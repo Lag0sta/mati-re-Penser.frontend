@@ -116,8 +116,9 @@ export async function topicThread({ topicData }: topicProps) {
         }
         )
         const response = await topic.json()
-
+        console.log("responseTopicThread :", response)
         return response
+
 
     } catch (error) {
         return error

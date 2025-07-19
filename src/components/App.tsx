@@ -5,7 +5,7 @@ import TopicThread from './TopicThread.js';
 
 import Header from './Header.js';
 import Contact from './Contact.js';
-import Discussions from './Discussions.js';
+import Forum from './Forum.js';
 import Publications from './Publications.js';
 import About from './About.js';
 import New from './New.js';
@@ -73,8 +73,8 @@ function App() {
             <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setIsAddComment={(value: boolean) => setIsAddComment(value)}
             />}
-          {mainComponent === "discussion" &&
-            <Discussions setMainComponent={(value: string) => setMainComponent(value)}
+          {mainComponent === "forum" &&
+            <Forum setMainComponent={(value: string) => setMainComponent(value)}
               setModalComponent={(value: string) => setModalComponent(value)}
               setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}

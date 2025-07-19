@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../store/hooks.js"
 
-import { handleTopicThread } from "../utils/topicActions.js"
+import { get } from "../store/reducers/topic.js"
+import { topicThread } from "../utils/topicActions.js"
 
 interface discussionProps {
     setMainComponent: (value: string) => any
@@ -11,7 +12,7 @@ interface discussionProps {
     setErrorMessage: (value: string) => any
 }
 
-function Discussions({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessageModalOpen, setErrorMessage }: discussionProps) {
+function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessageModalOpen, setErrorMessage }: discussionProps) {
     const [forum, setForum] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -21,9 +22,9 @@ function Discussions({ setMainComponent, setModalComponent, setIsModalOpen, setI
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:4000/submits/topicsWithThreadCounts')
+                const response = await fetch('http://localhost:4000/topics/topicsWithThreadCounts')
                 const data = await response.json()
-                console.log(data)
+                console.log("the data :", data)
                 setForum(data)
             } catch (error) {
                 console.error(error)
@@ -59,15 +60,30 @@ function Discussions({ setMainComponent, setModalComponent, setIsModalOpen, setI
         setIsModalOpen(true)
     }
 
-    const handleTopic = (title: string) => {
+    const handleTopic = async (title: string) => {
         console.log('topic')
-        handleTopicThread({ dispatch, title })
-        setMainComponent('topicThread')
+        const topicData = { title };
+        try {
+            const discussionResponse = await topicThread({ topicData })
+
+            console.log("Thediscussion :", discussionResponse)
+            
+            if (discussionResponse){
+                console.log("yeay")
+                setMainComponent('topicThread')
+                dispatch(get(discussionResponse))
+            }else {
+                setErrorMessage(discussionResponse.error);
+                setIsMessageModalOpen(true);
+            }
+            
+
+        } catch (error) {
+            setErrorMessage(error as string);
+        }
+
 
     }
-
-
-
     return (
         <div className="h-full w-full  flex flex-col items-center mt-24 mb-6">
             <div className="flex justify-center items-center mt-4 mb-4 w-[75%] bg-white rounded-md">
@@ -101,8 +117,8 @@ function Discussions({ setMainComponent, setModalComponent, setIsModalOpen, setI
                         <span className="text-right font-bold text-gray-500">{item.lastModified ? formatDateToBelgium(item.lastModified) : formatDateToBelgium(item.creationDate)}</span>
                     </div>
                 ))}
-           
-        </div>
+
+            </div>
 
         </div >
     )
@@ -110,4 +126,4 @@ function Discussions({ setMainComponent, setModalComponent, setIsModalOpen, setI
     // )
 }
 
-export default Discussions
+export default Forum
