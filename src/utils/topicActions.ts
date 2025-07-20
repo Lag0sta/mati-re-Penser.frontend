@@ -1,4 +1,5 @@
 import { topicData } from './types.js';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 interface topicProps {
     topicData: topicData
@@ -8,7 +9,7 @@ export async function newTopic({ topicData }: topicProps) {
     const { token, title, description } = topicData
 
     try {
-        const topic = await fetch('http://localhost:4000/submits/newTopic', {
+        const topic = await fetch(`${API_URL}/submits/newTopic`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -21,7 +22,7 @@ export async function newTopic({ topicData }: topicProps) {
 
         if (!response.result) return response;
 
-        const newTopic = await fetch('http://localhost:4000/submits/topicContent', {
+        const newTopic = await fetch(`${API_URL}/submits/topicContent`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -39,21 +40,11 @@ export async function newTopic({ topicData }: topicProps) {
     }
 }
 
-interface editTopicProps {
-    dispatch: any
-    id: string
-    token: string
-    title: string
-    description: string
-    setErrorMessage: (value: string) => void
-    setIsMessageModalOpen: (value: boolean) => void
-    setSuccessMessage: (value: string) => void
-}
 export async function editTopic({ topicData }: topicProps) {
     const { token, id, title, description } = topicData
 
     try {
-        const editTopic = await fetch('http://localhost:4000/topics/editTopic', {
+        const editTopic = await fetch(`${API_URL}/topics/editTopic`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -78,7 +69,7 @@ export async function lockTopic({ topicData }: topicProps) {
     const { id, isLocked, token } = topicData
     try {
 
-        const editLock = await fetch('http://localhost:4000/topics/lockTopic', {
+        const editLock = await fetch(`${API_URL}/topics/lockTopic`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -101,7 +92,7 @@ export async function topicThread({ topicData }: topicProps) {
     const { title } = topicData
 
     try {
-        const topic = await fetch('http://localhost:4000/topics/topicContent', {
+        const topic = await fetch(`${API_URL}/topics/topicContent`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -1,4 +1,5 @@
 import { authData } from "../utils/types.js"
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 interface authProps {
     authData : authData  
@@ -9,7 +10,7 @@ export async function signUp({ authData }: authProps) {
     const {name, surname, pseudo, email, password, confirmPassword} = authData
 
     try {
-        const response = await fetch("http://localhost:4000/users/signup", {
+        const response = await fetch(`${API_URL}/users/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -37,7 +38,7 @@ export async function signIn({ authData }: authProps) {
     const {email, password} = authData
 
     try {
-        const response = await fetch("http://localhost:4000/auths/signin", {
+        const response = await fetch(`${API_URL}/auths/signin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -60,7 +61,7 @@ export async function auth({ authData, }: authProps){
         const {token, password} = authData
       
     try {
-        const response = await fetch("http://localhost:4000/auths/auth", {
+        const response = await fetch(`${API_URL}/auths/auth`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
