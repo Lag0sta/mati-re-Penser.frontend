@@ -31,7 +31,6 @@ function App() {
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null)
 
-  const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
 
   return (
@@ -82,7 +81,6 @@ function App() {
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}
               setAuthType={(value: string) => setAuthType(value)}
-              isLocked={isLocked}
             />
           }
           {mainComponent === "about" && <About />}
@@ -108,7 +106,6 @@ function App() {
           setErrorMessage={(value: string) => setErrorMessage(value)}
           setSuccessMessage={(value: string) => setSuccessMessage(value)}
           setMainComponent={(value: string) => setMainComponent(value)}
-          isLocked={isLocked}
           authType={authType}
         />
       }
