@@ -1,4 +1,4 @@
-import parse from 'html-react-parser';
+const parse = require('html-react-parser').default;
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
@@ -30,7 +30,6 @@ function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, 
     const token = useAppSelector((state) => state.authToken.value);
 
     console.log("topic in TOPIC", topic);
-
     return (
         <div className="h-full w-full flex flex-col items-center mb-6">
             <Topic setIsLocked={setIsLocked} 
@@ -38,7 +37,7 @@ function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, 
                    setIsModalOpen={setIsModalOpen}
                    setModalComponent={setModalComponent}
                    setAuthType={setAuthType} />
-                   
+
             {!isLocked && (
                     <NewComment setIsMessageModalOpen={setIsMessageModalOpen} 
                                 setErrorMessage={setErrorMessage} 

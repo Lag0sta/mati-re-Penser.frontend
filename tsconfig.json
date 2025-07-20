@@ -5,11 +5,11 @@
     "lib": [
       "DOM",
       "DOM.Iterable",
-      "ESNext"
+      "ESNext",
     ],
-    "allowJs": false,
+    "allowJs": false, 
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -25,4 +25,5 @@
     "src",
     "vite.config.ts"
   ],
+  "types": ["node"]
 }
