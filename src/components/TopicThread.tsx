@@ -86,7 +86,8 @@ function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, 
                         <div className="w-full my-1 flex flex-col justify-between border-t-2 border-gray-300 ">
                             <span className="ml-1 my-1 text-sm text-black"
                                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
-/>
+                            />
+                        </div>
                         <div className=" h-full w-full ">
                             <div className="w-full flex justify-end items-center ">
                                 <span className="font-bold text-xs text-gray-500 mr-2">Créé le :</span>
