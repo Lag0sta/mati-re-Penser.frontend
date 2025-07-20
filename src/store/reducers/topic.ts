@@ -38,7 +38,7 @@ const topicSlice = createSlice({
             state.value.description = action.payload.description;
         },
 
-        lockTopic: (state, action) => {
+        lock: (state, action) => {
             state.value.isLocked = action.payload;
         },
     },
@@ -48,6 +48,6 @@ export const {
     get,
     addThread,
     editTopicInfo,
-    lockTopic
+    lock
 } = topicSlice.actions;
 export default topicSlice.reducer;

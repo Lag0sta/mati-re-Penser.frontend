@@ -74,31 +74,26 @@ export async function editTopic({ topicData }: topicProps) {
 
 // import { lockTopic } from '../store/reducers/topic.js';
 
-export async function lockTopic({ }) {
+export async function lockTopic({ topicData }: topicProps) {
+    const { id, isLocked, token } = topicData
     try {
-        // if (!token) {
-        //     setErrorMessage("Veuillez vous connecter");
-        //     return
-        // }
 
-        // const editLock = await fetch('http://localhost:4000/topics/lockTopic', {
-        //     method: "PUT",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify({
-        //         token: token,
-        //         id: id
-        //     })
-        // })
-        // const response = await editLock.json()
+        const editLock = await fetch('http://localhost:4000/topics/lockTopic', {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: token,
+                id: id,
+                isLocked: isLocked
+            })
+        })
+        const response = await editLock.json()
 
-        // if (!response) {
-        //     setErrorMessage("Une erreur est survenue");
-        //     return
-        // }
+        return response
 
-        // dispatch(lockTopic(response.topic.isLocked))
+       
     } catch (error) {
-        console.error(error)
+        return error
     }
 }
 

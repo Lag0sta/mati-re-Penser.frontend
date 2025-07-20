@@ -15,8 +15,11 @@ function MessageModal({successMessage, setSuccessMessage, errorMessage, setError
             setModalComponent("")
             setIsModalOpen(false)
             setIsMessageModalOpen(false)
+            setSuccessMessage("")
+
         }else {
             setIsMessageModalOpen(false)
+            setErrorMessage("")
         }
     }
 

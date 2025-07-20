@@ -74,7 +74,7 @@ export async function auth({ authData, }: authProps){
         return data
 
     } catch (error) {
-        return false
+        return error
     }
 
 }

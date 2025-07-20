@@ -1,8 +1,6 @@
-import * as parseModule from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
-import { useAppDispatch } from "../store/hooks.js"
 import { AnimatePresence, motion } from "framer-motion";
 
 import Topic from "./Topic.js";
@@ -12,19 +10,15 @@ import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
 
 interface topicProps {
-    setMainComponent: (value: string) => any
     setIsModalOpen: (value: boolean) => any
     setIsMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
     setAuthType: (value: string) => any
-    setIsLocked: (value: boolean) => any
-    isLocked: boolean
 }
 
-function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType, setIsLocked, isLocked }: topicProps) {
-    const parse = parseModule.default;
+function TopicThread({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
 
     const [newComment, setNewComment] = useState<string>('');
     console.log("newComment", newComment);
@@ -32,14 +26,16 @@ function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, 
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
 
+      const isLocked = useAppSelector((state) => state.topic.value.isLocked);
+
+
     console.log("topic in TOPIC", topic);
     return (
         <div className="h-full w-full flex flex-col items-center mb-6">
-            <Topic setIsLocked={setIsLocked} 
-                   isLocked={isLocked} 
-                   setIsModalOpen={setIsModalOpen}
+            <Topic setIsModalOpen={setIsModalOpen}
                    setModalComponent={setModalComponent}
-                   setAuthType={setAuthType} />
+                   setAuthType={setAuthType}
+                 />
 
             {!isLocked && (
                     <NewComment setIsMessageModalOpen={setIsMessageModalOpen} 

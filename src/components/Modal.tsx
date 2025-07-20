@@ -16,13 +16,11 @@ interface modalProps {
   setErrorMessage: (value: string) => any
   setSuccessMessage: (value: string) => any
   setMainComponent: (value: string) => any
-  isLocked: boolean
-  setIsLocked: (value: boolean) => any
   authType: string
 }
 
 
-function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent, isLocked , setIsLocked, authType }: modalProps) {
+function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType }: modalProps) {
   // console.log("modalComponent", modalComponent)
 
   return (
@@ -82,8 +80,6 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              isLocked={isLocked}
-              setIsLocked={(value: boolean) => setIsModalOpen(value)}
               authType={authType} 
             />
           }

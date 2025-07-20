@@ -25,4 +25,5 @@ export interface topicData {
     id ?: string
     title ?: string
     description ?: string
+    isLocked ?: boolean
 }

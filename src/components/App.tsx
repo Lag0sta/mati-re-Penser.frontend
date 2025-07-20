@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAppSelector } from '../store/hooks.js';
 import { useState, Suspense, } from 'react'
 import { useRef } from 'react'
 import TopicThread from './TopicThread.js';
@@ -13,18 +14,9 @@ import Modal from './Modal.js';
 import UserProfile from './UserProfile.js';
 import MessageModal from './MessageModal.js';
 
-// const Header = React.lazy(() => import('./Header.js'));
-// const Contact = React.lazy(() => import('./Contact.js'));
-// const Discussions = React.lazy(() => import('./Discussions.js'));
-// const Publications = React.lazy(() => import('./Publications.js'));
-// const About = React.lazy(() => import('./About.js'));
-// const New = React.lazy(() => import('./New.js'));
-// const Modal = React.lazy(() => import('./Modal.js'));
-// const UserProfile = React.lazy(() => import('./UserProfile.js'));
-// const MessageModal = React.lazy(() => import('./MessageModal.js'));
-
 function App() {
-  const [mainComponent, setMainComponent] = useState<string>('main')
+  
+  const [mainComponent, setMainComponent] = useState<string>('acceuil')
   const [modalComponent, setModalComponent] = useState<string>("")
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isAddComment, setIsAddComment] = useState<boolean>(false);
@@ -32,15 +24,15 @@ function App() {
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [authType, setAuthType] = useState<string>("");
-  const [isLocked, setIsLocked] = useState<boolean>(false);
-
-
 
   console.log("mainComponent", mainComponent);
   //ref initiale = null => ne pointe pas encore vers un él. DOM
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null)
+
+  const isLocked = useAppSelector((state) => state.topic.value.isLocked);
+
 
   return (
     <main className="max-w-screen mx-auto grid grid-rows-3 grid-cols-4 bg-gray-200">
@@ -83,14 +75,13 @@ function App() {
           }
           {mainComponent === "publication" && <Publications />}
           {mainComponent === "topicThread" &&
-            <TopicThread setMainComponent={(value: string) => setMainComponent(value)}
+            <TopicThread 
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}
               setAuthType={(value: string) => setAuthType(value)}
-              setIsLocked={(value: boolean) => setIsLocked(value)}
               isLocked={isLocked}
             />
           }
@@ -118,7 +109,6 @@ function App() {
           setSuccessMessage={(value: string) => setSuccessMessage(value)}
           setMainComponent={(value: string) => setMainComponent(value)}
           isLocked={isLocked}
-          setIsLocked={(value: boolean) => setIsLocked(value)}
           authType={authType}
         />
       }
