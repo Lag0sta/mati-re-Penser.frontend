@@ -1,4 +1,5 @@
-const parse = require('html-react-parser').default;
+import * as parseModule from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
@@ -23,6 +24,8 @@ interface topicProps {
 }
 
 function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType, setIsLocked, isLocked }: topicProps) {
+    const parse = parseModule.default;
+
     const [newComment, setNewComment] = useState<string>('');
     console.log("newComment", newComment);
 
@@ -81,8 +84,9 @@ function TopicThread({ setMainComponent, setIsModalOpen, setIsMessageModalOpen, 
                             </div>
                         </div>
                         <div className="w-full my-1 flex flex-col justify-between border-t-2 border-gray-300 ">
-                            <span className="ml-1 my-1 text-sm text-black"> {parse(thread.text)}</span>
-                        </div>
+                            <span className="ml-1 my-1 text-sm text-black"
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
+/>
                         <div className=" h-full w-full ">
                             <div className="w-full flex justify-end items-center ">
                                 <span className="font-bold text-xs text-gray-500 mr-2">Créé le :</span>

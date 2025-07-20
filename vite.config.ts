@@ -9,4 +9,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
     ],
+     optimizeDeps: {
+    include: ['html-react-parser'] // force Vite à pré-bundler ce package
+  },
+  build: {
+    commonjsOptions: {
+      include: [/html-react-parser/, /node_modules/]
+    }
+  }
 })
