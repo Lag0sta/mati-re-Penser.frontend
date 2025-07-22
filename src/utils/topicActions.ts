@@ -64,7 +64,6 @@ export async function editTopic({ topicData }: topicProps) {
 }
 
 // import { lockTopic } from '../store/reducers/topic.js';
-
 export async function lockTopic({ topicData }: topicProps) {
     const { id, isLocked, token } = topicData
     try {
@@ -92,6 +91,8 @@ export async function topicThread({ topicData }: topicProps) {
     const { title } = topicData
 
     try {
+        console.log("👉 API URL utilisée:", `${API_URL}/topics/topicContent`);
+
         const topic = await fetch(`${API_URL}/topics/topicContent`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

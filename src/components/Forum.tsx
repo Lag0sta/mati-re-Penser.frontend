@@ -23,9 +23,11 @@ function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessa
     const dispatch = useAppDispatch();
 
     useEffect(() => {
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:4000/topics/topicsWithThreadCounts')
+                const response = await fetch(`${API_URL}/topics/topicsWithThreadCounts`)
                 const data = await response.json()
                 console.log("the data :", data)
                 setForum(data)

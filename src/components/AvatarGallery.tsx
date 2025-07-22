@@ -48,8 +48,6 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
             setErrorMessage(error as string);
             setIsMessageModalOpen(true);
         }
-
-
     }
 
     return (
