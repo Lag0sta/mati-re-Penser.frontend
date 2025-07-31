@@ -9,7 +9,7 @@ export async function newTopic({ topicData }: topicProps) {
     const { token, title, description } = topicData
 
     try {
-        const topic = await fetch(`${API_URL}/submits/newTopic`, {
+        const topic = await fetch(`${API_URL}/topics/newTopic`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -19,10 +19,10 @@ export async function newTopic({ topicData }: topicProps) {
             })
         })
         const response = await topic.json()
-
+        console.log("response", response)
         if (!response.result) return response;
 
-        const newTopic = await fetch(`${API_URL}/submits/topicContent`, {
+        const newTopic = await fetch(`${API_URL}/topics/topicContent`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

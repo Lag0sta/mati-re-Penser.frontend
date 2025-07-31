@@ -19,7 +19,7 @@ function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessa
     const [forum, setForum] = useState([])
     const [loading, setLoading] = useState(true)
 
-    const token = useAppSelector((state) => state.authToken.value)
+  const token = useAppSelector((state: any) => state.authToken.value);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

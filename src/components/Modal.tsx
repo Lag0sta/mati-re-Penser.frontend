@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, Suspense } from 'react'
 import { useRef } from 'react'
 import EditTopic from './EditTopic.js';
+import EditComment from './EditComment.js';
 import NewTopic from './NewTopic.js';
 import Auth from './Auth.js';
 const SignIn = React.lazy(() => import('./SignIn.js'));
@@ -73,6 +74,15 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)} />
+          }
+          {modalComponent === "editComment" &&
+            <EditComment setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}/>
           }
           {modalComponent === "auth" &&
             <Auth setIsModalOpen={(value: boolean) => setIsModalOpen(value)}

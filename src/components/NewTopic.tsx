@@ -50,12 +50,14 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
             const newTopicResponse = await newTopic({ topicData });
 
             if (!newTopicResponse.result) {
+                console.log("newTopicResponse.error", newTopicResponse)
                 setErrorMessage(newTopicResponse.error);
                 setIsMessageModalOpen(true);
                 return;
                 
             } else {
                 setMainComponent('topicThread')
+                console.log("newTopicResponse.success", newTopicResponse)
                 setSuccessMessage(newTopicResponse.success);
                 setIsMessageModalOpen
                 dispatch(get(topic))
