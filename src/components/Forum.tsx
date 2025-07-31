@@ -30,7 +30,7 @@ function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessa
                 const response = await fetch(`${API_URL}/topics/topicsWithThreadCounts`)
                 const data = await response.json()
                 console.log("the data :", data)
-                setForum(data)
+                setForum(data.threadsInTopic)
             } catch (error) {
                 console.error(error)
             } finally {
