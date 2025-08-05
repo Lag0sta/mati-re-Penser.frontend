@@ -42,8 +42,7 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
     }
 
     const handleNewTopic = async () => {
-        setErrorMessage('');
-        setSuccessMessage('');
+       
         const topicData = { token, title, description };
 
         try {
@@ -52,17 +51,19 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
             if (!newTopicResponse.result) {
                 console.log("newTopicResponse.error", newTopicResponse)
                 setErrorMessage(newTopicResponse.error);
+                setSuccessMessage('');
                 setIsMessageModalOpen(true);
-                return;
-                
             } else {
+                setSuccessMessage(newTopicResponse.success);
+                setErrorMessage('');
+                setIsMessageModalOpen(true);
+                dispatch(get(newTopicResponse))
                 setMainComponent('topicThread')
                 console.log("newTopicResponse.success", newTopicResponse)
-                setSuccessMessage(newTopicResponse.success);
-                setIsMessageModalOpen
-                dispatch(get(topic))
+
+                console.log("newTopicResponse.discussion", newTopicResponse)
             }
-        }catch(error){
+        } catch (error) {
             setErrorMessage(error as string);
             setIsMessageModalOpen(true);
             return

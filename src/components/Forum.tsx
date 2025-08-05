@@ -60,7 +60,7 @@ function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessa
             console.log("Thediscussion :", discussionResponse)
             
             if (discussionResponse){
-                console.log("yeay")
+                console.log("yeay", discussionResponse)
                 setMainComponent('topicThread')
                 dispatch(get(discussionResponse))
             }else {

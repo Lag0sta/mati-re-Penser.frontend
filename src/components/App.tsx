@@ -26,6 +26,7 @@ function App() {
   const [authType, setAuthType] = useState<string>("");
 
   console.log("mainComponent", mainComponent);
+  console.log("Home success error message", successMessage, " + ", errorMessage);
   //ref initiale = null => ne pointe pas encore vers un él. DOM
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
