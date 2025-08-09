@@ -5,6 +5,7 @@ import EditTopic from './EditTopic.js';
 import EditComment from './EditComment.js';
 import NewTopic from './NewTopic.js';
 import Auth from './Auth.js';
+import NewResponse from './NewResponse.js';
 const SignIn = React.lazy(() => import('./SignIn.js'));
 const SignUp = React.lazy(() => import('./SignUp.js'));
 const AvatarGallery = React.lazy(() => import('./AvatarGallery.js'));
@@ -22,7 +23,7 @@ interface modalProps {
 
 
 function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType }: modalProps) {
-  // console.log("modalComponent", modalComponent)
+  console.log("modalComponent", modalComponent)
 
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
@@ -93,6 +94,12 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               authType={authType} 
             />
           }
+          {/* {modalComponent === "newResponse" &&
+           <NewResponse setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}/>
+          } */}
           {/* {modalComponent === "deleteTopic" &&
             <DeleteTopic setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}

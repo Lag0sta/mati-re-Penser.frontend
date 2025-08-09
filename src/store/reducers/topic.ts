@@ -12,7 +12,15 @@ const initialState = {
             text: "",
             createdBy: { pseudo: "", avatar: "" },
             creationDate: "",
-        }]
+            modificationDate: "",
+            comments: [{
+                    id: "",
+                    text: "",
+                    createdBy: { pseudo: "", avatar: "" },
+                    creationDate: "",
+                    modificationDate: "",
+            }]
+        }],
     },
 };
 
@@ -41,6 +49,8 @@ const topicSlice = createSlice({
         lock: (state, action) => {
             state.value.isLocked = action.payload;
         },
+
+        
     },
 });
 

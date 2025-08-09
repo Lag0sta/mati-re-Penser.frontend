@@ -2,25 +2,23 @@ import parse from 'html-react-parser';
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-import { AnimatePresence, motion } from "framer-motion";
-
 
 import TextEditor from "./TextEditor.js";
 
-import { get, addThread } from '../store/reducers/topic.js'
+import { get, } from '../store/reducers/topic.js'
 
 import { topicThread } from "../utils/topicActions.js"
-import { addComment } from "../utils/threadActions.js"
+import { addReply } from "../utils/threadActions.js"
 
 interface newTopicProps {
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
+    selectedThreadId : string
+    setSelectedThreadId : (value: string) => any
 }
 
-function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: newTopicProps) {
+function NewResponse({ selectedThreadId, setSelectedThreadId,  setIsMessageModalOpen, setErrorMessage }: newTopicProps) {
     const [newComment, setNewComment] = useState<string>('');
-    const [isNewComment, setIsNewComment] = useState<boolean>(false);
     console.log("newComment", newComment);
 
     const dispatch = useAppDispatch();
@@ -30,18 +28,18 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
     console.log("topic in TOPIC", topic);
 
     const handleNewComment = async () => {
-        const title = topic.title
-        const threadData = { token, title, newComment }
-
+        console.log("NewResponseTopic", topic);
+        const id = selectedThreadId
+        const threadData = { token, id, newComment }
+        console.log("NewResponseID", id);
         try {
-            const addCommentResponse = await addComment({ threadData });
-
-            if (addCommentResponse) {
-                dispatch(addThread(addCommentResponse.newThread))
+            const commentResponse = await addReply({ threadData });
+            console.log("commentResponse", commentResponse);
+            if (commentResponse) {
+                setSelectedThreadId("")
                 setNewComment("")
-                setIsNewComment(false)
             } else {
-                setErrorMessage(addCommentResponse.error);
+                setErrorMessage(commentResponse.error);
                 setIsMessageModalOpen(true);
             }
         } catch (error) {
@@ -51,7 +49,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
 
         // Re-sync avec les vraies données du backend après 2 sec
         setTimeout(async () => {
-            const topicData = { title };
+            const topicData = { id };
             try {
                 const respones = await topicThread({ topicData });
 
@@ -70,13 +68,6 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
 
     return (
         <div className="h-full w-full flex flex-col items-center mb-6">
-            {!isNewComment && (
-                <button className='my-2 px-2 py-1 bg-black text-white border border-black rounded-md hover:bg-white hover:text-black cursor-pointer'
-                    onClick={() => setIsNewComment(true)}>
-                    Ajouter un Commentaire
-                </button>
-            )}
-            {isNewComment && (
                 <div className="w-[55%] h-fit">
                     <div className="  py-3 px-3 flex flex-col justify-center items-center bg-white rounded-md my-1">
                         <TextEditor newComment={newComment} setNewComment={(value: string) => setNewComment(value)} />
@@ -84,9 +75,8 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
                             onClick={handleNewComment}>Valider</button>
                     </div>
                 </div>
-            )}
         </div>
     )
 }
 
-export default NewComment
+export default NewResponse

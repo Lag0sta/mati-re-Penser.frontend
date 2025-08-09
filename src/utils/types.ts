@@ -15,6 +15,7 @@ export interface profilData{
 }
 
 export interface threadData {
+    id ?: string
     token ?: string
     title ?: string
     newComment ?: string

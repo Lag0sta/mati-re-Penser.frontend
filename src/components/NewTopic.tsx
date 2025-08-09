@@ -4,9 +4,6 @@ import { useAppDispatch } from "../store/hooks.js"
 
 import { get } from '../store/reducers/topic.js';
 import { newTopic } from "../utils/topicActions.js"
-import { formatDateToBelgium } from "../utils/formatDateActions.js";
-
-
 
 interface topicProps {
     setMainComponent: (value: string) => any
@@ -24,22 +21,6 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
     const dispatch = useAppDispatch();
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
-    console.log("topic in TOPIC", topic);
-
-    //formatage Date à h-Belge
-    function formatDateToBelgium(dateStr: string | undefined): string {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        return date.toLocaleString('fr-BE', {
-            timeZone: 'Europe/Brussels',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-        }).replace(',', '');
-    }
 
     const handleNewTopic = async () => {
        
@@ -49,7 +30,6 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
             const newTopicResponse = await newTopic({ topicData });
 
             if (!newTopicResponse.result) {
-                console.log("newTopicResponse.error", newTopicResponse)
                 setErrorMessage(newTopicResponse.error);
                 setSuccessMessage('');
                 setIsMessageModalOpen(true);
@@ -59,9 +39,6 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
                 setIsMessageModalOpen(true);
                 dispatch(get(newTopicResponse))
                 setMainComponent('topicThread')
-                console.log("newTopicResponse.success", newTopicResponse)
-
-                console.log("newTopicResponse.discussion", newTopicResponse)
             }
         } catch (error) {
             setErrorMessage(error as string);

@@ -3,9 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     value: {     
             id: "",
-            text: "",
-            createdBy: { pseudo: "", avatar: "" },
-            creationDate: "",
     },
 };
 
@@ -14,14 +11,13 @@ const commentSlice = createSlice({
     initialState,
     reducers: {
         
-        addComment: (state, action) => {
+        find: (state, action) => {
             action.payload = state.value
         },
-
     },
 });
 
 export const {
-    addComment
+    find
 } = commentSlice.actions;
 export default commentSlice.reducer;
