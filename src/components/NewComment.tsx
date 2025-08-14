@@ -16,11 +16,14 @@ interface newTopicProps {
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
+    setIsNewComment: (value: boolean) => any
+    isNewComment: boolean
+    setIsNewResponse: (value: boolean) => any
+    isNewResponse: boolean
 }
 
-function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: newTopicProps) {
+function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setIsNewComment, isNewComment, setIsNewResponse, isNewResponse }: newTopicProps) {
     const [newComment, setNewComment] = useState<string>('');
-    const [isNewComment, setIsNewComment] = useState<boolean>(false);
     console.log("newComment", newComment);
 
     const dispatch = useAppDispatch();
@@ -29,17 +32,34 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
 
     console.log("topic in TOPIC", topic);
 
+    const commentPermission = () => {
+        if(!token) {
+            setErrorMessage("Vous devez être connecté pour ajouter un commentaire");
+            setIsMessageModalOpen(true);
+            return
+        }
+        setIsNewResponse(!isNewResponse)
+        setIsNewComment(true)
+    }
     const handleNewComment = async () => {
         const title = topic.title
         const threadData = { token, title, newComment }
 
         try {
             const addCommentResponse = await addComment({ threadData });
-
+            console.log("addCommentResponse", addCommentResponse);
             if (addCommentResponse) {
-                dispatch(addThread(addCommentResponse.newThread))
+                const newComment = {
+                    createdBy: addCommentResponse.newThread.createdBy,
+                    creationDate: addCommentResponse.newThread.creationDate,
+                    modificationDate: addCommentResponse.newThread.modificationDate,
+                    text: addCommentResponse.newThread.text,
+                    topic: addCommentResponse.newThread.topic,
+                    id: addCommentResponse.newThread._id,
+                    isNew: true
+                }
+                dispatch(addThread(newComment))
                 setNewComment("")
-                setIsNewComment(false)
             } else {
                 setErrorMessage(addCommentResponse.error);
                 setIsMessageModalOpen(true);
@@ -57,6 +77,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
 
                 if (respones) {
                     dispatch(get(topic))
+                    setIsNewComment(false)
                 } else {
                     setErrorMessage(respones.error);
                     setIsMessageModalOpen(true);
@@ -72,7 +93,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setSuccessMessage 
         <div className="h-full w-full flex flex-col items-center mb-6">
             {!isNewComment && (
                 <button className='my-2 px-2 py-1 bg-black text-white border border-black rounded-md hover:bg-white hover:text-black cursor-pointer'
-                    onClick={() => setIsNewComment(true)}>
+                    onClick={commentPermission}>
                     Ajouter un Commentaire
                 </button>
             )}

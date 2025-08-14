@@ -13,12 +13,14 @@ const initialState = {
             createdBy: { pseudo: "", avatar: "" },
             creationDate: "",
             modificationDate: "",
+            isNew: false,
             comments: [{
                     id: "",
                     text: "",
                     createdBy: { pseudo: "", avatar: "" },
                     creationDate: "",
                     modificationDate: "",
+                    isNew: false
             }]
         }],
     },

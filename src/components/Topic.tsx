@@ -19,7 +19,6 @@ function TopicThread({ setIsModalOpen, setModalComponent, setAuthType }: topicPr
 
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
-
     console.log("topic in TOPIC", topic);
 
     const handleEditTopic = () => {
