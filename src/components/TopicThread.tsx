@@ -34,20 +34,22 @@ function TopicThread({ setIsModalOpen, setIsMessageModalOpen, setModalComponent,
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
     
     return (
-        <div className="h-full w-full flex flex-col items-center mb-6">
-            <Topic setIsModalOpen={setIsModalOpen}
+        <div className="h-full w-full flex justify-center items-center mb-6 ">
+            <div className='w-[65%] py-4 flex flex-col justify-center items-center bg-gray-800 rounded-md'>
+<Topic setIsModalOpen={setIsModalOpen}
                 setModalComponent={setModalComponent}
                 setAuthType={setAuthType}
+                setIsNewComment={setIsNewComment}
+                isNewComment={isNewComment}
+                setMessageModalOpen={setIsMessageModalOpen}
+                setErrorMessage={setErrorMessage}
             />
 
-            {!isLocked && (
+            {(!isLocked && isNewComment) && (
                 <NewComment setIsMessageModalOpen={setIsMessageModalOpen}
                     setErrorMessage={setErrorMessage}
-                    setSuccessMessage={setSuccessMessage}
                     setIsNewComment={setIsNewComment}
-                    isNewComment={isNewComment} 
-                    setIsNewResponse={setIsNewResponse}
-                    isNewResponse={isNewResponse}/>
+                />
             )}
             <ThreadList setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
                         setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
@@ -56,6 +58,8 @@ function TopicThread({ setIsModalOpen, setIsMessageModalOpen, setModalComponent,
                         setIsNewComment={(value: boolean) => setIsNewComment(value)}
             />
         </div>
+            </div>
+            
     )
 }
 
