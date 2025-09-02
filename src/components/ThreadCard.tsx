@@ -75,6 +75,10 @@ function ThreadCard({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, 
         setShowComments({ istrue: !showComments.istrue, threadId: threadId })
     }
 
+    const handleReplyComment = () => {
+        
+    }
+
     return (
         <motion.div
             key={thread._id ?? index}
@@ -115,6 +119,10 @@ function ThreadCard({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, 
                         <div className=" h-full w-full flex justify-end items-center">
                             {(token && !isLocked) &&
                                 <div className="w-fit flex justify-between ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#9CA3AF" className="size-6 m-1 ">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m15 15-6 6m0 0-6-6m6 6V9a6 6 0 0 1 12 0v3"
+                                        onClick={handleReplyComment} />
+                                    </svg>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 m-1 cursor-pointer" style={{ color: editHover ? '#9CA3AF' : " #1F2937" }} onMouseEnter={() => setEditHover(true)} onMouseLeave={() => setEditHover(false)} onClick={() => handleEditComment(index)}>
                                         <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                                         <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
@@ -132,14 +140,6 @@ function ThreadCard({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, 
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
                         />
                     </div>
-                    <div className=" h-fit w-full flex justify-end   ">
-
-                        <button className="px-10 py-1 bg-gray-800 border-l-2 border-t-2  border-gray-800 rounded-tl-xs text-gray-200 cursor-pointer hover:bg-gray-700"
-                            onClick={() => handleResponse(thread.id)}
-
-                        >répondre</button>
-                    </div>
-
                 </div>
 
             </div>
@@ -150,29 +150,7 @@ function ThreadCard({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, 
                         >
 
                         </span>
-                        {(thread.comments?.length !== 0 && !thread.isNew) &&
-                            <div className='flex justify-start items-center ml-5  cursor-pointer'
-                                onMouseEnter={() => setHover(true)}
-                                onMouseLeave={() => setHover(false)}
-                                onClick={() => handleShowComments(thread.id)}
-                            >
-                                <span className='text-xs font-bold'
-                                    style={{ color: hover ? '#FFF' : '#6B7280' }}
-                                >
-                                    {msgChevron}
-                                </span>
-                                <motion.div
-                                    ref={scope}
-                                    className='mx-1'
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" style={{ color: hover ? '#FFF' : '#6B7280' }}
-
-                                        className="size-4">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                                    </svg>
-                                </motion.div>
-                            </div>
-                        }
+                        
                     </div>
                     <span className='m-1 '>
                         {formatDateToBelgium(thread.modificationDate)}
@@ -187,13 +165,6 @@ function ThreadCard({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, 
                         setSelectedThreadId={(value: string) => setSelectedThreadId(value)}
                     />
                 </div>
-            }
-
-            {(showComments.istrue && showComments.threadId === thread.id) &&
-                thread.comments.map((comment: any, index: number) => (
-                    <ThreadReplyCard setIsModalOpen={setIsModalOpen} setIsMessageModalOpen={setIsMessageModalOpen} setModalComponent={setModalComponent} setErrorMessage={setErrorMessage} setIsNewComment={setIsNewComment} thread={comment} index={index} comment={comment} />
-
-                ))
             }
         </motion.div>
     )

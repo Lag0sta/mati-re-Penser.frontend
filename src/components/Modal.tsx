@@ -6,6 +6,7 @@ import EditComment from './EditComment.js';
 import EditResponse from './EditResponse.js';
 import NewTopic from './NewTopic.js';
 import Auth from './Auth.js';
+import MenuModal from './MenuModal.js';
 import NewResponse from './NewResponse.js';
 const SignIn = React.lazy(() => import('./SignIn.js'));
 const SignUp = React.lazy(() => import('./SignUp.js'));
@@ -103,6 +104,16 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               authType={authType} 
             />
+            
+          }
+          {modalComponent === "modalMenu" &&
+              <MenuModal setModalComponent={(value: string) => setModalComponent(value)}
+                setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+                setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+                setMainComponent={(value: string) => setMainComponent(value)}
+                setErrorMessage={(value: string) => setErrorMessage(value)}
+                setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              />
           }
           {/* {modalComponent === "newResponse" &&
            <NewResponse setIsModalOpen={(value: boolean) => setIsModalOpen(value)}

@@ -80,3 +80,23 @@ export async function auth({ authData, }: authProps){
     }
 
 }
+
+export async function logOut(profileData: authData) {
+    const {token, userId} = profileData
+
+    try {
+        const logOut = await fetch(`${API_URL}/auths/logout`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: token,
+                userId: userId
+            })
+        });
+        const data = await logOut.json();
+        return data
+    } catch (error) {
+        console.error(error);
+        return false
+    }
+}

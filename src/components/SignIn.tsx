@@ -29,17 +29,17 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
 
             const signInResponse = await signIn({ authData })
 
-            if (signInResponse) {
+            if (signInResponse.result) {
                 setEmail("");
                 setPassword("");
 
                 dispatch(save(signInResponse.accessToken));
                 dispatch(login(signInResponse));
 
-                setSuccessMessage(signInResponse.success);
+                setSuccessMessage(signInResponse.message);
                 setIsMessageModalOpen(true);
             } else {
-                setErrorMessage(signInResponse.error);
+                setErrorMessage(signInResponse.message);
                 setIsMessageModalOpen(true);
             }
         } catch (error) {

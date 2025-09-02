@@ -35,8 +35,6 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
         setMainComponent("publication")
       } else if (ref === mainRef && refTitle === "about") {
         setMainComponent("about")
-      } else if (ref === mainRef && refTitle === "userProfile") {
-        setMainComponent("userProfile")
       } else {
         setMainComponent("acceuil")
       }
@@ -62,13 +60,19 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
     })
   }
 
+  const handleClickAvatar = () => {
+    startTransition(() => {
+      setIsModalOpen(true);
+      setModalComponent("modalMenu");
+    })
+  }
 
   if (!user.avatar) {
     const str = user.pseudo;
     const avatarUrl = str.slice(0, 1).toUpperCase();
     avatar = (
       <div className="w-10 h-10 flex justify-center items-center cursor-pointer rounded-full bg-white"
-        onClick={() => handleScroll(mainRef, "userProfile")}>
+        onClick={handleClickAvatar}>
         <span className="text-xl">{avatarUrl}</span>
       </div>
     )
@@ -76,8 +80,7 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
     const avatarUrl = user.avatar
     avatar = (
       <div className="w-12 h-12 flex justify-center items-center cursor-pointer rounded-full bg-white"
-        onClick={() => handleScroll(mainRef, "userProfile")}
-      >
+      onClick={handleClickAvatar}>
         <img className="w-14 h-14 flex justify-center items-center cursor-pointer rounded-full" src={avatarUrl} />
       </div>
     )

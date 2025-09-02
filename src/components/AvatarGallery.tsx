@@ -31,15 +31,15 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
         try {
             const avatarChangeResponse = await changeAvatar({ profilData })
 
-            if (avatarChangeResponse) {
+            if (avatarChangeResponse.result) {
                 dispatch(update(avatarChangeResponse));
 
                 setIsModalOpen(false);
                 setModalComponent("");
-                setSuccessMessage(avatarChangeResponse.success);
+                setSuccessMessage(avatarChangeResponse.message);
                 setIsMessageModalOpen(true);
             } else {
-                setErrorMessage(avatarChangeResponse.error);
+                setErrorMessage(avatarChangeResponse.message);
                 setIsMessageModalOpen(true);
 
             }
