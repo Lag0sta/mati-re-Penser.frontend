@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { text } from "stream/consumers";
 
 const initialState = {
     value: {     
             id: "",
+            text: "",
     },
 };
 
@@ -11,13 +13,13 @@ const commentSlice = createSlice({
     initialState,
     reducers: {
         
-        find: (state, action) => {
+        get: (state, action) => {
             action.payload = state.value
         },
     },
 });
 
 export const {
-    find
+    get
 } = commentSlice.actions;
 export default commentSlice.reducer;

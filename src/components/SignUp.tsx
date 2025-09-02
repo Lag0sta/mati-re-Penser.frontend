@@ -17,6 +17,7 @@ function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [hp, setHp] = useState("")
 
     const handleReturn = () => {
         setModalComponent("signIn");
@@ -24,8 +25,8 @@ function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
     }
 
     const handleSignUp = async () => {
-        const authData = { name, surname, pseudo, email, password, confirmPassword }
-        
+        const authData = { name, surname, pseudo, email, password, confirmPassword, hp }
+
         try {
             //réinitialisation des messages
             setErrorMessage("")
@@ -175,6 +176,21 @@ function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                 </div>
+                <input
+                    type="text"
+                    id="hp"
+                    name="hp"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{
+                        position: "absolute",
+                        left: "-9999px",
+                        opacity: 0,
+                    }}
+                />
                 <button className="w-fit bg-black border-2 border-black text-white hover:bg-white hover:text-black rounded-md px-2 py-1 my-6"
                     onClick={handleSignUp}
                 >

@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify';
-import { useAppSelector, } from "../store/hooks.js"
+import { useAppSelector, useAppDispatch } from "../store/hooks.js"
 import { useState, } from 'react';
 import { motion, } from "framer-motion";
 
@@ -7,6 +7,8 @@ import NewResponse from './NewResponse.js';
 
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
+import { get } from '../store/reducers/topic.js';
+import { i } from 'framer-motion/client';
 interface threadReplyProps {
     setIsModalOpen: (value: boolean) => any
     setIsMessageModalOpen: (value: boolean) => any
@@ -19,26 +21,35 @@ interface threadReplyProps {
 }
 
 function ThreadReplyCard({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, thread, index, comment }: threadReplyProps) {
-
+console.log("comment", comment)
     const [selectedThreadId, setSelectedThreadId] = useState<string>("");
     const [isNewResponse, setIsNewResponse] = useState<boolean>(false);
     const [msgHover, setMsgHover] = useState<boolean>(false);
+    const [editHover, setEditHover] = useState<boolean>(false);
+    const [deleteHover, setDeleteHover] = useState<boolean>(false);
 
     const token = useAppSelector((state) => state.authToken.value);
 
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
+    const dispatch = useAppDispatch();
 
-
-    const handleEditComment = (index: number) => {
+    let selectedComment;
+const handleEditResponse = () => {
+        console.log("double click")
+         selectedComment = { 
+            text: comment.text, 
+            id: comment._id,}
+        console.log("selectedComment", selectedComment)
+        // dispatch(get({text: comment.text, id: comment._id}));
         setIsModalOpen(true);
-        setModalComponent('editComment');
+        setModalComponent('editResponse');
     }
 
-    const handleResponse = (threadId: string) => {
-        setSelectedThreadId(threadId);
-        setIsNewResponse(!isNewResponse);
-        setIsNewComment(false);
-    }
+    // const handleResponse = (threadId: string) => {
+    //     setSelectedThreadId(threadId);
+    //     setIsNewResponse(!isNewResponse);
+    //     setIsNewComment(false);
+    // }
 
     return (
         <motion.div
@@ -79,11 +90,11 @@ function ThreadReplyCard({ setIsModalOpen, setIsMessageModalOpen, setModalCompon
                         <div className=" h-full w-full flex justify-end items-center">
                             {(token && !isLocked) &&
                                 <div className="w-fit flex justify-between ">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 m-1 cursor-pointer" style={{color: " #1F2937"}} onClick={() => handleEditComment(index)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 m-1 cursor-pointer" style={{ color: editHover ? '#9CA3AF' : " #1F2937" }} onMouseEnter={() => setEditHover(true)} onMouseLeave={() => setEditHover(false)} onClick={() => handleEditResponse()}>
                                         <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                                         <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
                                     </svg>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 m-1 cursor-pointer" style={{color: " #1F2937"}}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 m-1 cursor-pointer" style={{ color: deleteHover ? '#9CA3AF' : " #1F2937" }} onMouseEnter={() => setDeleteHover(true)} onMouseLeave={() => setDeleteHover(false)} >
                                         <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clipRule="evenodd" />
                                     </svg>
                                 </div>
@@ -105,11 +116,7 @@ function ThreadReplyCard({ setIsModalOpen, setIsMessageModalOpen, setModalCompon
             </div>
             <div className=''>
                 <div className='flex justify-between ml-1 text-xs text-gray-500 font-bold '>
-                    <span className=' px-2  text-gray-500 cursor-pointer  hover:text-blue-500  '
-                        onClick={() => handleResponse(comment.id)}
-                    >
-                        répondre
-                    </span>
+                    
                     <span className='m-1 '>
                         {formatDateToBelgium(comment.modificationDate)}
                     </span>

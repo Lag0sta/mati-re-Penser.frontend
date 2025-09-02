@@ -6,6 +6,7 @@ export interface authData {
     email ?: string;
     password ?: string;
     confirmPassword ?: string;
+    hp ?: string
 }
 
 export interface profilData{

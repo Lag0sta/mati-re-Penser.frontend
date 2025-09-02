@@ -7,7 +7,7 @@ interface authProps {
 
 //fonction pour s'inscrire
 export async function signUp({ authData }: authProps) {
-    const {name, surname, pseudo, email, password, confirmPassword} = authData
+    const {name, surname, pseudo, email, password, confirmPassword, hp} = authData
 
     try {
         const response = await fetch(`${API_URL}/users/signup`, {
@@ -19,7 +19,8 @@ export async function signUp({ authData }: authProps) {
                 pseudo: pseudo,
                 email: email,
                 password: password,
-                confirmPassword: confirmPassword
+                confirmPassword: confirmPassword,
+                hp: hp
             }),
         });
 

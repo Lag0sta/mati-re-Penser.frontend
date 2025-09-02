@@ -51,3 +51,12 @@ const { token, id, newComment } = threadData
     }
 
 }
+
+export async function editReply({ threadData }: threadProps) {
+    const { token, id, newComment } = threadData
+    try {
+        
+    }catch (error) {
+        return error
+    }
+}
