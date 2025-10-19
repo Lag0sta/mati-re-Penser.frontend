@@ -3,7 +3,6 @@ import { text } from "stream/consumers";
 
 const initialState = {
     value: {     
-            id: "",
             text: "",
     },
 };
@@ -12,14 +11,13 @@ const commentSlice = createSlice({
     name: "comment",
     initialState,
     reducers: {
-        
-        get: (state, action) => {
-            action.payload = state.value
+        toEdit: (state, action) => {
+            state.value = action.payload;
         },
     },
 });
 
 export const {
-    get
+    toEdit
 } = commentSlice.actions;
 export default commentSlice.reducer;

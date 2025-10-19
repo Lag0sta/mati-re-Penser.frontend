@@ -5,7 +5,8 @@ interface threadProps {
     threadData: threadData
 }
 export async function addComment({ threadData }: threadProps) {
-    const { token, title, newComment } = threadData
+    const { token, title, newComment} = threadData
+    console.log("initComment", threadData)
 
     try {
         const response = await fetch(`${API_URL}/threads/newComment`, {
@@ -19,7 +20,7 @@ export async function addComment({ threadData }: threadProps) {
         })
 
         const thread = await response.json()
-
+        console.log("returnComment", thread)
         return thread
 
     } catch (error) {

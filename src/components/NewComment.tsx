@@ -1,4 +1,5 @@
 import parse from 'html-react-parser';
+import DOMPurify from 'dompurify';
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
@@ -18,11 +19,15 @@ interface newTopicProps {
     setIsNewComment: (value: boolean) => any
     reply: string
     pseudo: string
+    replyTo: any
+    setReplyTo: (value: any) => any
+    rQValue: string
+    setRQValue: (value: string) => any
+    responseType: string
+    setResponseType: (value: string) => any
 }
 
-function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, reply, pseudo }: newTopicProps) {
-    const [newComment, setNewComment] = useState<string>('');
-    console.log("newComment", newComment);
+function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, reply, pseudo, replyTo, setReplyTo, rQValue, setRQValue, responseType, setResponseType }: newTopicProps) {
 
     const dispatch = useAppDispatch();
     const topic: any = useAppSelector((state) => state.topic.value);
@@ -33,13 +38,15 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
 
     const handleNewComment = async () => {
         const title = topic.title
-        const threadData = { token, title, newComment }
-
+        const newComment = rQValue
+        const threadData = { token, title, newComment}
+        console.log("newCommentRepresents", newComment)
         try {
             const addCommentResponse = await addComment({ threadData });
             console.log("addCommentResponse", addCommentResponse);
+            console.log("addCommentResponse", addCommentResponse.error);
             if (addCommentResponse) {
-                const newComment = {
+                const TheNewComment = {
                     createdBy: addCommentResponse.newThread.createdBy,
                     creationDate: addCommentResponse.newThread.creationDate,
                     modificationDate: addCommentResponse.newThread.modificationDate,
@@ -48,8 +55,10 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                     id: addCommentResponse.newThread._id,
                     isNew: true
                 }
-                dispatch(addThread(newComment))
-                setNewComment("")
+                dispatch(addThread(TheNewComment))
+                setRQValue("")
+                setReplyTo("");
+                setResponseType("");
             } else {
                 setErrorMessage(addCommentResponse.error);
                 setIsMessageModalOpen(true);
@@ -79,6 +88,8 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         }, 2000);
     }
 
+    console.log("responseType", responseType);
+
     return (
         <div className="w-[85%] pl-5 flex flex-col bg-gray-800  border-2 border-gray-800  rounded-md my-1 ">
             <div className='w-full flex'>
@@ -87,24 +98,26 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                     <span className="text-gray-800 font-bold mx-2 mb-2">{user.pseudo}</span>
                 </div>
                 <div className="flex-col w-full">
+                    <div>
+
+                    </div>
                     <div className="w-full flex flex-col justify-between  ">
                         <div className="h-full w-full flex flex-col items-center ">
                             <div className="w-full h-fit px-2 py-1">
-                                <div className='flex flex-col px-2 py-1 my-2 h-fit w-full border-2 border-gray-700'>
-                                    <span className='text-gray-300 text-xs font-bold'>{pseudo} <span className='text-gray-400'>à écrit :</span></span>
-                                    <span className='text-gray-500 text-xs'>{reply}</span>
-                                </div>
+                               
+
                                 <div className=" flex flex-col justify-center items-center   ">
-                                    <TextEditor newComment={newComment}
-                                        setNewComment={(value: string) => setNewComment(value)}
+                                    <TextEditor
+                                        rQValue={rQValue}
+                                        setRQValue={setRQValue}
+                                        replyTo={replyTo}
+                                        setReplyTo={setReplyTo}
                                     />
 
                                 </div>
                             </div>
                         </div>
                     </div>
-                 
-
                 </div>
             </div>
 

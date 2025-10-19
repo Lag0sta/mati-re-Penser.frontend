@@ -23,6 +23,7 @@ function App() {
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  // const [msg, setMsg] = useState<string>({""});
   const [authType, setAuthType] = useState<string>("");
 
   console.log("mainComponent", mainComponent);
@@ -31,8 +32,6 @@ function App() {
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null)
-
-
 
   return (
     <main className="max-w-screen mx-auto grid grid-rows-3 grid-cols-4 bg-gray-200">
@@ -58,7 +57,7 @@ function App() {
         </div>
       </div>
 
-      <div className="h-min-screen row-start-2 row-end-3 col-start-1 col-end-5  h-fit "
+      <div className="h-full row-start-2 row-end-3 col-start-1 col-end-5 border-4 border-blue-500 bg-green-200 "
         ref={mainRef}>
         <Suspense fallback={<div>Chargement...</div>}>
           {mainComponent === "acceuil" &&

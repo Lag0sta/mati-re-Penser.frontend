@@ -19,20 +19,17 @@ interface commentProps {
 function EditComment({ modalComponent, setModalComponent, setErrorMessage, setIsModalOpen, setSuccessMessage, setIsMessageModalOpen }: commentProps) {
     const dispatch = useAppDispatch();
 
-    const topic: any = useAppSelector((state) => state.topic.value);
+    const comment: any = useAppSelector((state) => state.comment.value);
     const token = useAppSelector((state) => state.authToken.value);
-    console.log("topic in TOPIC", topic);
 
-    const id = topic.id
-    console.log("Topic id :", id);
 
-    const [title, setTitle] = useState<string>(topic.title);
-    console.log("Topic title :", title);
+    const [text, setText] = useState<string>(comment.text);
 
-    const [description, setDescription] = useState<string>(topic.description);
 
     const handleEditTopic = async () => {
-        const topicData = { token, id, title, description };
+        const replyTo = comment.replyTo
+        const replyToUser = comment.replyToUser
+        const topicData = { token, text, replyTo, replyToUser };
 
         try {
             const editTopicResponse = await editTopic({ topicData });
@@ -78,29 +75,17 @@ function EditComment({ modalComponent, setModalComponent, setErrorMessage, setIs
                     <label className="text-base mt-2 -mb-1"
                         htmlFor="email"
                     >
-                        Sujet :
+                        Commentaire :
                     </label>
                     <input className="border-2 border-black rounded-md pl-2"
                         id="subject"
                         type="text"
                         placeholder="sujet"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label className="text-base mt-2 -mb-1"
-                        htmlFor="description"
-                    >
-                        Descriptif :
-                    </label>
-                    <textarea className="w-full h-32 border-2 border-black rounded-md px-3"
-                        id="email"
-                        placeholder="descriptif"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
+                
             </fieldset>
 
             <div className="flex flex-col justify-center items-center">

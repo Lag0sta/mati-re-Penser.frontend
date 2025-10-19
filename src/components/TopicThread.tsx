@@ -1,19 +1,15 @@
-import DOMPurify from 'dompurify';
-import { useAppSelector, useAppDispatch } from "../store/hooks.js"
-import { useState, useEffect } from 'react';
-import { AnimatePresence, motion, useAnimate } from "framer-motion";
+import { useAppSelector } from "../store/hooks.js"
+import { useState, useRef } from 'react';
+import '../styles/TopicThreads.css';
+
 
 import Topic from "./Topic.js";
-import ThreadList from "./ThreadList.js";
+import Thread from "./Thread.js";
 import NewComment from "./NewComment.js";
-import NewResponse from './NewResponse.js';
-
-import { formatDateToBelgium } from "../utils/formatDateActions.js";
-import { openChevron, closeChevron, appearComments, hideComments } from '../utils/animationActions.js';
-import { pseudoRandomBytes } from 'crypto';
-
-
-
+interface ReplyData {
+  author: string;
+  text: string;
+}
 interface topicProps {
     setIsModalOpen: (value: boolean) => any
     setIsMessageModalOpen: (value: boolean) => any
@@ -26,19 +22,24 @@ interface topicProps {
 function TopicThread({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
 
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
-    const [isNewResponse, setIsNewResponse] = useState<boolean>(false);
+    const [responseType, setResponseType] = useState<string>("");
     const [reply, setReply] = useState<string>("");
+    const [replyTo, setReplyTo] = useState<ReplyData | null>({author: "", text: ""});
     const [pseudo, setPseudo] = useState<string>("");
+    const [threadID, setThreadID] = useState<string>("");
+    const [rQValue, setRQValue] = useState<string>("");
+console.log("replyToTopicThread", replyTo)
+    const threadRef = useRef<HTMLDivElement>(null);
 
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
     console.log("token in topicthread", token);
     console.log("topic in topicthread", topic);
-    const isLocked = useAppSelector((state) => state.topic.value.isLocked);
+
 
     return (
-        <div className="h-full w-full flex justify-center items-center mb-6 ">
-            <div className='w-[65%] py-4 flex flex-col justify-center items-center bg-gray-800 rounded-md'>
+        <div className=" w-full flex justify-center mb-6 ">
+            <div className='w-[65%] py-4 flex flex-col justify-center items-center bg-gray-800 rounded-md border-4 border-red-500 bg-yellow-200'>
                 <Topic setIsModalOpen={setIsModalOpen}
                     setModalComponent={setModalComponent}
                     setAuthType={setAuthType}
@@ -46,27 +47,42 @@ function TopicThread({ setIsModalOpen, setIsMessageModalOpen, setModalComponent,
                     isNewComment={isNewComment}
                     setMessageModalOpen={setIsMessageModalOpen}
                     setErrorMessage={setErrorMessage}
-                    setReply={setReply}
-                    setPseudo={setPseudo}
+                    setResponseType={setResponseType}
+                    threadRef={threadRef}
                 />
-                
-                
-                <ThreadList setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-                    setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-                    setModalComponent={(value: string) => setModalComponent(value)}
-                    setErrorMessage={(value: string) => setErrorMessage(value)}
-                    setIsNewComment={(value: boolean) => setIsNewComment(value)}
-                />
-                {(!isLocked && isNewComment) && (
-                    <NewComment setIsMessageModalOpen={setIsMessageModalOpen}
+
+
+                <Thread setPseudo={setPseudo}
+                        setIsModalOpen={setIsModalOpen}
+                        setMessageModalOpen={setIsMessageModalOpen}
+                        setModalComponent={setModalComponent}
                         setErrorMessage={setErrorMessage}
                         setIsNewComment={setIsNewComment}
-                        reply={reply}
-                        pseudo={pseudo}
-                    />
-             )}
+                        threadRef={threadRef}
+                        setThreadID={setThreadID}
+                        setResponseType={setResponseType}
+                        setReplyTo={setReplyTo}
+                />
+
+                <div ref={threadRef}>
+                    {(isNewComment) && (
+                        <NewComment setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+                                    setErrorMessage={(value: string) => setErrorMessage(value)}
+                                    setIsNewComment={(value: boolean) => setIsNewComment(value)}
+                                    reply={reply}
+                                    pseudo={pseudo}
+                                    replyTo={replyTo}
+                                    setReplyTo={(value: any) => setReplyTo(value)}
+                                    setResponseType={(value: string) => setResponseType(value)}
+                                    responseType={responseType}
+                                    rQValue={rQValue}
+                                    setRQValue={(value: string) => setRQValue(value)}
+                        />
+                    )}
+                </div>
+
             </div>
-            
+
         </div>
 
     )

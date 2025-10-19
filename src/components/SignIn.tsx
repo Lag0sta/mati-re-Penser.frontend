@@ -36,6 +36,7 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 dispatch(save(signInResponse.accessToken));
                 dispatch(login(signInResponse));
 
+                console.log("signInResponse", signInResponse);
                 setSuccessMessage(signInResponse.message);
                 setIsMessageModalOpen(true);
             } else {

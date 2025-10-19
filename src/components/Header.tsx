@@ -1,6 +1,6 @@
 import { startTransition } from "react";
-import { useSelector } from "react-redux";
 import { useAppSelector } from "../store/hooks.js";
+
 
 interface HeaderProps {
   acceuilRef: any;

@@ -1,39 +1,74 @@
-.ql-container {
-background-color: #D1D5DB;   
+/* Conteneur Quill */
+.ql-editor .ql-reply-quote {
+  display: block;
   width: 100%;
-  min-height: 10rem;
-  border-color: #1F2937;
-
-}
-.ql-container.ql-snow {
-  border: none; 
+  margin-bottom: 8px;
+  padding: 0; /* padding déplacé dans reply-quote-box */
+  box-sizing: border-box;
 }
 
-.ql-editor {
-  padding: 1rem;            /* équivaut à p-4 */
-  font-size: 1rem;          /* équivaut à text-base */
-  width: 100%;
-  height: 100%;
-  border-radius: 0; /* équivaut à rounded-md */
-background-color: #D1D5DB;   
-border-color: #1F2937;
-
-
-}
-.ql-toolbar{
-background-color: #D1D5DB;   
-border-color: #1F2937;
-  height: 2.5rem;
+/* Rectangle complet avec fond et padding */
+.ql-editor .ql-reply-quote  {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #1f2937;          /* fond gris foncé */
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 8px;
 }
 
-.ql-toolbar.ql-snow {
-  border: none;
-  border-bottom: 2px solid #1F2937; 
+.reply-quote-box {
+    border: 3px solid #4b5563;    /* bordure grise autour */
+display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start ;
+}
+/* Auteur */
+.ql-editor .ql-reply-quote .reply-quote-author {
+  color: #d1d5db;
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin: 8px 8px 0 8px;
 
 }
 
-/* Si tu veux limiter la largeur du composant entier */
-.react-quill-wrapper {
-  width: 100%
-  margin: auto;
+.ql-editor .ql-reply-quote .reply-quote-author .light {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+/* Flex row pour ligne + texte */
+.ql-editor .ql-reply-quote .reply-quote-body-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* la ligne prend toute la hauteur du texte */
+}
+
+/* Ligne verticale continue */
+.ql-editor .ql-reply-quote .reply-quote-line {
+  width: 2px;
+  background-color: #6b7280;
+  border-radius: 2px;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 8px
+}
+
+/* Texte */
+.ql-editor .ql-reply-quote .reply-quote-body {
+  flex: 1;
+  color: #e5e7eb;
+  font-size: 0.7rem;
+  line-height: 1.75;
+  margin: 0 0 8px 0;
+
+}
+
+/* Supprime marges internes pour éviter les trous */
+.ql-editor .ql-reply-quote p,
+.ql-editor .ql-reply-quote div {
+  margin: 0;
+  padding: 0;
 }
