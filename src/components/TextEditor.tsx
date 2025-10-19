@@ -30,7 +30,7 @@ function TextEditor({ rQValue, setRQValue, replyTo, onInserted }: TextEditorProp
 
     // Supprime l'ancien blot ReplyQuote si existant
     const delta = quill.getContents();
-    const ops = delta.ops?.filter(op => !(op.insert && op.insert.replyQuote)) ?? [];
+const ops = delta.ops?.filter((op: any) => !(op.insert && op.insert.replyQuote)) ?? [];
     quill.setContents({ ops });
     console.log("quill", quill)
     // Sanitize les données
