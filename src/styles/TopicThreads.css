@@ -13,11 +13,12 @@
 }
 
 .reply-quote-box {
-    border: 3px solid #4b5563;    /* bordure grise autour */
-display: flex;
+  border: 3px solid #4b5563;    /* bordure grise autour */
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start ;
+  padding: 8px
 }
 
 .reply-quote .reply-quote-author .light {

@@ -1,9 +1,5 @@
-import React from 'react';
-import { useAppSelector } from '../store/hooks.js';
-import { useState, Suspense, } from 'react'
-import { useRef } from 'react'
+import React, { useState, useRef, Suspense } from 'react';
 import TopicThread from './TopicThread.js';
-
 import Header from './Header.js';
 import Contact from './Contact.js';
 import Forum from './Forum.js';
@@ -11,119 +7,152 @@ import Publications from './Publications.js';
 import About from './About.js';
 import New from './New.js';
 import Modal from './Modal.js';
+import EditModal from './EditModal.js';
 import UserProfile from './UserProfile.js';
 import MessageModal from './MessageModal.js';
 
 function App() {
-  
-  const [mainComponent, setMainComponent] = useState<string>('acceuil')
-  const [modalComponent, setModalComponent] = useState<string>("")
+  const [mainComponent, setMainComponent] = useState<string>('acceuil');
+  const [modalComponent, setModalComponent] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isAddComment, setIsAddComment] = useState<boolean>(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('')
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  // const [msg, setMsg] = useState<string>({""});
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [authType, setAuthType] = useState<string>("");
 
-  console.log("mainComponent", mainComponent);
-  console.log("Home success error message", successMessage, " + ", errorMessage);
-  //ref initiale = null => ne pointe pas encore vers un él. DOM
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null)
+  const contactRef = useRef<HTMLDivElement>(null);
+
+  const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
 
   return (
-    <main className="max-w-screen mx-auto grid grid-rows-3 grid-cols-4 bg-gray-200">
-      <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed">
+    <main className="max-w-screen mx-auto grid grid-rows-[auto_1fr_auto] grid-cols-4 bg-gray-200 min-h-screen">
+      
+      {/* Header */}
+      <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed w-full">
         <Suspense fallback={<div>Chargement...</div>}>
-          <Header acceuilRef={acceuilRef}
+          <Header
+            acceuilRef={acceuilRef}
             mainRef={mainRef}
             contactRef={contactRef}
-            setMainComponent={(value: string) => setMainComponent(value)}
-            setModalComponent={(value: string) => setModalComponent(value)}
-            setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+            setMainComponent={setMainComponent}
+            setModalComponent={setModalComponent}
+            setIsModalOpen={setIsModalOpen}
           />
         </Suspense>
-
       </header>
-      <div className="row-start-1 row-end-2 col-start-1 col-end-5 "
+
+      {/* Accueil / Hero */}
+      <div
         ref={acceuilRef}
+        className={`row-start-1 row-end-2 col-start-1 col-end-5`}
+        style={{ paddingTop: `${headerHeight}px` }}
+
       >
-        <div className="h-full max-h-screen w-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat "
-          style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}>
+        <div
+          className="w-full flex flex-col justify-center items-center h-[calc(100vh-80px)]  bg-cover bg-center bg-no-repeat "
+          style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}
+        >
           <h1 className="text-7xl text-white">MATIÈRE À PENSER</h1>
-          <h2 className="text-1xl mt-4 text-white">Site de discussion philosophique et de publication de Jean Christophe Ronnet</h2>
+          <h2 className="text-1xl mt-4 text-white">
+            Site de discussion philosophique et de publication de Jean Christophe Ronnet
+          </h2>
         </div>
       </div>
 
-      <div className="h-full row-start-2 row-end-3 col-start-1 col-end-5 border-4 border-blue-500 bg-green-200 "
-        ref={mainRef}>
+      {/* Main */}
+      <div
+        ref={mainRef}
+        className="row-start-2 row-end-3 col-start-1 col-end-5"
+      >
         <Suspense fallback={<div>Chargement...</div>}>
-          {mainComponent === "acceuil" &&
-            <New setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsAddComment={(value: boolean) => setIsAddComment(value)}
-            />}
-          {mainComponent === "forum" &&
-            <Forum setMainComponent={(value: string) => setMainComponent(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+          {mainComponent === "acceuil" && (
+            <New
+              setIsModalOpen={setIsModalOpen}
+              setIsAddComment={setIsAddComment}
             />
-          }
+          )}
+          {mainComponent === "forum" && (
+            <Forum
+              setMainComponent={setMainComponent}
+              setModalComponent={setModalComponent}
+              setIsModalOpen={setIsModalOpen}
+              setErrorMessage={setErrorMessage}
+              setIsMessageModalOpen={setIsMessageModalOpen}
+            />
+          )}
           {mainComponent === "publication" && <Publications />}
-          {mainComponent === "topicThread" &&
-            <TopicThread 
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setAuthType={(value: string) => setAuthType(value)}
+          {mainComponent === "topicThread" && (
+            <TopicThread
+              setErrorMessage={setErrorMessage}
+              setSuccessMessage={setSuccessMessage}
+              setIsModalOpen={setIsModalOpen}
+              setIsEditModalOpen={setIsEditModalOpen}
+              setIsMessageModalOpen={setIsMessageModalOpen}
+              setModalComponent={setModalComponent}
+              setAuthType={setAuthType}
             />
-          }
+          )}
           {mainComponent === "about" && <About />}
-          {mainComponent === "userProfile" &&
-            <UserProfile setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)} />}
+          {mainComponent === "userProfile" && (
+            <UserProfile
+              setIsModalOpen={setIsModalOpen}
+              setModalComponent={setModalComponent}
+            />
+          )}
         </Suspense>
       </div>
 
-      <footer className="h-full row-start-3 row-end-4 col-start-1 col-end-5 pt-24"
-        ref={contactRef}>
+      {/* Footer */}
+      <footer
+        ref={contactRef}
+        className="row-start-3 row-end-4 col-start-1 col-end-5 pt-24"
+      >
         <Suspense fallback={<div>Chargement...</div>}>
-
           <Contact />
         </Suspense>
       </footer>
 
-      {isModalOpen &&
-        <Modal setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-          setModalComponent={(value: string) => setModalComponent(value)}
+      {/* Modals */}
+      {isModalOpen && (
+        <Modal
+          setIsModalOpen={setIsModalOpen}
+          setModalComponent={setModalComponent}
           modalComponent={modalComponent}
-          setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-          setErrorMessage={(value: string) => setErrorMessage(value)}
-          setSuccessMessage={(value: string) => setSuccessMessage(value)}
-          setMainComponent={(value: string) => setMainComponent(value)}
+          setIsMessageModalOpen={setIsMessageModalOpen}
+          setErrorMessage={setErrorMessage}
+          setSuccessMessage={setSuccessMessage}
+          setMainComponent={setMainComponent}
           authType={authType}
         />
-      }
-
-      {isMessageModalOpen &&
-        <MessageModal successMessage={successMessage}
+      )}
+      {isEditModalOpen && (
+        <EditModal
+        setIsModalOpen={setIsModalOpen}
+          setModalComponent={setModalComponent}
+          modalComponent={modalComponent}
+          setIsMessageModalOpen={setIsMessageModalOpen}
+          setIsEditModalOpen={setIsEditModalOpen}
+          setErrorMessage={setErrorMessage}
+          setSuccessMessage={setSuccessMessage}
+          setMainComponent={setMainComponent}
+          authType={authType}/>)}
+      {isMessageModalOpen && (
+        <MessageModal
+          successMessage={successMessage}
           setSuccessMessage={setSuccessMessage}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
-          setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-          setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-          setModalComponent={(value: string) => setModalComponent(value)}
+          setIsMessageModalOpen={setIsMessageModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setModalComponent={setModalComponent}
         />
-      }
-
+      )}
     </main>
-
-  )
+  );
 }
 
-export default App
+export default App;

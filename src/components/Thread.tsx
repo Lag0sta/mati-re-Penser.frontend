@@ -10,6 +10,7 @@ import { toEdit } from '../store/reducers/comment.js'
 interface threadListProps {
     setPseudo: (value: string) => any
     setIsModalOpen: (value: boolean) => any
+    setIsEditModalOpen: (value: boolean) => any
     setMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
@@ -17,9 +18,10 @@ interface threadListProps {
     threadRef: any
     setThreadID: (value: string) => any
     setResponseType: (value: string) => any
-    setReplyTo: (value: any) => any}
+    setReplyTo: (value: any) => any
+}
 
-function Thread({ setPseudo, setIsModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo }: threadListProps) {
+function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo }: threadListProps) {
     const [showComments, setShowComments] = useState<any>({ istrue: false, threadId: "" })
     const [replyHover, setReplyHover] = useState<boolean>(false);
     const [msgHover, setMsgHover] = useState<boolean>(false);
@@ -64,7 +66,7 @@ function Thread({ setPseudo, setIsModalOpen, setMessageModalOpen, setModalCompon
     const handleEditComment = (index: number) => {
         const commentToEdit = topic.topicThread[index];
         dispatch(toEdit(commentToEdit))
-        setIsModalOpen(true);
+        setIsEditModalOpen(true);
         setModalComponent('editComment');
     }
 
@@ -80,10 +82,10 @@ function Thread({ setPseudo, setIsModalOpen, setMessageModalOpen, setModalCompon
         const targetThread = topic.topicThread.find((t: any) => t.id === threadID);
         console.log("targetThread", targetThread)
         if (targetThread) {
-            
+
             setResponseType("response")
 
-            setReplyTo({author: targetThread.createdBy.pseudo, text: targetThread.text})
+            setReplyTo({ author: targetThread.createdBy.pseudo, text: targetThread.text })
         }
         setIsNewComment(true)
         setPseudo(topic.createdBy.pseudo)
@@ -142,75 +144,92 @@ function Thread({ setPseudo, setIsModalOpen, setMessageModalOpen, setModalCompon
                             <div className="w-full h-full  flex  justify-between  px-1">
                                 <div className="w-full flex justify-start items-center ">
                                     <span className="font-bold text-xs text-gray-500 mr-2">Créé le :</span>
-                                    <span className="text-blue-500 text-xs font-black">{formatDateToBelgium(topic.creationDate)}</span>
+                                    <span className="text-blue-500 text-xs font-black">{formatDateToBelgium(thread.creationDate)}</span>
                                 </div>
                                 <div className=" h-full w-full flex justify-end items-center">
                                     {(token && !isLocked) &&
                                         <div className="w-fit flex justify-between ">
 
                                             {/* Icône réponse */}
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke={replyHover && keyNumber === index ? "#D1D5DB" : "#1F2937"}
-                                                className="size-6 m-1 cursor-pointer"
-                                                onMouseEnter={() => handleMouseEnterReply(index, true)}
-                                                onMouseLeave={() => handleMouseEnterReply(index, false)}
-                                                onClick={() => handleReplyComment(thread.id)}
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="m15 15-6 6m0 0-6-6m6 6V9a6 6 0 0 1 12 0v3"
-                                                />
-                                            </svg>
+                                            <div className="relative group inline-block">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    strokeWidth={1.5}
+                                                    stroke={replyHover && keyNumber === index ? "#D1D5DB" : "#1F2937"}
+                                                    className="size-6 m-1 cursor-pointer"
+                                                    onMouseEnter={() => handleMouseEnterReply(index, true)}
+                                                    onMouseLeave={() => handleMouseEnterReply(index, false)}
+                                                    onClick={() => handleReplyComment(thread.id)}
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m15 15-6 6m0 0-6-6m6 6V9a6 6 0 0 1 12 0v3"
+                                                    />
+                                                </svg>
+                                                <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
+                                                    Répondre
+                                                </span>
+                                            </div>
 
                                             {/* Icône modifier */}
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24"
-                                                fill="currentColor"
-                                                className="size-6 m-1 cursor-pointer"
-                                                style={{ color: editHover && keyNumber === index ? '#9CA3AF' : " #1F2937" }} onMouseEnter={() => handleMouseEnterEdit(index, true)}
-                                                onMouseLeave={() => handleMouseEnterEdit(index, false)}
-                                                onClick={() => handleEditComment(index)}
-                                            >
-                                                <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                                <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                                            </svg>
+                                            <div className="relative group inline-block">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                    className="size-6 m-1 cursor-pointer"
+                                                    style={{ color: editHover && keyNumber === index ? '#9CA3AF' : " #1F2937" }} onMouseEnter={() => handleMouseEnterEdit(index, true)}
+                                                    onMouseLeave={() => handleMouseEnterEdit(index, false)}
+                                                    onClick={() => handleEditComment(index)}
+                                                >
+                                                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                                    <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                                </svg>
+                                                <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
+                                                    Modifier
+                                                </span>
+                                            </div>
 
                                             {/* Icône Delete */}
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 24 24"
-                                                fill="currentColor"
-                                                className="size-6 m-1 cursor-pointer rounded-full"
-                                                style={{ color: deleteHover && keyNumber === index ? '#9CA3AF' : " #1F2937" }}
-                                                clipRule="evenodd"
-                                                onMouseEnter={() => handleMouseEnterDelete(index, true)}
-                                                onMouseLeave={() => handleMouseEnterDelete(index, false)}
-                                            >
-                                                <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                                            <div className="relative group inline-block">
 
-                                                />
-                                            </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                    className="size-6 m-1 cursor-pointer rounded-full"
+                                                    style={{ color: deleteHover && keyNumber === index ? '#9CA3AF' : " #1F2937" }}
+                                                    clipRule="evenodd"
+                                                    onMouseEnter={() => handleMouseEnterDelete(index, true)}
+                                                    onMouseLeave={() => handleMouseEnterDelete(index, false)}
+                                                >
+                                                    <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+
+                                                    />
+                                                </svg>
+                                                <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
+                                                    Supprimer
+                                                </span>
+                                                </div>
+                                            </div>
+
+                                    }
+
+                                        </div>
+                            </div>
+                                <div className="w-full p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 ">
+
+                                    {(typeof thread.replyTo === "string" && thread.replyTo.trim() !== "" &&
+                                        typeof thread.replyToUser === "string" && thread.replyToUser.trim() !== "") &&
+                                        <div className='bg-gray-800 px-2 rounded-md'>
+                                            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(typeof thread.replyTo === "string" ? thread.replyTo : "") }} />
                                         </div>
                                     }
 
+                                    <span className="ml-1 my-1 text-sm font-semibold text-gray-700"
+                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
+                                    />
                                 </div>
                             </div>
-                            <div className="w-full p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 ">
 
-                                {(typeof thread.replyTo === "string" && thread.replyTo.trim() !== "" &&
-                                    typeof thread.replyToUser === "string" && thread.replyToUser.trim() !== "") &&
-                                    <div className='bg-gray-800 px-2 rounded-md'>
-                                        <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(typeof thread.replyTo === "string" ? thread.replyTo : "") }} />
-                                    </div>
-                                }
-
-                                <span className="ml-1 my-1 text-sm font-semibold text-gray-700"
-                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
-                                />
-                            </div>
                         </div>
-
-                    </div>
 
                 </motion.div>
             ))}

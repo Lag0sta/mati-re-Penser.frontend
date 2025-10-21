@@ -14,7 +14,7 @@ function New({ setIsModalOpen, setIsAddComment }: newProps) {
     }
 
     return (
-        <div className="h-full w-full  flex flex-col items-center -mt-8 mb-6">
+        <div className="h-full w-full  flex flex-col items-center mt-24 mb-6">
             <div className="flex justify-center items-center mt-4 mb-4 w-[78%] bg-white rounded-md">
                 <h2 className=" mx-2 my-1  text-3xl text-center">À LA UNE</h2>
             </div>

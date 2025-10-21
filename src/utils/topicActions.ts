@@ -39,7 +39,6 @@ export async function newTopic({ topicData }: topicProps) {
         return error
     }
 }
-
 export async function editTopic({ topicData }: topicProps) {
     const { token, id, title, description } = topicData
 

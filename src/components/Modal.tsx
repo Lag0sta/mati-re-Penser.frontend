@@ -67,7 +67,7 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
             />
           }
-          {modalComponent === "editTopic" &&
+          {/* {modalComponent === "editTopic" &&
             <EditTopic setMainComponent={(value: string) => setMainComponent(value)}
               modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
@@ -85,7 +85,7 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}/>
           }
-          
+           */}
           {modalComponent === "auth" &&
             <Auth setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}

@@ -28,35 +28,23 @@ export async function addComment({ threadData }: threadProps) {
     }
 }
 
-export async function addReply({ threadData }: threadProps) {
-const { token, id, newComment } = threadData
+export async function editComment({ threadData }: threadProps) {
+    const { token, id, text } = threadData
     try {
-        console.log("replyID :", id)
-
-        const response = await fetch(`${API_URL}/threads/newResponse`, {
-            method: "POST",
+        const comment = await fetch(`${API_URL}/threads/editComment`, {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: token,
-                threadId: id,
-                text: newComment,
-            })
-        })
-
-        const comment = await response.json()
-
-        return comment
-
-    } catch (error) {
-        return error
-    }
-
-}
-
-export async function editReply({ threadData }: threadProps) {
-    const { token, id, newComment } = threadData
-    try {
-        
+                text: text,
+                id: id
+            }
+            )
+        }
+        )
+        const thread = await comment.json()
+        console.log("thread", thread)
+        return thread
     }catch (error) {
         return error
     }

@@ -12,6 +12,7 @@ interface ReplyData {
 }
 interface topicProps {
     setIsModalOpen: (value: boolean) => any
+    setIsEditModalOpen: (value: boolean) => any
     setIsMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
@@ -19,7 +20,7 @@ interface topicProps {
     setAuthType: (value: string) => any
 }
 
-function TopicThread({ setIsModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
+function TopicThread({ setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
 
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
     const [responseType, setResponseType] = useState<string>("");
@@ -38,10 +39,11 @@ console.log("replyToTopicThread", replyTo)
 
 
     return (
-        <div className=" w-full flex justify-center mb-6 ">
-            <div className='w-[65%] py-4 flex flex-col justify-center items-center bg-gray-800 rounded-md border-4 border-red-500 bg-yellow-200'>
+        <div className="w-full flex justify-center pt-24 pb-6">
+            <div className='w-[65%] py-4 flex flex-col justify-start items-center bg-gray-800 rounded-md'>
                 <Topic setIsModalOpen={setIsModalOpen}
                     setModalComponent={setModalComponent}
+                    setIsEditModalOpen={setIsEditModalOpen}
                     setAuthType={setAuthType}
                     setIsNewComment={setIsNewComment}
                     isNewComment={isNewComment}
@@ -54,6 +56,7 @@ console.log("replyToTopicThread", replyTo)
 
                 <Thread setPseudo={setPseudo}
                         setIsModalOpen={setIsModalOpen}
+                        setIsEditModalOpen={setIsEditModalOpen}
                         setMessageModalOpen={setIsMessageModalOpen}
                         setModalComponent={setModalComponent}
                         setErrorMessage={setErrorMessage}

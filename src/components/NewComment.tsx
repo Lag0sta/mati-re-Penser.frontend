@@ -39,7 +39,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
     const handleNewComment = async () => {
         const title = topic.title
         const newComment = rQValue
-        const threadData = { token, title, newComment}
+        const threadData = { token, title, newComment }
         console.log("newCommentRepresents", newComment)
         try {
             const addCommentResponse = await addComment({ threadData });
@@ -91,12 +91,9 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
     console.log("responseType", responseType);
 
     return (
-        <div className="w-[85%] pl-5 flex flex-col bg-gray-800  border-2 border-gray-800  rounded-md my-1 ">
+        <div className="w-fit  bg-gray-800  border-2 border-gray-800  rounded-md my-1 ">
             <div className='w-full flex'>
-                <div className="w-fit flex flex-col justify-start items-center bg-gray-500  border-r-2 border-gray-800 rounded-l-xs">
-                    <img className="object-contain mt-2 w-14 h-14 bg-white rounded-full border-2 border-gray-800 mx-2 mb-2" src={user.avatar || ''} alt="Avatar de l'utilisateur aillant créé le topic" />
-                    <span className="text-gray-800 font-bold mx-2 mb-2">{user.pseudo}</span>
-                </div>
+
                 <div className="flex-col w-full">
                     <div>
 
@@ -104,8 +101,6 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                     <div className="w-full flex flex-col justify-between  ">
                         <div className="h-full w-full flex flex-col items-center ">
                             <div className="w-full h-fit px-2 py-1">
-                               
-
                                 <div className=" flex flex-col justify-center items-center   ">
                                     <TextEditor
                                         rQValue={rQValue}
@@ -121,13 +116,13 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                 </div>
             </div>
 
-            <div className=' '>
-
+            <div className='flex justify-center px-2 '>
+                <button className="w-full px-2 py-1 bg-gray-800 text-gray-200  rounded-b-md hover:bg-gray-600 hover:text-gray-800 border-l-2 border-gray-800 cursor-pointer"
+                    onClick={handleNewComment}>
+                    Valider
+                </button>
             </div>
-            <button className=" px-2 py-1 bg-gray-800 text-gray-200  rounded-br-md hover:bg-gray-600 hover:text-gray-800 border-l-2 border-gray-800 cursor-pointer"
-                onClick={handleNewComment}>
-                Valider
-            </button>
+
         </div>
 
     )

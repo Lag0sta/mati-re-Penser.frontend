@@ -21,6 +21,7 @@ export interface threadData {
     token ?: string
     title ?: string
     newComment ?: string
+    text ?: string
 }
 
 export interface topicData {

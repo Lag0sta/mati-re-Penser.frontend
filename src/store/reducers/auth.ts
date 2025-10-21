@@ -12,8 +12,6 @@ const authTokenSlice = createSlice({
       state.value = action.payload
     },
     
-
-    
     //Supprime le token d'authentification stock  dans le store.
     clearToken: (state) => {
         state.value = ""

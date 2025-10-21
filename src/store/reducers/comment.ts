@@ -4,6 +4,7 @@ import { text } from "stream/consumers";
 const initialState = {
     value: {     
             text: "",
+            id: "",
     },
 };
 
