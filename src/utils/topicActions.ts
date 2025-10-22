@@ -102,7 +102,7 @@ export async function topicThread({ topicData }: topicProps) {
         }
         )
         const response = await topic.json()
-        console.log("responseTopicThread :", response)
+        console.log("reponseTopicThread :", response)
         return response
 
 

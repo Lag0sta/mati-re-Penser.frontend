@@ -44,7 +44,6 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         try {
             const addCommentResponse = await addComment({ threadData });
             console.log("addCommentResponse", addCommentResponse);
-            console.log("addCommentResponse", addCommentResponse.error);
             if (addCommentResponse) {
                 const TheNewComment = {
                     createdBy: addCommentResponse.newThread.createdBy,
@@ -59,6 +58,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                 setRQValue("")
                 setReplyTo("");
                 setResponseType("");
+                setIsNewComment(false)
             } else {
                 setErrorMessage(addCommentResponse.error);
                 setIsMessageModalOpen(true);

@@ -40,9 +40,23 @@ const topicSlice = createSlice({
             state.value.description = action.payload.description;
         },
 
+        editCommentInfo: (state, action) => {
+            const { id, text} = action.payload; 
+            const threadToUpdate = state.value.topicThread.find((t) => t.id === id)
+
+            if(threadToUpdate){
+                threadToUpdate.text = text
+            }
+        },
+
         lock: (state, action) => {
             state.value.isLocked = action.payload;
         },
+
+        deleteC: (state, action) => {
+            const { id } = action.payload;
+            state.value.topicThread = state.value.topicThread.filter((t) => t.id !== id);
+        }
 
         
     },
@@ -52,6 +66,8 @@ export const {
     get,
     addThread,
     editTopicInfo,
-    lock
+    editCommentInfo,
+    lock,
+    deleteC
 } = topicSlice.actions;
 export default topicSlice.reducer;

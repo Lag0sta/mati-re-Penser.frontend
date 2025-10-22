@@ -21,7 +21,8 @@ function App() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [authType, setAuthType] = useState<string>("");
-
+console.log("modalComponent", modalComponent)
+console.log("isModalOpen", isModalOpen)
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
@@ -127,6 +128,7 @@ function App() {
           setSuccessMessage={setSuccessMessage}
           setMainComponent={setMainComponent}
           authType={authType}
+          setAuthType={setAuthType}
         />
       )}
       {isEditModalOpen && (
@@ -149,6 +151,8 @@ function App() {
           setIsMessageModalOpen={setIsMessageModalOpen}
           setIsModalOpen={setIsModalOpen}
           setModalComponent={setModalComponent}
+          modalComponent={modalComponent}
+          authType={authType}
         />
       )}
     </main>

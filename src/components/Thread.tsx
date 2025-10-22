@@ -1,11 +1,11 @@
 import DOMPurify from 'dompurify';
 import { useAppDispatch, useAppSelector } from "../store/hooks.js"
-import { useState, useEffect, startTransition } from 'react';
+import { useState, useEffect, startTransition, useMemo } from 'react';
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
 import { openChevron, closeChevron, appearComments, hideComments } from '../utils/animationActions.js';
-import { toEdit } from '../store/reducers/comment.js'
+import { getComment } from '../store/reducers/comment.js'
 
 interface threadListProps {
     setPseudo: (value: string) => any
@@ -19,9 +19,12 @@ interface threadListProps {
     setThreadID: (value: string) => any
     setResponseType: (value: string) => any
     setReplyTo: (value: any) => any
+    pageSize: number
+    currentPage: number
+    setAuthType: (value: string) => any
 }
 
-function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo }: threadListProps) {
+function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo, pageSize, currentPage, setAuthType }: threadListProps) {
     const [showComments, setShowComments] = useState<any>({ istrue: false, threadId: "" })
     const [replyHover, setReplyHover] = useState<boolean>(false);
     const [msgHover, setMsgHover] = useState<boolean>(false);
@@ -32,10 +35,16 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
     const dispatch = useAppDispatch()
     const token = useAppSelector((state) => state.authToken.value);
     const topic: any = useAppSelector((state) => state.topic.value);
+    console.log("nThread", topic.topicThread.length)
 
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
     const [scope, animate]: any = useAnimate();
+
+    // nombres de pages visible
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const visibleComments = topic.topicThread.slice(startIndex, endIndex);
 
     const handleMouseEnterReply = (index: number, isTrue: boolean) => {
         setReplyHover(isTrue)
@@ -65,11 +74,20 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
 
     const handleEditComment = (index: number) => {
         const commentToEdit = topic.topicThread[index];
-        dispatch(toEdit(commentToEdit))
+        dispatch(getComment(commentToEdit))
         setIsEditModalOpen(true);
         setModalComponent('editComment');
     }
 
+    const handleDeleteComment = (index: number) => {
+        setAuthType("deleteComment");
+        const commentToDelete = topic.topicThread[index];
+        
+        dispatch(getComment({ id: commentToDelete.id }))
+        console.log("commentToDelete", commentToDelete.id)
+        setIsModalOpen(true);
+        setModalComponent("auth")        
+    }
     const handleReplyComment = (threadID: string) => {
         console.log("click")
         console.log("threadID", threadID)
@@ -80,6 +98,8 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
         }
 
         const targetThread = topic.topicThread.find((t: any) => t.id === threadID);
+
+
         console.log("targetThread", targetThread)
         if (targetThread) {
 
@@ -91,6 +111,7 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
         setPseudo(topic.createdBy.pseudo)
         handleScroll()
     }
+
 
     useEffect(() => {
         if (!scope.current) return;
@@ -109,7 +130,7 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
 
     return (
         <AnimatePresence initial={false}>
-            {topic.topicThread.map((thread: any, index: number) => (
+            {visibleComments.map((thread: any, index: number) => (
                 <motion.div
                     key={thread._id ?? index}
                     initial={{ opacity: 0, y: 20 }}
@@ -199,6 +220,8 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
                                                     clipRule="evenodd"
                                                     onMouseEnter={() => handleMouseEnterDelete(index, true)}
                                                     onMouseLeave={() => handleMouseEnterDelete(index, false)}
+                                                    onClick={() => handleDeleteComment(index)}
+
                                                 >
                                                     <path fillRule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
 
@@ -207,29 +230,30 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
                                                 <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
                                                     Supprimer
                                                 </span>
-                                                </div>
                                             </div>
+                                        </div>
 
                                     }
 
-                                        </div>
-                            </div>
-                                <div className="w-full p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 ">
-
-                                    {(typeof thread.replyTo === "string" && thread.replyTo.trim() !== "" &&
-                                        typeof thread.replyToUser === "string" && thread.replyToUser.trim() !== "") &&
-                                        <div className='bg-gray-800 px-2 rounded-md'>
-                                            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(typeof thread.replyTo === "string" ? thread.replyTo : "") }} />
-                                        </div>
-                                    }
-
-                                    <span className="ml-1 my-1 text-sm font-semibold text-gray-700"
-                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
-                                    />
                                 </div>
+                            </div>
+                            <div className="w-full p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 ">
+
+                                {(typeof thread.replyTo === "string" && thread.replyTo.trim() !== "" &&
+                                    typeof thread.replyToUser === "string" && thread.replyToUser.trim() !== "") &&
+                                    <div className='bg-gray-800 px-2 rounded-md'>
+                                        <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(typeof thread.replyTo === "string" ? thread.replyTo : "") }} />
+                                    </div>
+                                }
+
+                                <span className="ml-1 my-1 text-sm font-semibold text-gray-700"
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
+                                />
                             </div>
 
                         </div>
+
+                    </div>
 
                 </motion.div>
             ))}

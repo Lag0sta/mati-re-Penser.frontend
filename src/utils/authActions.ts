@@ -71,10 +71,20 @@ export async function auth({ authData, }: authProps){
                 password: password,
             }),
         })
-
         const data = await response.json()
+        
+        console.log("dataResponse", data)
 
         return data
+
+        // const text = await response.text()
+        // try {
+        //     const data = JSON.parse(text);
+        //     console.log("Parsed JSON:", data);
+        // } catch (err) {
+        //     console.error("Not JSON:", err);
+        // }
+        // return text
 
     } catch (error) {
         return error

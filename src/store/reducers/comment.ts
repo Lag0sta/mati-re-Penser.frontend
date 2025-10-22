@@ -12,13 +12,13 @@ const commentSlice = createSlice({
     name: "comment",
     initialState,
     reducers: {
-        toEdit: (state, action) => {
+        getComment: (state, action) => {
             state.value = action.payload;
         },
     },
 });
 
 export const {
-    toEdit
+    getComment
 } = commentSlice.actions;
 export default commentSlice.reducer;

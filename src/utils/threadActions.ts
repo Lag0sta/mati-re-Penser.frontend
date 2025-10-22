@@ -49,3 +49,26 @@ export async function editComment({ threadData }: threadProps) {
         return error
     }
 }
+
+export async function deleteComment({ threadData }: threadProps) {
+    console.log("pop")
+    const { token, id, } = threadData
+    console.log("threadData", threadData)
+    try {
+        const deleteComment = await fetch(`${API_URL}/threads/deleteComment`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: token,
+                id: id
+            }
+            )
+        }
+        )
+        const thread = await deleteComment.json()
+        console.log("threadDelete", deleteComment)
+        return thread
+    }catch (error) {
+        return error
+    }
+}

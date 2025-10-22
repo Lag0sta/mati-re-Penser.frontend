@@ -4,7 +4,7 @@ import { useAppDispatch } from "../store/hooks.js"
 
 import TextEditor from "./TextEditor.js";
 
-import { editTopicInfo } from '../store/reducers/topic.js';
+import { editCommentInfo } from '../store/reducers/topic.js';
 
 import { editComment, } from '../utils/threadActions.js';
 import { original } from "@reduxjs/toolkit";
@@ -43,13 +43,15 @@ function EditComment({ modalComponent, setModalComponent, setErrorMessage, setIs
             console.log("editCommentResponse", editCommentResponse);
 
             if (!editCommentResponse.result) {
-                setErrorMessage(editCommentResponse.error);
+                setErrorMessage(editCommentResponse.message);
                 setIsMessageModalOpen(true);
                 return;
             } else {
-                dispatch(editTopicInfo(editCommentResponse.topic))
-                setSuccessMessage(editCommentResponse.success);
+                dispatch(editCommentInfo(editCommentResponse.editedComment))
+                setSuccessMessage(editCommentResponse.message);
                 setIsMessageModalOpen(true);
+                setIsEditModalOpen(false);
+                setModalComponent('');
             }
         } catch (error) {
             setErrorMessage(error as string);
@@ -103,7 +105,7 @@ function EditComment({ modalComponent, setModalComponent, setErrorMessage, setIs
 
                 {originalValue === rQValue &&
                     <button className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer opacity-50 cursor-not-allowed"
-                        onClick={handleEditComment}>
+                    >
                         Modifier
                     </button>
                 }

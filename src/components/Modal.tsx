@@ -3,6 +3,7 @@ import { useState, Suspense } from 'react'
 import { useRef } from 'react'
 import EditTopic from './EditTopic.js';
 import EditComment from './EditComment.js';
+import DeleteComment from './DeleteComment.js';
 import NewTopic from './NewTopic.js';
 import Auth from './Auth.js';
 import MenuModal from './MenuModal.js';
@@ -19,10 +20,11 @@ interface modalProps {
   setSuccessMessage: (value: string) => any
   setMainComponent: (value: string) => any
   authType: string
+  setAuthType: (value: string) => any
 }
 
 
-function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType }: modalProps) {
+function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setAuthType }: modalProps) {
   console.log("modalComponent", modalComponent)
 
   return (
@@ -67,25 +69,7 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
             />
           }
-          {/* {modalComponent === "editTopic" &&
-            <EditTopic setMainComponent={(value: string) => setMainComponent(value)}
-              modalComponent={modalComponent}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)} />
-          }
-          {modalComponent === "editComment" &&
-            <EditComment setMainComponent={(value: string) => setMainComponent(value)}
-              modalComponent={modalComponent}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}/>
-          }
-           */}
+          
           {modalComponent === "auth" &&
             <Auth setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}
@@ -94,7 +78,6 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               authType={authType} 
             />
-            
           }
           {modalComponent === "modalMenu" &&
               <MenuModal setModalComponent={(value: string) => setModalComponent(value)}
@@ -104,6 +87,16 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
                 setErrorMessage={(value: string) => setErrorMessage(value)}
                 setSuccessMessage={(value: string) => setSuccessMessage(value)}
               />
+          }
+          {modalComponent === "deleteComment" &&
+          <DeleteComment setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+              setAuthType={(value: string) => setAuthType(value)}/>
           }
           
           {/* {modalComponent === "deleteTopic" &&

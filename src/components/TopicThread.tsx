@@ -1,5 +1,5 @@
 import { useAppSelector } from "../store/hooks.js"
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import '../styles/TopicThreads.css';
 
 
@@ -7,8 +7,8 @@ import Topic from "./Topic.js";
 import Thread from "./Thread.js";
 import NewComment from "./NewComment.js";
 interface ReplyData {
-  author: string;
-  text: string;
+    author: string;
+    text: string;
 }
 interface topicProps {
     setIsModalOpen: (value: boolean) => any
@@ -22,14 +22,15 @@ interface topicProps {
 
 function TopicThread({ setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
 
+    const [currentPage, setCurrentPage] = useState(1);
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
     const [responseType, setResponseType] = useState<string>("");
     const [reply, setReply] = useState<string>("");
-    const [replyTo, setReplyTo] = useState<ReplyData | null>({author: "", text: ""});
+    const [replyTo, setReplyTo] = useState<ReplyData | null>({ author: "", text: "" });
     const [pseudo, setPseudo] = useState<string>("");
     const [threadID, setThreadID] = useState<string>("");
     const [rQValue, setRQValue] = useState<string>("");
-console.log("replyToTopicThread", replyTo)
+    console.log("replyToTopicThread", replyTo)
     const threadRef = useRef<HTMLDivElement>(null);
 
     const topic: any = useAppSelector((state) => state.topic.value);
@@ -37,6 +38,13 @@ console.log("replyToTopicThread", replyTo)
     console.log("token in topicthread", token);
     console.log("topic in topicthread", topic);
 
+    // Calcule et initialisation du nombre de pages
+    const totalComments = topic.topicThread.length;
+    const pageSize = 15;
+    const pagesNumber = useMemo(() => {
+        const numberOfPages = Math.ceil(topic.topicThread.length / pageSize);
+        return Array.from({ length: numberOfPages }, (_, i) => i + 1);
+    }, [topic.topicThread.length]);
 
     return (
         <div className="w-full flex justify-center pt-24 pb-6">
@@ -55,33 +63,48 @@ console.log("replyToTopicThread", replyTo)
 
 
                 <Thread setPseudo={setPseudo}
-                        setIsModalOpen={setIsModalOpen}
-                        setIsEditModalOpen={setIsEditModalOpen}
-                        setMessageModalOpen={setIsMessageModalOpen}
-                        setModalComponent={setModalComponent}
-                        setErrorMessage={setErrorMessage}
-                        setIsNewComment={setIsNewComment}
-                        threadRef={threadRef}
-                        setThreadID={setThreadID}
-                        setResponseType={setResponseType}
-                        setReplyTo={setReplyTo}
+                    setIsModalOpen={setIsModalOpen}
+                    setIsEditModalOpen={setIsEditModalOpen}
+                    setMessageModalOpen={setIsMessageModalOpen}
+                    setModalComponent={setModalComponent}
+                    setErrorMessage={setErrorMessage}
+                    setIsNewComment={setIsNewComment}
+                    threadRef={threadRef}
+                    setThreadID={setThreadID}
+                    setResponseType={setResponseType}
+                    setReplyTo={setReplyTo}
+                    pageSize={pageSize}
+                    currentPage={currentPage}  
+                    setAuthType={setAuthType} 
                 />
 
                 <div ref={threadRef}>
                     {(isNewComment) && (
                         <NewComment setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-                                    setErrorMessage={(value: string) => setErrorMessage(value)}
-                                    setIsNewComment={(value: boolean) => setIsNewComment(value)}
-                                    reply={reply}
-                                    pseudo={pseudo}
-                                    replyTo={replyTo}
-                                    setReplyTo={(value: any) => setReplyTo(value)}
-                                    setResponseType={(value: string) => setResponseType(value)}
-                                    responseType={responseType}
-                                    rQValue={rQValue}
-                                    setRQValue={(value: string) => setRQValue(value)}
+                            setErrorMessage={(value: string) => setErrorMessage(value)}
+                            setIsNewComment={(value: boolean) => setIsNewComment(value)}
+                            reply={reply}
+                            pseudo={pseudo}
+                            replyTo={replyTo}
+                            setReplyTo={(value: any) => setReplyTo(value)}
+                            setResponseType={(value: string) => setResponseType(value)}
+                            responseType={responseType}
+                            rQValue={rQValue}
+                            setRQValue={(value: string) => setRQValue(value)}
                         />
                     )}
+                </div>
+                <div className="flex gap-2 mt-4">
+                    {pagesNumber.map((num) => (
+                        <button
+                            key={num}
+                            onClick={() => setCurrentPage(num)}
+                            className={`px-3 py-1 rounded ${num === currentPage ? "bg-blue-500 text-white" : "bg-gray-200"
+                                }`}
+                        >
+                            {num}
+                        </button>
+                    ))}
                 </div>
 
             </div>
