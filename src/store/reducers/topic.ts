@@ -10,6 +10,7 @@ const initialState = {
         topicThread: [{
             id: "",
             text: "",
+            quote: [""],
             createdBy: { pseudo: "", avatar: "" },
             creationDate: "",
             modificationDate: "",
@@ -47,6 +48,10 @@ const topicSlice = createSlice({
             if(threadToUpdate){
                 threadToUpdate.text = text
             }
+            // if (threadToUpdate) {
+            //     if (text !== undefined) threadToUpdate.text = text;
+            //     if (quotes !== undefined) threadToUpdate.quotes = quotes;
+            // }
         },
 
         lock: (state, action) => {

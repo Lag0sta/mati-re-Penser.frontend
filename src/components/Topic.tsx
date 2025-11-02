@@ -56,6 +56,7 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setModalComponent, se
     }
 
     const handleReplyTopic = () => {
+        console.log("clickReplyRopic")
         if (!token) {
             setMessageModalOpen(true);
             setErrorMessage("Vous devez vous connecter pour commenter");
@@ -97,11 +98,11 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setModalComponent, se
                                         className="size-6 m-1 cursor-pointer"
                                         onMouseEnter={() => setReplyHover(true)}
                                         onMouseLeave={() => setReplyHover(false)}
+                                        onClick={handleReplyTopic}
                                     >
                                         <path strokeLinecap="round"
                                             strokeLinejoin="round"
                                             d="m15 15-6 6m0 0-6-6m6 6V9a6 6 0 0 1 12 0v3"
-                                            onClick={handleReplyTopic}
                                         />
                                     </svg>
                                     <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">

@@ -110,7 +110,7 @@ function DeleteComment({ modalComponent, setModalComponent, setErrorMessage, set
                 <legend className="p-2 text-lg text-center text-gray-300 font-medium mb-2">
                     êtes vous sure de vouloir supprimer ce commentaire ?
                 </legend>
-                <label className="flex flex-col items-center gap-1">
+                <label className="flex flex-col items-center gap-1 text-gray-300 hover:cursor-pointer hover:text-white">
                     <input
                         type="checkbox"
                         checked={choice === true}
@@ -119,7 +119,7 @@ function DeleteComment({ modalComponent, setModalComponent, setErrorMessage, set
                     Oui
                 </label>
 
-                <label className="flex flex-col items-center gap-1">
+                <label className="flex flex-col items-center gap-1 text-gray-300 hover:cursor-pointer hover:text-white">
                     <input
                         type="checkbox"
                         checked={choice === false}

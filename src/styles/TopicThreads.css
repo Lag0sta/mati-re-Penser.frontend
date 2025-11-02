@@ -1,27 +1,17 @@
-.reply-quote {
-  color: #d1d5db;
-  font-size: 0.75rem;
-  font-weight: 400;
-  margin: 8px 8px 0 8px;
-   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: #1f2937;          /* fond gris foncé */
-  border-radius: 8px;
-  box-sizing: border-box;
-  padding: 8px;
+.scrollable-quotes::-webkit-scrollbar {
+  height: 8px; /* hauteur de la scrollbar horizontale */
 }
 
-.reply-quote-box {
-  border: 3px solid #4b5563;    /* bordure grise autour */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: start ;
-  padding: 8px
+.scrollable-quotes::-webkit-scrollbar-track {
+  background: #1f2937; /* bg-gray-800 */
+  border-radius: 4px;
 }
 
-.reply-quote .reply-quote-author .light {
-  color: #9ca3af;
-  font-weight: 400;
+.scrollable-quotes::-webkit-scrollbar-thumb {
+  background: #f3f4f6
+; /* gray-200 */
+}
+
+.scrollable-quotes::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db; /* un gris un peu plus foncé au hover */
 }

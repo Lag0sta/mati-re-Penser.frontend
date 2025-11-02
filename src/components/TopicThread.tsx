@@ -6,6 +6,7 @@ import '../styles/TopicThreads.css';
 import Topic from "./Topic.js";
 import Thread from "./Thread.js";
 import NewComment from "./NewComment.js";
+
 interface ReplyData {
     author: string;
     text: string;
@@ -26,9 +27,13 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
     const [responseType, setResponseType] = useState<string>("");
     const [reply, setReply] = useState<string>("");
-    const [replyTo, setReplyTo] = useState<ReplyData | null>({ author: "", text: "" });
+    const [replyTo, setReplyTo] = useState<string>("");
+    const [quoteID, setQuoteID] = useState<string[]>([]);
     const [pseudo, setPseudo] = useState<string>("");
+            console.log("setReplyToTHREAD", replyTo)
+
     const [threadID, setThreadID] = useState<string>("");
+
     const [rQValue, setRQValue] = useState<string>("");
     console.log("replyToTopicThread", replyTo)
     const threadRef = useRef<HTMLDivElement>(null);
@@ -47,7 +52,7 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen
     }, [topic.topicThread.length]);
 
     return (
-        <div className="w-full flex justify-center pt-24 pb-6">
+        <div className="w-full  flex justify-center pt-24 pb-6 ">
             <div className='w-[65%] py-4 flex flex-col justify-start items-center bg-gray-800 rounded-md'>
                 <Topic setIsModalOpen={setIsModalOpen}
                     setModalComponent={setModalComponent}
@@ -75,7 +80,9 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen
                     setReplyTo={setReplyTo}
                     pageSize={pageSize}
                     currentPage={currentPage}  
-                    setAuthType={setAuthType} 
+                    setAuthType={setAuthType}
+                    quoteID={quoteID}
+                    setQuoteID={setQuoteID} 
                 />
 
                 <div ref={threadRef}>
@@ -83,14 +90,14 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen
                         <NewComment setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
                             setErrorMessage={(value: string) => setErrorMessage(value)}
                             setIsNewComment={(value: boolean) => setIsNewComment(value)}
-                            reply={reply}
-                            pseudo={pseudo}
                             replyTo={replyTo}
                             setReplyTo={(value: any) => setReplyTo(value)}
                             setResponseType={(value: string) => setResponseType(value)}
                             responseType={responseType}
                             rQValue={rQValue}
                             setRQValue={(value: string) => setRQValue(value)}
+                            quoteID={quoteID}
+                            setQuoteID={(value: string[]) => setQuoteID(value)}
                         />
                     )}
                 </div>

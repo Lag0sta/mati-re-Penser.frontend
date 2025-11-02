@@ -5,7 +5,7 @@ interface threadProps {
     threadData: threadData
 }
 export async function addComment({ threadData }: threadProps) {
-    const { token, title, newComment} = threadData
+    const { token, title, newComment, quote} = threadData
     console.log("initComment", threadData)
 
     try {
@@ -15,7 +15,8 @@ export async function addComment({ threadData }: threadProps) {
             body: JSON.stringify({
                 token: token,
                 text: newComment,
-                title: title
+                title: title,
+                quote: quote
             })
         })
 
@@ -66,7 +67,6 @@ export async function deleteComment({ threadData }: threadProps) {
         }
         )
         const thread = await deleteComment.json()
-        console.log("threadDelete", deleteComment)
         return thread
     }catch (error) {
         return error

@@ -1,6 +1,7 @@
 import DOMPurify from 'dompurify';
 import { useAppDispatch, useAppSelector } from "../store/hooks.js"
 import { useState, useEffect, startTransition, useMemo } from 'react';
+
 import { AnimatePresence, motion, useAnimate } from "framer-motion";
 
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
@@ -22,9 +23,11 @@ interface threadListProps {
     pageSize: number
     currentPage: number
     setAuthType: (value: string) => any
+    quoteID: string[]
+    setQuoteID: (value: any) => any
 }
 
-function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo, pageSize, currentPage, setAuthType }: threadListProps) {
+function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo, pageSize, currentPage, setAuthType, quoteID, setQuoteID }: threadListProps) {
     const [showComments, setShowComments] = useState<any>({ istrue: false, threadId: "" })
     const [replyHover, setReplyHover] = useState<boolean>(false);
     const [msgHover, setMsgHover] = useState<boolean>(false);
@@ -82,35 +85,56 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
     const handleDeleteComment = (index: number) => {
         setAuthType("deleteComment");
         const commentToDelete = topic.topicThread[index];
-        
+
         dispatch(getComment({ id: commentToDelete.id }))
         console.log("commentToDelete", commentToDelete.id)
         setIsModalOpen(true);
-        setModalComponent("auth")        
+        setModalComponent("auth")
     }
     const handleReplyComment = (threadID: string) => {
-        console.log("click")
-        console.log("threadID", threadID)
+
         if (!token) {
             setMessageModalOpen(true);
             setErrorMessage("Vous devez vous connecter pour commenter");
-            return
+            return;
         }
 
+        // Récupère le commentaire ciblé
         const targetThread = topic.topicThread.find((t: any) => t.id === threadID);
+        if (!targetThread) return;
 
-
-        console.log("targetThread", targetThread)
-        if (targetThread) {
-
-            setResponseType("response")
-
-            setReplyTo({ author: targetThread.createdBy.pseudo, text: targetThread.text })
+        // Récupère toutes les citations précédentes de ce commentaire
+        const quoteArr: { id: string }[] = [];
+        const quoteInfo: { pseudo: string, text: string }[] = [];
+        console.log("quoteArrTHREAD", quoteArr)
+        if (targetThread.quote?.length) {
+            targetThread.quote.forEach((quoteId: string) => {
+                console.log("quoteIdThread", quoteId)
+                const quotedThread = topic.topicThread.find((t: any) => t.id === quoteId);
+                if (quotedThread) {
+                    quoteArr.push(quotedThread.id);
+                    quoteInfo.push({ pseudo: quotedThread.createdBy.pseudo, text: quotedThread.text });
+                }
+            });
         }
-        setIsNewComment(true)
-        setPseudo(topic.createdBy.pseudo)
-        handleScroll()
+
+        // Ajoute le dernier commentaire ciblé à la fin
+        quoteArr.push(targetThread.id);
+        quoteInfo.push({
+            pseudo: targetThread.createdBy.pseudo,
+            text: targetThread.text
+        });
+        console.log("quoteArrThread", quoteArr)
+
+        setReplyTo(quoteInfo)
+
+
+        setQuoteID(quoteArr);  // On passe maintenant le tableau complet
+        setIsNewComment(true);
+        setPseudo(topic.createdBy.pseudo);
+        handleScroll();
     }
+
 
 
     useEffect(() => {
@@ -137,7 +161,8 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="w-[85%]  ">
+                    className="w-[85%] max-w-[85%] px-2 py-2 overflow-x-auto overflow-y-hidden"
+                >
 
                     <div className="flex bg-gray-100 rounded-md mt-1 border-2 border-gray-800">
                         <div className="w-[15%] flex flex-col justify-center items-center bg-gray-500 border-r-2 border-gray-800 rounded-l-xs">
@@ -161,13 +186,13 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
 
 
                         </div>
-                        <div className='flex-col h-full w-full'>
+                        <div className='flex-col h-full max-w-[85%]'>
                             <div className="w-full h-full  flex  justify-between  px-1">
                                 <div className="w-full flex justify-start items-center ">
                                     <span className="font-bold text-xs text-gray-500 mr-2">Créé le :</span>
                                     <span className="text-blue-500 text-xs font-black">{formatDateToBelgium(thread.creationDate)}</span>
                                 </div>
-                                <div className=" h-full w-full flex justify-end items-center">
+                                <div className=" h-full  flex justify-end items-center">
                                     {(token && !isLocked) &&
                                         <div className="w-fit flex justify-between ">
 
@@ -237,18 +262,103 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
 
                                 </div>
                             </div>
-                            <div className="w-full p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 ">
+                            <div className=" p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 overflow-x-auto overflow-y-hidden"
+                                >
 
-                                {(typeof thread.replyTo === "string" && thread.replyTo.trim() !== "" &&
-                                    typeof thread.replyToUser === "string" && thread.replyToUser.trim() !== "") &&
-                                    <div className='bg-gray-800 px-2 rounded-md'>
-                                        <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(typeof thread.replyTo === "string" ? thread.replyTo : "") }} />
+                                {/* Quotes */}
+                                {thread.quote.length > 0 && (
+                                    <div className="w-full mt-2 p-2 bg-gray-800 rounded-sm text-gray-300 text-xs font-normal overflow-x-auto overflow-y-hidden scrollable-quotes"
+                                    >
+                                        {(() => {
+                                            const quotedThreads = thread.quote
+                                                .map((id: string) => topic.topicThread.find((t: any) => t.id === id))
+                                                .filter(
+                                                    (q: { id?: string } | undefined, i: number, arr: ({ id?: string } | undefined)[]) =>
+                                                        q && arr.findIndex(x => x?.id === q.id) === i
+                                                );
+
+                                            const [showAllQuotes, setShowAllQuotes] = useState(false);
+
+                                            // Troncature pour > 4 quotes
+                                            let displayQuotes = quotedThreads;
+                                            if (!showAllQuotes && quotedThreads.length > 4) {
+                                                displayQuotes = [
+                                                    ...quotedThreads.slice(0, 2), // 2 premières
+                                                    "ellipsis",                   // ...
+                                                    ...quotedThreads.slice(-2)    // 2 dernières
+                                                ];
+                                            }
+
+                                            // Fonction récursive pour rendre les quotes imbriquées
+                                            const renderNestedQuotes = (quotes: any[]): JSX.Element | null => {
+                                                if (!quotes.length) return null;
+
+                                                const last = quotes[quotes.length - 1];
+                                                const rest = quotes.slice(0, -1);
+
+                                                if (last === "ellipsis") {
+                                                    return (
+                                                        <div
+                                                            key="ellipsis"
+                                                            className="w-full ml-2 my-1 flex-1 flex flex-row items-center text-gray-500 text-xs italic cursor-pointer hover:text-gray-300 transition min-w-[406.5px] "
+                                                            onClick={() => setShowAllQuotes(true)}
+                                                        >
+                                                            <span>…</span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 ml-1">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                                                            </svg>
+                                                        </div>
+                                                    );
+                                                }
+
+                                                return (
+                                                    <div
+                                                        key={last.id}
+                                                        className="border-[3px] border-gray-600 flex flex-col justify-start items-start p-2 text-md text-gray-400 font-normal mt-1 rounded-sm min-w-[250px]"
+                                                    >
+                                                        {/* Auteur */}
+                                                        <span className="font-semibold text-gray-400 underline underline-offset-2">
+                                                            <span className="font-semibold text-gray-200">{last.createdBy.pseudo}</span> a écrit :
+                                                        </span>
+
+                                                        {/* Sous-quotes */}
+                                                        {rest.length > 0 && (
+                                                            <div className="ml-2 w-auto">{renderNestedQuotes(rest)}</div>
+                                                        )}
+
+                                                        {/* Texte de la quote actuelle */}
+                                                        <span className="ml-2 text-xs mt-1 text-gray-300">{last.text.replace(/<[^>]+>/g, "")}</span>
+                                                    </div>
+                                                );
+                                            };
+
+                                            return (
+                                                <>
+                                                    <div className="inline-flex space-x-2">{renderNestedQuotes(displayQuotes)}</div>
+
+                                                    {showAllQuotes && quotedThreads.length > 4 && (
+                                                        <button
+                                                            className="flex flex-row justify-end items-center text-gray-400 text-xs mt-1 hover:text-gray-200 transition"
+                                                            onClick={() => setShowAllQuotes(false)}
+                                                        >
+                                                            Réduire les citations
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4 ml-1">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                                            </svg>
+                                                        </button>
+                                                    )}
+                                                </>
+                                            );
+                                        })()}
                                     </div>
-                                }
+                                )}
 
-                                <span className="ml-1 my-1 text-sm font-semibold text-gray-700"
+                                {/* Message principal */}
+                                <span
+                                    className="ml-1 my-1 text-sm font-semibold text-gray-700"
                                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(thread.text) }}
                                 />
+
                             </div>
 
                         </div>

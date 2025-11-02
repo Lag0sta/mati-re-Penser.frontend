@@ -22,6 +22,7 @@ export interface threadData {
     title ?: string
     newComment ?: string
     text ?: string
+    quote ?: string[];
 }
 
 export interface topicData {

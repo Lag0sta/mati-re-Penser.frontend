@@ -1,7 +1,7 @@
 import parse from 'html-react-parser';
 import DOMPurify from 'dompurify';
 import { useAppSelector } from "../store/hooks.js"
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -17,30 +17,47 @@ interface newTopicProps {
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setIsNewComment: (value: boolean) => any
-    reply: string
-    pseudo: string
+
     replyTo: any
     setReplyTo: (value: any) => any
     rQValue: string
     setRQValue: (value: string) => any
     responseType: string
     setResponseType: (value: string) => any
+    quoteID: string[]
+    setQuoteID: (value: string[]) => any
 }
 
-function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, reply, pseudo, replyTo, setReplyTo, rQValue, setRQValue, responseType, setResponseType }: newTopicProps) {
+function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, replyTo, setReplyTo, rQValue, setRQValue, responseType, setResponseType, quoteID, setQuoteID }: newTopicProps) {
 
     const dispatch = useAppDispatch();
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
+    const [quoteIds, setQuoteIds] = useState<string[]>([]);
+    console.log("quoteID", quoteID)
+    const handleInsertedQuote = useCallback((id: string) => {
+        setQuoteIds(prev => [...prev, id]);
+    }, []);
 
     console.log("topic in TOPIC", topic);
 
     const handleNewComment = async () => {
         const title = topic.title
-        const newComment = rQValue
-        const threadData = { token, title, newComment }
-        console.log("newCommentRepresents", newComment)
+
+        // Supprime les blocs de citation Quill avant l'envoi
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rQValue, 'text/html');
+
+        
+        // Supprime tous les éléments de citation
+        doc.querySelectorAll('.ql-reply-quote').forEach(el => el.remove());
+
+        // Récupère le HTML restant
+        const newComment = doc.body.innerHTML.trim();
+
+        const threadData = { token, title, newComment, quote: quoteID }
+        console.log("threadData", threadData)
         try {
             const addCommentResponse = await addComment({ threadData });
             console.log("addCommentResponse", addCommentResponse);
@@ -49,6 +66,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                     createdBy: addCommentResponse.newThread.createdBy,
                     creationDate: addCommentResponse.newThread.creationDate,
                     modificationDate: addCommentResponse.newThread.modificationDate,
+                    quote: addCommentResponse.newThread.quote,
                     text: addCommentResponse.newThread.text,
                     topic: addCommentResponse.newThread.topic,
                     id: addCommentResponse.newThread._id,
@@ -107,6 +125,10 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                                         setRQValue={setRQValue}
                                         replyTo={replyTo}
                                         setReplyTo={setReplyTo}
+                                        // onInserted={handleInsertedQuote}
+                                        // setQuoteID={setQuoteID}
+
+
                                     />
 
                                 </div>

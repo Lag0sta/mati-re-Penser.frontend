@@ -22,7 +22,9 @@
   display: block;
   width: 100%;
   margin-bottom: 8px;
+
   padding: 0; /* padding déplacé dans reply-quote-box */
+  
   box-sizing: border-box;
 }
 
@@ -34,7 +36,7 @@
   background: #1f2937;          /* fond gris foncé */
   border-radius: 8px;
   box-sizing: border-box;
-  padding: 8px;
+  padding: 10px;
 }
 
 .reply-quote-box {
@@ -43,19 +45,22 @@ display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start ;
+        margin-left: 16px
+
 }
 /* Auteur */
 .ql-editor .ql-reply-quote .reply-quote-author {
   color: #d1d5db;
   font-size: 0.75rem;
   font-weight: 400;
-  margin: 8px 8px 0 8px;
+  margin: 10px 10px 0 10px;
 
 }
 
 .ql-editor .ql-reply-quote .reply-quote-author .light {
   color: #9ca3af;
   font-weight: 400;
+
 }
 
 /* Flex row pour ligne + texte */
@@ -82,12 +87,30 @@ display: flex;
   font-size: 0.7rem;
   line-height: 1.75;
   margin: 0 8px 8px 0;
+  
 
 }
 
 /* Supprime marges internes pour éviter les trous */
 .ql-editor .ql-reply-quote p,
 .ql-editor .ql-reply-quote div {
-  margin: 0;
+  margin: 2px;
   padding: 0;
+}
+
+.reply-quote-body-wrapper-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* la ligne prend toute la hauteur du texte */
+}
+
+.reply-quote-body-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.reply-quote-body-column {
+  display: flex;
+  flex-direction: column;
 }
