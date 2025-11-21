@@ -1,16 +1,10 @@
-import React from 'react';
-import { useState, Suspense } from 'react'
-import { useRef } from 'react'
+import { Suspense } from 'react'
 import EditTopic from './EditTopic.js';
 import EditComment from './EditComment.js';
-import NewTopic from './NewTopic.js';
-import Auth from './Auth.js';
-import MenuModal from './MenuModal.js';
-const SignIn = React.lazy(() => import('./SignIn.js'));
-const SignUp = React.lazy(() => import('./SignUp.js'));
-const AvatarGallery = React.lazy(() => import('./AvatarGallery.js'));
 
 interface modalProps {
+  replyTo: any
+  setReplyTo: (value: any) => any
   setIsModalOpen: (value: boolean) => any
   modalComponent: string
   setModalComponent: (value: string) => any
@@ -23,7 +17,7 @@ interface modalProps {
 }
 
 
-function EditModal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsEditModalOpen }: modalProps) {
+function EditModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsEditModalOpen }: modalProps) {
   console.log("modalComponent", modalComponent)
 
   return (
@@ -39,12 +33,14 @@ function EditModal({ setIsModalOpen, setModalComponent, modalComponent, setIsMes
               modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+              setIsEditModalOpen={(value: boolean) => setIsEditModalOpen(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)} />
           }
           {modalComponent === "editComment" &&
-            <EditComment setMainComponent={(value: string) => setMainComponent(value)}
+            <EditComment replyTo={replyTo}
+            setReplyTo={(value: any) => setReplyTo(value)} 
+            setMainComponent={(value: string) => setMainComponent(value)}
               modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}

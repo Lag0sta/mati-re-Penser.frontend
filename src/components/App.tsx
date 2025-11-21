@@ -21,6 +21,8 @@ function App() {
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [authType, setAuthType] = useState<string>("");
+  const [replyTo, setReplyTo] = useState<string>("");
+
 console.log("modalComponent", modalComponent)
 console.log("isModalOpen", isModalOpen)
   const acceuilRef = useRef<HTMLDivElement>(null);
@@ -88,6 +90,8 @@ console.log("isModalOpen", isModalOpen)
           {mainComponent === "publication" && <Publications />}
           {mainComponent === "topicThread" && (
             <TopicThread
+              replyTo={replyTo}
+              setReplyTo={setReplyTo}
               setErrorMessage={setErrorMessage}
               setSuccessMessage={setSuccessMessage}
               setIsModalOpen={setIsModalOpen}
@@ -141,7 +145,10 @@ console.log("isModalOpen", isModalOpen)
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}
           setMainComponent={setMainComponent}
-          authType={authType}/>)}
+          authType={authType}
+          replyTo={replyTo}
+          setReplyTo={setReplyTo}/>)}
+          
       {isMessageModalOpen && (
         <MessageModal
           successMessage={successMessage}

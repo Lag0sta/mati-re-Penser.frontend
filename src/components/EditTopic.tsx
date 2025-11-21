@@ -10,13 +10,13 @@ interface topicProps {
     setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
     modalComponent: string
-    setIsModalOpen: (value: boolean) => any
+    setIsEditModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
 
 }
-function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
+function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsEditModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
     const dispatch = useAppDispatch();
 
     const topic: any = useAppSelector((state) => state.topic.value);
@@ -55,7 +55,7 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsMo
 
     const handleCloseModal = () => {
         setModalComponent('');
-        setIsModalOpen(false);
+        setIsEditModalOpen(false);
     }
 
     return (

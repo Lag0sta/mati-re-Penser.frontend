@@ -48,10 +48,6 @@ const topicSlice = createSlice({
             if(threadToUpdate){
                 threadToUpdate.text = text
             }
-            // if (threadToUpdate) {
-            //     if (text !== undefined) threadToUpdate.text = text;
-            //     if (quotes !== undefined) threadToUpdate.quotes = quotes;
-            // }
         },
 
         lock: (state, action) => {

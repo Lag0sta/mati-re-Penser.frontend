@@ -5,6 +5,7 @@ const initialState = {
     value: {     
             text: "",
             id: "",
+            quote: [""],
     },
 };
 
