@@ -108,7 +108,8 @@ export default function EditComment({
       }
 
       // update topic slice with edited comment
-dispatch(editCommentInfo({ id: editCommentResponse.editedComment.id, text: editCommentResponse.editedComment.text }));
+      console.log("editCommentResponse", editCommentResponse);
+dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: editCommentResponse.editedComment.text }));
       setSuccessMessage(editCommentResponse.message ?? "Commentaire modifié");
       setIsMessageModalOpen(true);
       setIsEditModalOpen(false);
