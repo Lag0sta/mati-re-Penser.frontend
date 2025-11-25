@@ -18,14 +18,14 @@ interface TextEditorProps {
   replyTo?: ReplyData | null;         // données pour insérer une citation
   setReplyTo?: (value: ReplyData | null) => void;
   onInserted?: () => void;            // callback après insertion
-  mode?: 'editComment' | 'reply';
+  mode?: 'editComment' | 'reply' | 'editTopic';
 }
 
 function TextEditor({ rQValue, setRQValue, replyTo, onInserted, mode }: TextEditorProps) {
   const quillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {
-     if (mode === 'editComment') {
+     if (mode === 'editComment' || mode === 'editTopic') {
       // On est en édition, ne pas insérer de quote
       return;
     }

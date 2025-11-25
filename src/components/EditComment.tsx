@@ -196,7 +196,7 @@ dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: edit
         <legend className="text-lg text-center text-gray-300 font-medium mb-2">Modifiez le Commentaire</legend>
 
         <div className="flex flex-col w-full">
-          <label className="text-base text-gray-400 mt-2 mb-1" htmlFor="email">
+          <label className="text-base text-gray-400 mt-2 mb-1">
             Commentaire :
           </label>
 

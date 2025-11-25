@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 import { useAppSelector } from "../store/hooks.js"
 import { useState, startTransition } from 'react';
 
@@ -177,9 +179,8 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setModalComponent, se
                     <span className="ml-1  text-3xl font-bold text-white">
                         {topic.title}
                     </span>
-                    <span className="ml-2  text-md text-gray-300">
-                        {topic.description}
-                    </span>
+                    <span className="ml-2  text-md text-gray-300" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(topic.description) }}/>
+                        
                 </div>
             </div>
         </div>
