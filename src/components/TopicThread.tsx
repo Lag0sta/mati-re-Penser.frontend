@@ -15,7 +15,7 @@ interface topicProps {
     replyTo: string
     setReplyTo: (value: string) => any
     setIsModalOpen: (value: boolean) => any
-    setIsEditModalOpen: (value: boolean) => any
+    setIsTextModalOpen: (value: boolean) => any
     setIsMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
@@ -23,7 +23,7 @@ interface topicProps {
     setAuthType: (value: string) => any
 }
 
-function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsEditModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
+function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
@@ -57,7 +57,7 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsEditModalOpen, 
             <div className='w-[65%] py-4 flex flex-col justify-start items-center bg-gray-800 rounded-md'>
                 <Topic setIsModalOpen={setIsModalOpen}
                     setModalComponent={setModalComponent}
-                    setIsEditModalOpen={setIsEditModalOpen}
+                    setIsTextModalOpen={setIsTextModalOpen}
                     setAuthType={setAuthType}
                     setIsNewComment={setIsNewComment}
                     isNewComment={isNewComment}
@@ -70,7 +70,7 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsEditModalOpen, 
 
                 <Thread setPseudo={setPseudo}
                     setIsModalOpen={setIsModalOpen}
-                    setIsEditModalOpen={setIsEditModalOpen}
+                    setIsTextModalOpen={setIsTextModalOpen}
                     setMessageModalOpen={setIsMessageModalOpen}
                     setModalComponent={setModalComponent}
                     setErrorMessage={setErrorMessage}

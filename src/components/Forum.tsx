@@ -10,12 +10,12 @@ import { formatDateToBelgium } from "../utils/formatDateActions.js";
 interface discussionProps {
     setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
-    setIsModalOpen: (value: boolean) => any
+    setIsTextModalOpen: (value: boolean) => any
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
 }
 
-function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessageModalOpen, setErrorMessage }: discussionProps) {
+function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsMessageModalOpen, setErrorMessage }: discussionProps) {
     const [forum, setForum] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -48,7 +48,7 @@ function Forum({ setMainComponent, setModalComponent, setIsModalOpen, setIsMessa
         }
 
         setModalComponent('newTopic')
-        setIsModalOpen(true)
+        setIsTextModalOpen(true)
     }
 
     const handleTopic = async (title: string) => {

@@ -7,7 +7,7 @@ import Publications from './Publications.js';
 import About from './About.js';
 import New from './New.js';
 import Modal from './Modal.js';
-import EditModal from './EditModal.js';
+import TextModal from './TextModal.js';
 import UserProfile from './UserProfile.js';
 import MessageModal from './MessageModal.js';
 
@@ -15,7 +15,7 @@ function App() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
   const [modalComponent, setModalComponent] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isTextModalOpen, setIsTextModalOpen] = useState<boolean>(false);
   const [isAddComment, setIsAddComment] = useState<boolean>(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
@@ -82,7 +82,7 @@ console.log("isModalOpen", isModalOpen)
             <Forum
               setMainComponent={setMainComponent}
               setModalComponent={setModalComponent}
-              setIsModalOpen={setIsModalOpen}
+              setIsTextModalOpen={setIsTextModalOpen}
               setErrorMessage={setErrorMessage}
               setIsMessageModalOpen={setIsMessageModalOpen}
             />
@@ -95,7 +95,7 @@ console.log("isModalOpen", isModalOpen)
               setErrorMessage={setErrorMessage}
               setSuccessMessage={setSuccessMessage}
               setIsModalOpen={setIsModalOpen}
-              setIsEditModalOpen={setIsEditModalOpen}
+              setIsTextModalOpen={setIsTextModalOpen}
               setIsMessageModalOpen={setIsMessageModalOpen}
               setModalComponent={setModalComponent}
               setAuthType={setAuthType}
@@ -135,13 +135,13 @@ console.log("isModalOpen", isModalOpen)
           setAuthType={setAuthType}
         />
       )}
-      {isEditModalOpen && (
-        <EditModal
+      {isTextModalOpen && (
+        <TextModal
         setIsModalOpen={setIsModalOpen}
           setModalComponent={setModalComponent}
           modalComponent={modalComponent}
           setIsMessageModalOpen={setIsMessageModalOpen}
-          setIsEditModalOpen={setIsEditModalOpen}
+          setIsTextModalOpen={setIsTextModalOpen}
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}
           setMainComponent={setMainComponent}

@@ -7,7 +7,7 @@ import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
 interface topicProps {
     setIsModalOpen: (value: boolean) => any
-    setIsEditModalOpen: (value: boolean) => any
+    setIsTextModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setAuthType: (value: string) => any
     setIsNewComment: (value: boolean) => any
@@ -18,7 +18,7 @@ interface topicProps {
     threadRef: any
 }
 
-function TopicThread({ setIsModalOpen, setIsEditModalOpen, setModalComponent, setAuthType, setIsNewComment, isNewComment, setMessageModalOpen, setErrorMessage, setResponseType, threadRef }: topicProps) {
+function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, setAuthType, setIsNewComment, isNewComment, setMessageModalOpen, setErrorMessage, setResponseType, threadRef }: topicProps) {
     const [lockHover, setLockHover] = useState<boolean>(false);
     const [editHover, setEditHover] = useState<boolean>(false);
     const [replyHover, setReplyHover] = useState<boolean>(false);
@@ -29,7 +29,7 @@ function TopicThread({ setIsModalOpen, setIsEditModalOpen, setModalComponent, se
 
 
     const handleEditTopic = () => {
-        setIsEditModalOpen(true);
+        setIsTextModalOpen(true);
         setModalComponent('editTopic');
     }
 

@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import EditTopic from './EditTopic.js';
 import EditComment from './EditComment.js';
+import NewTopic from './NewTopic.js';
 
 interface modalProps {
   replyTo: any
@@ -13,11 +14,11 @@ interface modalProps {
   setSuccessMessage: (value: string) => any
   setMainComponent: (value: string) => any
   authType: string
-  setIsEditModalOpen: (value: boolean) => any
+  setIsTextModalOpen: (value: boolean) => any
 }
 
 
-function EditModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsEditModalOpen }: modalProps) {
+function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsTextModalOpen }: modalProps) {
   console.log("modalComponent", modalComponent)
 
   return (
@@ -33,7 +34,7 @@ function EditModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
               modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
-              setIsEditModalOpen={(value: boolean) => setIsEditModalOpen(value)}
+              setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)} />
           }
@@ -45,9 +46,19 @@ function EditModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsEditModalOpen={(value: boolean) => setIsEditModalOpen(value)}
+              setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}/>
+          }
+          {modalComponent === "newTopic" &&
+            <NewTopic setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+            />
           }
         </Suspense>
       </div>
@@ -55,4 +66,4 @@ function EditModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
   )
 }
 
-export default EditModal
+export default TextModal

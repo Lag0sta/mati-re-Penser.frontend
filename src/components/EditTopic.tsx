@@ -10,13 +10,13 @@ interface topicProps {
     setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
     modalComponent: string
-    setIsEditModalOpen: (value: boolean) => any
+    setIsTextModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
 
 }
-function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsEditModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
+function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
     const topic: any = useAppSelector((state) => state.topic.value);
     const originalValue = topic?.description
     const [rQValue, setRQValue] = useState<string>(topic?.description ?? "");
@@ -66,7 +66,7 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsEd
                 dispatch(editTopicInfo(editTopicResponse.topic))
                 setSuccessMessage(editTopicResponse.success);
                 setIsMessageModalOpen(true);
-                setIsEditModalOpen(false);
+                setIsTextModalOpen(false);
                 setModalComponent("");
             }
         } catch (error) {
@@ -78,7 +78,7 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsEd
 
     const handleCloseModal = () => {
         setModalComponent('');
-        setIsEditModalOpen(false);
+        setIsTextModalOpen(false);
     }
 
     return (
@@ -128,13 +128,6 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsEd
                         setRQValue={setRQValue}
                         mode="editTopic"
                      />
-
-                    {/* <textarea className="w-full h-32 border-2 border-black rounded-md px-3"
-                        id="description"
-                        placeholder="descriptif"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    /> */}
                 </div>
             </fieldset>
             <div className="flex flex-col justify-center items-center mt-4">
@@ -149,8 +142,6 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsEd
                     >
                         Modifier
                     </button>)}
-
-
             </div>
 
         </div>

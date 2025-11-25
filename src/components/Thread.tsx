@@ -11,7 +11,7 @@ import { getComment } from '../store/reducers/comment.js'
 interface threadListProps {
     setPseudo: (value: string) => any
     setIsModalOpen: (value: boolean) => any
-    setIsEditModalOpen: (value: boolean) => any
+    setIsTextModalOpen: (value: boolean) => any
     setMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
@@ -27,7 +27,7 @@ interface threadListProps {
     setQuoteID: (value: any) => any
 }
 
-function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo, pageSize, currentPage, setAuthType, quoteID, setQuoteID }: threadListProps) {
+function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setThreadID, setResponseType, setReplyTo, pageSize, currentPage, setAuthType, quoteID, setQuoteID }: threadListProps) {
     const [showComments, setShowComments] = useState<any>({ istrue: false, threadId: "" })
     const [replyHover, setReplyHover] = useState<boolean>(false);
     const [msgHover, setMsgHover] = useState<boolean>(false);
@@ -118,7 +118,7 @@ function Thread({ setPseudo, setIsModalOpen, setIsEditModalOpen, setMessageModal
     setReplyTo(quoteInfo);
 
     // Ouvrir modal
-    setIsEditModalOpen(true);
+    setIsTextModalOpen(true);
     setModalComponent('editComment');
 }
 

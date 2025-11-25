@@ -12,7 +12,7 @@ interface CommentProps {
   setModalComponent: (value: string) => any;
   modalComponent?: string;
   setIsModalOpen?: (value: boolean) => any;
-  setIsEditModalOpen: (value: boolean) => any;
+  setIsTextModalOpen: (value: boolean) => any;
   setErrorMessage: (value: string) => any;
   setSuccessMessage: (value: string) => any;
   setIsMessageModalOpen: (value: boolean) => any;
@@ -23,7 +23,7 @@ export default function EditComment({
   setReplyTo,
   setModalComponent,
   setErrorMessage,
-  setIsEditModalOpen,
+  setIsTextModalOpen,
   setSuccessMessage,
   setIsMessageModalOpen,
 }: CommentProps) {
@@ -112,7 +112,7 @@ export default function EditComment({
 dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: editCommentResponse.editedComment.text }));
       setSuccessMessage(editCommentResponse.message ?? "Commentaire modifié");
       setIsMessageModalOpen(true);
-      setIsEditModalOpen(false);
+      setIsTextModalOpen(false);
       setModalComponent("");
     } catch (err: any) {
       setErrorMessage(err?.message ?? String(err));
@@ -122,7 +122,7 @@ dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: edit
 
   const handleCloseModal = () => {
     setModalComponent("");
-    setIsEditModalOpen(false);
+    setIsTextModalOpen(false);
   };
 
   // helper to render nested quotes recursively
