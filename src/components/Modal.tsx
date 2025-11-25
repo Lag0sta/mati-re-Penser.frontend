@@ -1,8 +1,6 @@
 import React from 'react';
 import { useState, Suspense } from 'react'
-import { useRef } from 'react'
-import EditTopic from './EditTopic.js';
-import EditComment from './EditComment.js';
+import AddReview from './AddReview.js';
 import DeleteComment from './DeleteComment.js';
 import NewTopic from './NewTopic.js';
 import Auth from './Auth.js';
@@ -58,17 +56,7 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)} />
-          }
-          {modalComponent === "newTopic" &&
-            <NewTopic setMainComponent={(value: string) => setMainComponent(value)}
-              modalComponent={modalComponent}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-            />
-          }
+          }          
           
           {modalComponent === "auth" &&
             <Auth setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
@@ -99,6 +87,11 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setAuthType={(value: string) => setAuthType(value)}/>
           }
           
+          {modalComponent === "addReview" && 
+            <AddReview setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
+                       setModalComponent={(value: string) => setModalComponent(value)}/>
+          
+          }
           {/* {modalComponent === "deleteTopic" &&
             <DeleteTopic setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
               setModalComponent={(value: string) => setModalComponent(value)}

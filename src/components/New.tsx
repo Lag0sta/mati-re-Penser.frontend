@@ -5,11 +5,13 @@ const Comments = React.lazy(() => import('./Comments.js'));
 interface newProps {
     setIsModalOpen: (value: boolean) => any
     setIsAddComment: (value: boolean) => any
+    setModalComponent: (value: string) => any
 }
-function New({ setIsModalOpen, setIsAddComment }: newProps) {
+function New({ setIsModalOpen, setIsAddComment, setModalComponent }: newProps) {
 
     const handleClickAddComment = () => {
         setIsModalOpen(true);
+        setModalComponent("addReview")
         setIsAddComment(true);
     }
 

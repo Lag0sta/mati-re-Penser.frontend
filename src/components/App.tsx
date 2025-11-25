@@ -76,6 +76,7 @@ console.log("isModalOpen", isModalOpen)
             <New
               setIsModalOpen={setIsModalOpen}
               setIsAddComment={setIsAddComment}
+              setModalComponent={setModalComponent}
             />
           )}
           {mainComponent === "forum" && (

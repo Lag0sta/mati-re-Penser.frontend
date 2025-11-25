@@ -1,13 +1,13 @@
 interface AddReviewsProps {
     setIsModalOpen: (value: boolean) => any
-    setIsAddComment: (value: boolean) => any
+    setModalComponent: (value: string) => any
 }
 
-function AddReviews({ setIsModalOpen, setIsAddComment }: AddReviewsProps) {
+function AddReview({ setIsModalOpen, setModalComponent }: AddReviewsProps) {
 
     const handleCloseModal = () => {
         setIsModalOpen(false)
-        setIsAddComment(false)
+        setModalComponent('')
     }
 
     return (
@@ -27,4 +27,4 @@ function AddReviews({ setIsModalOpen, setIsAddComment }: AddReviewsProps) {
     )
 }
 
-export default AddReviews
+export default AddReview
