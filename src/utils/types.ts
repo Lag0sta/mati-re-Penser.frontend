@@ -32,3 +32,10 @@ export interface topicData {
     description ?: string
     isLocked ?: boolean
 }
+
+export interface reviewData {
+    name ?: string
+    title ?: string
+    text ?: string
+    rating ?: number
+}

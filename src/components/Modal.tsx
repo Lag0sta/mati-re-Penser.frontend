@@ -89,7 +89,11 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
           
           {modalComponent === "addReview" && 
             <AddReview setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-                       setModalComponent={(value: string) => setModalComponent(value)}/>
+                       setModalComponent={(value: string) => setModalComponent(value)}
+                       setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+                       setMessageModal={(value: string) => setErrorMessage(value)}
+                       setErrorMessage={(value: string) => setErrorMessage(value)}
+                       setSuccessMessage={(value: string) => setSuccessMessage(value)}/>
           
           }
           {/* {modalComponent === "deleteTopic" &&
