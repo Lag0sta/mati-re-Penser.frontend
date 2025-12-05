@@ -8,7 +8,8 @@ const initialState = {
         email: "",
         avatar: "",
         pseudo: "",
-        submits: []
+        submits: [],
+        isAdmin: false
     },
 };
 
@@ -21,6 +22,8 @@ const userSlice = createSlice({
             state.value.email = action.payload.email;
             state.value.pseudo = action.payload.pseudo;
             state.value.avatar = action.payload.avatar;
+            state.value.submits = action.payload.submits;
+            state.value.isAdmin = action.payload.isAdmin;
         },
 
         update: (state, action) => {

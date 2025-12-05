@@ -33,10 +33,10 @@ const handleUserProfile = () => {
 
 const handleLogOut = async () => {
   const authData = {token: token, userId: user.id}
-
+console.log("authData", authData)
   try {
     const logOutResponse = await logOut(authData)
-
+    console.log("logOutResponse", logOutResponse)
     if (!logOutResponse.result) {
       setIsMessageModalOpen(true)
       setErrorMessage("Une erreur est survenue")
