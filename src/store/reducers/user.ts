@@ -38,6 +38,8 @@ const userSlice = createSlice({
             state.value.email = "";
             state.value.pseudo = "";
             state.value.avatar = "";
+            state.value.submits = [];
+            state.value.isAdmin = false;
         },
     },
 });
