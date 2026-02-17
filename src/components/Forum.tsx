@@ -52,19 +52,19 @@ function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsM
     }
 
     const handleTopic = async (title: string) => {
-        console.log('topic')
-        const topicData = { title };
+        console.log('TopicTitle', title)
+        const topicThreadData = { title };
         try {
-            const discussionResponse = await topicThread({ topicData })
+            const discussionResponse = await topicThread({ topicThreadData })
 
-            console.log("Thediscussion :", discussionResponse)
+            console.log("Thediscussion :", JSON.parse(discussionResponse.error))
             
             if (discussionResponse){
                 console.log("yeay", discussionResponse)
                 setMainComponent('topicThread')
                 dispatch(get(discussionResponse))
             }else {
-                setErrorMessage(discussionResponse.error);
+                setErrorMessage(JSON.parse(discussionResponse.error));
                 setIsMessageModalOpen(true);
             }
             

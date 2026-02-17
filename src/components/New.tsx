@@ -32,6 +32,7 @@ function New({ setIsModalOpen, setIsAddComment, setModalComponent }: newProps) {
                     </div>
                 </div>
             }
+            <input type="file" className="w-fit my-2 p-2 border border-white rounded-lg " accept="image/*"/>
             {!user.isAdmin &&
                 <div className="w-[78%] flex justify-center items-center mb-4  bg-white rounded-md">
                     <h2 className=" mx-2 my-1  text-3xl text-center">À LA UNE</h2>

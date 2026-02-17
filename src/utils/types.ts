@@ -33,6 +33,10 @@ export interface topicData {
     isLocked ?: boolean
 }
 
+export interface topicThreadData {
+    title : string
+}
+
 export interface reviewData {
     name ?: string
     title ?: string

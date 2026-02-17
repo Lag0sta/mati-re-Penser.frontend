@@ -21,7 +21,7 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
 
     const handleSignIn = async () => {
         const authData = { email, password }
-
+        const msg = []
         try {
             //réinitialisation des messages
             setErrorMessage("")
@@ -32,7 +32,7 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
             if (signInResponse.result) {
                 setEmail("");
                 setPassword("");
-
+                
                 dispatch(save(signInResponse.accessToken));
                 dispatch(login(signInResponse));
 
@@ -40,7 +40,15 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 setSuccessMessage(signInResponse.message);
                 setIsMessageModalOpen(true);
             } else {
-                setErrorMessage(signInResponse.message);
+                // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
+                const errors = JSON.parse(signInResponse.error);
+
+                for (const err of errors) {
+                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
+                    msg.push(err.message)
+                
+                }
+                setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
             }
         } catch (error) {

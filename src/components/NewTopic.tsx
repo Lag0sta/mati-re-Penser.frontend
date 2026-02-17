@@ -27,15 +27,23 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
     const handleNewTopic = async () => {
        
         const topicData = { token, title, description };
+        const msg = [];
 
         try {
             const newTopicResponse = await newTopic({ topicData });
 
             if (!newTopicResponse.result) {
-                setErrorMessage(newTopicResponse.error);
+                const errors = JSON.parse(newTopicResponse.error);
+                for (const err of errors) {
+                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
+                    msg.push(err.message)
+                
+                }
+                setErrorMessage(msg.join(", "));
                 setSuccessMessage('');
                 setIsMessageModalOpen(true);
             } else {
+
                 setSuccessMessage(newTopicResponse.success);
                 setErrorMessage('');
                 setIsMessageModalOpen(true);

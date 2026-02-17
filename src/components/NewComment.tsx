@@ -88,9 +88,9 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
 
         // Re-sync avec les vraies données du backend après 2 sec
         setTimeout(async () => {
-            const topicData = { title };
+            const topicThreadData = { title };
             try {
-                const respones = await topicThread({ topicData });
+                const respones = await topicThread({ topicThreadData });
 
                 if (respones) {
                     dispatch(get(topic))

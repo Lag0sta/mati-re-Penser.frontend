@@ -6,7 +6,7 @@ interface reviewProps {
 }
 
 export async function newReview({ reviewData }: reviewProps){
-    const { name, mail, title, text, rating } = reviewData
+    const { name, title, text, rating } = reviewData
     console.log("reviewData", reviewData)
     try {
         const review = await fetch(`${API_URL}/reviews/newReview`, {
@@ -14,7 +14,6 @@ export async function newReview({ reviewData }: reviewProps){
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 name: name,
-                mail: mail,
                 title: title,
                 text: text,
                 rating: rating

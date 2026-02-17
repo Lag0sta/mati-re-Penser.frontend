@@ -26,7 +26,7 @@ function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, se
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
-
+console.log("whatTopic", topic)
 
     const handleEditTopic = () => {
         setIsTextModalOpen(true);

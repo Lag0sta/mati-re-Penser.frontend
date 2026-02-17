@@ -30,7 +30,21 @@ console.log("isModalOpen", isModalOpen)
   const contactRef = useRef<HTMLDivElement>(null);
 
   const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
+//todo : Admin : 
+// 1_backend:
+//a_
+//router.get("/admin/stats", auth, async (req, res) => {
+//    const user = req.user;
 
+//    if (!user.isAdmin) return res.status(403).json({ error: "Admins only" });
+
+//    res.json({ data: "secret admin stats" });
+//});
+//
+//b_Admin Routes
+//
+//2_front : 
+//check adminData 
   return (
     <main className="max-w-screen mx-auto grid grid-rows-[auto_1fr_auto] grid-cols-4 bg-gray-200 min-h-screen">
       

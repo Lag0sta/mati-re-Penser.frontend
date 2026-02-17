@@ -31,14 +31,25 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
     const handleReview = async () => {
         const text = review
         const reviewData = { name, title, text, rating }
+        const msg: string[] = [];
+
 
         try {
             const addReviewResponse = await newReview({ reviewData })
-            console.log("addReviewResponse", addReviewResponse)
+            console.log("addReviewResponse1", JSON.stringify(addReviewResponse.error, null, 2));
 
-            if (!addReviewResponse.result) {
-                console.log("addReviewResponse.message", addReviewResponse)
-                setErrorMessage(addReviewResponse.message)
+            if (addReviewResponse.error) {
+                // addReviewResponse.error n'est pas juste un string et à besoin d'être JSON.parse
+                const errors = JSON.parse(addReviewResponse.error);
+
+                for (const err of errors) {
+                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
+                    msg.push(err.message)
+                
+                }
+                console.log("msgArray", msg)
+                setErrorMessage(msg.join(", "))
+
                 setIsMessageModalOpen(true)
                 return
             }
@@ -81,9 +92,9 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
                     </svg>
                 ))}
             </div>
-            <input className="w-64 border-2 text-gray-800 border-gray-800 rounded-md pl-2 my-1" type="text" placeholder="nom" value={name} onChange={(e) => setName(e.target.value)}/>
+            <input className="w-64 border-2 text-gray-800 border-gray-800 rounded-md pl-2 my-1" type="text" placeholder="nom" value={name} onChange={(e) => setName(e.target.value)} />
             <input className="w-64 border-2 text-gray-800 border-gray-800 rounded-md pl-2 my-1" type="text" placeholder="titre" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <textarea className="min-h-[100px]  w-64 border-2 text-gray-800 border-gray-800 rounded-md pl-2 my-1" placeholder="écrivez votre commentaire ici" value={review} onChange={(e) => setReview(e.target.value)}/>
+            <textarea className="min-h-[100px]  w-64 border-2 text-gray-800 border-gray-800 rounded-md pl-2 my-1" placeholder="écrivez votre commentaire ici" value={review} onChange={(e) => setReview(e.target.value)} />
 
             <button className="bg-gray-800 border-2 border-gray-800 text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer"
                 onClick={handleReview}>Envoyer</button>
