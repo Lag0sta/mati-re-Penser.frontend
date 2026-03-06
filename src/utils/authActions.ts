@@ -101,7 +101,7 @@ export async function logOut(profileData: authData) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: token,
-                id: userId
+                idd: userId
             })
         });
         const data = await logOut.json();

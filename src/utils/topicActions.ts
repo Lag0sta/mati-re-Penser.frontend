@@ -1,12 +1,8 @@
 import { topicData } from './types.js';
-import { topicThreadData } from './types.js';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 interface topicProps {
     topicData: topicData
-}
-interface topicThreadProps{
-    topicThreadData: topicThreadData
 }
 
 export async function newTopic({ topicData }: topicProps) {
@@ -90,9 +86,9 @@ export async function lockTopic({ topicData }: topicProps) {
     }
 }
 
-export async function topicThread({ topicThreadData }: topicThreadProps) {
-    const { title } = topicThreadData
-        console.log("topicData", topicThreadData.title)
+export async function topicThread({ topicData }: topicProps) {
+    const { title } = topicData
+        console.log("topicData", topicData.title)
         console.log("THEtitle", title)
     try {
         

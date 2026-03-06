@@ -16,6 +16,7 @@ const commentSlice = createSlice({
         getComment: (state, action) => {
             state.value = action.payload;
         },
+
     },
 });
 

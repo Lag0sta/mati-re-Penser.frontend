@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store/hooks.js";
 
 import TextEditor from "./TextEditor.js";
@@ -109,7 +109,7 @@ export default function EditComment({
 
       // update topic slice with edited comment
       console.log("editCommentResponse", editCommentResponse);
-dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: editCommentResponse.editedComment.text }));
+      dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: editCommentResponse.editedComment.text }));
       setSuccessMessage(editCommentResponse.message ?? "Commentaire modifié");
       setIsMessageModalOpen(true);
       setIsTextModalOpen(false);
@@ -215,11 +215,11 @@ dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: edit
             </div>
           )}
 
-          <TextEditor rQValue={rQValue} 
-                      setRQValue={setRQValue} 
-                      replyTo={replyTo} 
-                      setReplyTo={setReplyTo}  
-                      mode="editComment" />
+          <TextEditor rQValue={rQValue}
+            setRQValue={setRQValue}
+            replyTo={replyTo}
+            setReplyTo={setReplyTo}
+            mode="editComment" />
         </div>
 
       </fieldset>

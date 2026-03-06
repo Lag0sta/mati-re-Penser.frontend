@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import EditTopic from './EditTopic.js';
 import EditComment from './EditComment.js';
 import NewTopic from './NewTopic.js';
+import NewPublication from './NewPublication.js';
 
 interface modalProps {
   replyTo: any
@@ -60,6 +61,15 @@ function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
             />
           }
+          {modalComponent === "newPublication" &&
+            <NewPublication setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+            />}
         </Suspense>
       </div>
     </div>

@@ -1,10 +1,6 @@
-import parse from 'html-react-parser';
-import DOMPurify from 'dompurify';
 import { useAppSelector } from "../store/hooks.js"
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-import { AnimatePresence, motion } from "framer-motion";
-
 
 import TextEditor from "./TextEditor.js";
 
@@ -17,30 +13,35 @@ interface newTopicProps {
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setIsNewComment: (value: boolean) => any
-
     replyTo: any
     setReplyTo: (value: any) => any
     rQValue: string
     setRQValue: (value: string) => any
-    responseType: string
     setResponseType: (value: string) => any
     quoteID: string[]
-    setQuoteID: (value: string[]) => any
 }
 
-function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, replyTo, setReplyTo, rQValue, setRQValue, responseType, setResponseType, quoteID, setQuoteID }: newTopicProps) {
-
+function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, replyTo, setReplyTo, rQValue, setRQValue, setResponseType, quoteID,  }: newTopicProps) {
     const dispatch = useAppDispatch();
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
-    const user = useAppSelector((state) => state.user.value);
-    const [quoteIds, setQuoteIds] = useState<string[]>([]);
-    console.log("quoteID", quoteID)
-    const handleInsertedQuote = useCallback((id: string) => {
-        setQuoteIds(prev => [...prev, id]);
-    }, []);
+    const originalValue = ""
+    const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true)
 
-    console.log("topic in TOPIC", topic);
+    function normalize(str = "") {
+        return str.replace(/<[^>]+>/g, "").trim();
+    }
+
+    useEffect(() => {
+        if (
+            normalize(rQValue) !== originalValue) {
+            console.log("goal! w2")
+            setIsButtonLocked(false)
+        } else {
+            console.log("no goal")
+            setIsButtonLocked(true)
+        }
+    }, [rQValue]);
 
     const handleNewComment = async () => {
         const title = topic.title
@@ -49,7 +50,6 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         const parser = new DOMParser();
         const doc = parser.parseFromString(rQValue, 'text/html');
 
-        
         // Supprime tous les éléments de citation
         doc.querySelectorAll('.ql-reply-quote').forEach(el => el.remove());
 
@@ -58,6 +58,8 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
 
         const threadData = { token, title, newComment, quote: quoteID }
         console.log("threadData", threadData)
+
+        const msg: string[] = []
         try {
             const addCommentResponse = await addComment({ threadData });
             console.log("addCommentResponse", addCommentResponse);
@@ -78,7 +80,15 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                 setResponseType("");
                 setIsNewComment(false)
             } else {
-                setErrorMessage(addCommentResponse.error);
+                // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
+                const errors = JSON.parse(addCommentResponse.error);
+
+                for (const err of errors) {
+                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
+                    msg.push(err.message)
+                
+                }
+                setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
             }
         } catch (error) {
@@ -88,9 +98,9 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
 
         // Re-sync avec les vraies données du backend après 2 sec
         setTimeout(async () => {
-            const topicThreadData = { title };
+            const topicData = { title };
             try {
-                const respones = await topicThread({ topicThreadData });
+                const respones = await topicThread({ topicData });
 
                 if (respones) {
                     dispatch(get(topic))
@@ -106,16 +116,10 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         }, 2000);
     }
 
-    console.log("responseType", responseType);
-
     return (
         <div className="w-fit  bg-gray-800  border-2 border-gray-800  rounded-md my-1 ">
             <div className='w-full flex'>
-
                 <div className="flex-col w-full">
-                    <div>
-
-                    </div>
                     <div className="w-full flex flex-col justify-between  ">
                         <div className="h-full w-full flex flex-col items-center ">
                             <div className="w-full h-fit px-2 py-1">
@@ -125,10 +129,6 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                                         setRQValue={setRQValue}
                                         replyTo={replyTo}
                                         setReplyTo={setReplyTo}
-                                        // onInserted={handleInsertedQuote}
-                                        // setQuoteID={setQuoteID}
-
-
                                     />
 
                                 </div>
@@ -139,14 +139,19 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
             </div>
 
             <div className='flex justify-center px-2 '>
-                <button className="w-full px-2 py-1 bg-gray-800 text-gray-200  rounded-b-md hover:bg-gray-600 hover:text-gray-800 border-l-2 border-gray-800 cursor-pointer"
+                {isButtonLocked ? (
+                 <button className="w-full px-2 py-1 bg-gray-800 text-gray-600  rounded-b-md hover:bg-gray-600 hover:text-gray-800 border-l-2 border-gray-800 cursor-pointer opacity-50 cursor-not-allowed opacity-50 cursor-not-allowed" disabled>
+                    Valider
+                 </button>
+                ) : (     
+                 <button className="w-full px-2 py-1 bg-gray-800 text-gray-200  rounded-b-md hover:bg-gray-600 hover:text-gray-800 border-l-2 border-gray-800 cursor-pointer"
                     onClick={handleNewComment}>
                     Valider
                 </button>
+                 )
+                }
             </div>
-
         </div>
-
     )
 }
 

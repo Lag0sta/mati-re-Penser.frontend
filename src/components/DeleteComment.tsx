@@ -1,19 +1,15 @@
 import { useAppSelector } from "../store/hooks.js"
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-
-import TextEditor from "./TextEditor.js";
 
 import { deleteC, get } from '../store/reducers/topic.js';
 
 import { deleteComment } from '../utils/threadActions.js';
 import { topicThread } from "../utils/topicActions.js";
-import { original } from "@reduxjs/toolkit";
 
 interface commentProps {
     setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
-    modalComponent: string
     setIsModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
@@ -22,24 +18,19 @@ interface commentProps {
 
 
 }
-function DeleteComment({ modalComponent, setModalComponent, setErrorMessage, setIsModalOpen, setSuccessMessage, setIsMessageModalOpen, setAuthType }: commentProps) {
+function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, setSuccessMessage, setIsMessageModalOpen, setAuthType }: commentProps) {
     const dispatch = useAppDispatch();
 
     const comment: any = useAppSelector((state) => state.comment.value);
     const token = useAppSelector((state) => state.authToken.value);
-
-    const [originalValue, setOriginalValue] = useState<string>(comment.text);
-    const [rQValue, setRQValue] = useState<string>(comment.text);
-    const [password, setPassword] = useState('');
     const [choice, setChoice] = useState(false);
     const topic: any = useAppSelector((state) => state.topic.value);
-
-    console.log("rQValue", rQValue)
 
     const handleDeleteComment = async () => {
         console.log("comment.id", comment.id)
         const id = comment.id
         const threadData = { token, id };
+        const msg = [];
         try {
             console.log("threadData", threadData)
 
@@ -47,38 +38,45 @@ function DeleteComment({ modalComponent, setModalComponent, setErrorMessage, set
             console.log("deleteCommentResponse", deleteCommentResponse);
 
             if (!deleteCommentResponse.result) {
-                setErrorMessage(deleteCommentResponse.message);
+                // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
+                const errors = JSON.parse(deleteCommentResponse.error);
+
+                for (const err of errors) {
+                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
+                    msg.push(err.message)
+                }
+                setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
                 return;
             } else {
-                dispatch(deleteC({id : deleteCommentResponse.id}))
+                dispatch(deleteC({ id: deleteCommentResponse.id }))
                 setAuthType('');
                 setSuccessMessage(deleteCommentResponse.message);
                 setIsMessageModalOpen(true);
                 setIsModalOpen(false);
                 setModalComponent('');
 
-                 // <-- AJOUTER CE BLOc
-    setTimeout(async () => {
-    try {
-        const res = await topicThread({ topicData: { title: topic.title } });
+                // <-- AJOUTER CE BLOc
+                setTimeout(async () => {
+                    try {
+                        const res = await topicThread({ topicData: { title: topic.title } });
 
-        // --- Success case ---
-        if (res?.result && res?.discussion) {
-            dispatch(get(res)); // <-- on envoie seulement la discussion
-            return;
-        }
+                        // --- Success case ---
+                        if (res?.result && res?.discussion) {
+                            dispatch(get(res)); // <-- on envoie seulement la discussion
+                            return;
+                        }
 
-        // --- API returned an error ---
-        setErrorMessage(res?.message || "Erreur lors de la récupération");
-        setIsMessageModalOpen(true);
+                        // --- API returned an error ---
+                        setErrorMessage(res?.message || "Erreur lors de la récupération");
+                        setIsMessageModalOpen(true);
 
-    } catch (error) {
-        // --- Crash JS / réseau ---
-        setErrorMessage(error instanceof Error ? error.message : String(error));
-        setIsMessageModalOpen(true);
-    }
-}, 1000);
+                    } catch (error) {
+                        // --- Crash JS / réseau ---
+                        setErrorMessage(error instanceof Error ? error.message : String(error));
+                        setIsMessageModalOpen(true);
+                    }
+                }, 1000);
 
             }
         } catch (error) {
@@ -92,7 +90,6 @@ function DeleteComment({ modalComponent, setModalComponent, setErrorMessage, set
         setModalComponent('');
         setIsModalOpen(false);
     }
-
 
     return (
         <div className="h-full w-full bg-gray-800 flex flex-col justify-center items-center">
@@ -127,22 +124,19 @@ function DeleteComment({ modalComponent, setModalComponent, setErrorMessage, set
                     />
                     Non
                 </label>
-               
-
-
             </fieldset >
 
             <div className="flex flex-col justify-center items-center">
                 {choice &&
                     <button className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer "
-                    onClick={handleDeleteComment}>
+                        onClick={handleDeleteComment}>
                         Confirmer
                     </button>
                 }
 
                 {!choice &&
                     <button className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer opacity-50 cursor-not-allowed"
-                        >
+                    >
                         Confirmer
                     </button>
                 }

@@ -2,14 +2,13 @@ import { useState } from "react"
 import { signUp } from "../utils/authActions.js"
 
 interface signUpProps {
-    setIsModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
 }
 
-function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signUpProps) {
+function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signUpProps) {
 
     const [name, setName] = useState("")
     const [surname, setSurname] = useState("")
@@ -26,6 +25,7 @@ function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
 
     const handleSignUp = async () => {
         const authData = { name, surname, pseudo, email, password, confirmPassword, hp }
+        const msg = []
 
         try {
             //réinitialisation des messages
@@ -44,7 +44,14 @@ function SignUp({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 setSuccessMessage(signUpResponse.success);
                 setIsMessageModalOpen(true);
             } else {
-                setErrorMessage(signUpResponse.error);
+                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
+                const errors = JSON.parse(signUpResponse.error);
+
+                for (const err of errors) {
+                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
+                    msg.push(err.message)
+                }
+                setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true)
             }
         } catch (error) {

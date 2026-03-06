@@ -1,4 +1,4 @@
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import TopicThread from './TopicThread.js';
 import Header from './Header.js';
 import Contact from './Contact.js';
@@ -10,6 +10,8 @@ import Modal from './Modal.js';
 import TextModal from './TextModal.js';
 import UserProfile from './UserProfile.js';
 import MessageModal from './MessageModal.js';
+import { useAppSelector, useAppDispatch } from '../store/hooks.js';
+import { load } from '../store/reducers/publication.js';
 
 function App() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
@@ -22,30 +24,37 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [authType, setAuthType] = useState<string>("");
   const [replyTo, setReplyTo] = useState<string>("");
+  const [loading, setLoading] = useState(true)
 
-console.log("modalComponent", modalComponent)
-console.log("isModalOpen", isModalOpen)
+  const dispatch = useAppDispatch();
+  
+  console.log("modalComponent", modalComponent)
+  console.log("isModalOpen", isModalOpen)
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
   const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
-//todo : Admin : 
-// 1_backend:
-//a_
-//router.get("/admin/stats", auth, async (req, res) => {
-//    const user = req.user;
 
-//    if (!user.isAdmin) return res.status(403).json({ error: "Admins only" });
+  useEffect(() => {
+          const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+  
+          const fetchData = async () => {
+              try {
+                  const response = await fetch(`${API_URL}/books/publications`)
+                  const data = await response.json()
+              
+                  dispatch(load(data.topics))
+              } catch (error) {
+                  console.error(error)
+              } finally {
+                  setLoading(false);
+              }
+          }
+          fetchData();
+      }, [])
 
-//    res.json({ data: "secret admin stats" });
-//});
-//
-//b_Admin Routes
-//
-//2_front : 
-//check adminData 
-  return (
+      return (
     <main className="max-w-screen mx-auto grid grid-rows-[auto_1fr_auto] grid-cols-4 bg-gray-200 min-h-screen">
       
       {/* Header */}
@@ -91,6 +100,7 @@ console.log("isModalOpen", isModalOpen)
               setIsModalOpen={setIsModalOpen}
               setIsAddComment={setIsAddComment}
               setModalComponent={setModalComponent}
+              setIsTextModalOpen={setIsTextModalOpen}
             />
           )}
           {mainComponent === "forum" && (

@@ -49,12 +49,6 @@ console.log("replyToTextEditor", replyTo)
 
   console.log("safeQuoteArr", safeQuoteArr)
 
-  // // Ajoute la dernière citation ciblée
-  // safeQuoteArr.push({
-  //   pseudo: DOMPurify.sanitize(replyTo.pseudo),
-  //   text: DOMPurify.sanitize(replyTo.text),
-  // });
-
   // Vide le contenu et insère le blot avec toutes les quotes
   quill.setContents([]);
   quill.insertEmbed(0, 'replyQuote', { quoteArr: safeQuoteArr });
