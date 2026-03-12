@@ -42,8 +42,7 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
             />}
           {modalComponent === "signUp" &&
-            <SignUp setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
+            <SignUp setModalComponent={(value: string) => setModalComponent(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
@@ -78,7 +77,6 @@ function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessage
           }
           {modalComponent === "deleteComment" &&
           <DeleteComment setMainComponent={(value: string) => setMainComponent(value)}
-              modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setIsModalOpen={(value: boolean) => setIsModalOpen(value)}

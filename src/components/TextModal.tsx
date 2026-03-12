@@ -3,6 +3,7 @@ import EditTopic from './EditTopic.js';
 import EditComment from './EditComment.js';
 import NewTopic from './NewTopic.js';
 import NewPublication from './NewPublication.js';
+import EditPublication from './EditPublication.js';
 
 interface modalProps {
   replyTo: any
@@ -16,10 +17,12 @@ interface modalProps {
   setMainComponent: (value: string) => any
   authType: string
   setIsTextModalOpen: (value: boolean) => any
+  publicationID: string
+  setPublicationID: (value: string) => any
 }
 
 
-function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsTextModalOpen }: modalProps) {
+function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsTextModalOpen, publicationID, setPublicationID }: modalProps) {
   console.log("modalComponent", modalComponent)
 
   return (
@@ -70,6 +73,19 @@ function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
               setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
             />}
+          {modalComponent === "editPublication" && 
+          <EditPublication 
+            setMainComponent={(value: string) => setMainComponent(value)}
+              modalComponent={modalComponent}
+              setModalComponent={(value: string) => setModalComponent(value)}
+              setErrorMessage={(value: string) => setErrorMessage(value)}
+              setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
+              setSuccessMessage={(value: string) => setSuccessMessage(value)}
+              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
+              publicationID={publicationID}
+              setPublicationID={(value: string) => setPublicationID(value)}
+            />}
+          
         </Suspense>
       </div>
     </div>

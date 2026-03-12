@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value:[{titre: "",
+  value:[{_id: "",
+          titre: "",
           text: "",
           img: "",
           avis: [{author: "", text: ""}],

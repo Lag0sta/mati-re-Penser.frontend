@@ -13,8 +13,9 @@ interface newProps {
     setIsAddComment: (value: boolean) => any
     setModalComponent: (value: string) => any
     setIsTextModalOpen: (value: boolean) => any
+    setPublicationID: (value: string) => any
 }
-function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComponent }: newProps) {
+function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComponent, setPublicationID }: newProps) {
     const [isAdminView, setIsAdminView] = useState(false);
     const user = useAppSelector(state => state.user.value)
 
@@ -57,7 +58,7 @@ function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComp
             }
             {isAdminView &&
                 <div>
-                    <NewAdminView setIsTextModalOpen={setIsTextModalOpen} setIsAddComment={setIsAddComment} setModalComponent={setModalComponent} />
+                    <NewAdminView setIsTextModalOpen={setIsTextModalOpen} setIsAddComment={setIsAddComment} setModalComponent={setModalComponent} setPublicationID={setPublicationID} />
                 </div>
             }
             {!isAdminView &&

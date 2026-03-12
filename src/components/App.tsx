@@ -25,6 +25,7 @@ function App() {
   const [authType, setAuthType] = useState<string>("");
   const [replyTo, setReplyTo] = useState<string>("");
   const [loading, setLoading] = useState(true)
+  const [publicationID, setPublicationID] = useState<string>("");
 
   const dispatch = useAppDispatch();
   
@@ -43,7 +44,7 @@ function App() {
               try {
                   const response = await fetch(`${API_URL}/books/publications`)
                   const data = await response.json()
-              
+                  console.log("dataPublication", data)
                   dispatch(load(data.topics))
               } catch (error) {
                   console.error(error)
@@ -101,6 +102,7 @@ function App() {
               setIsAddComment={setIsAddComment}
               setModalComponent={setModalComponent}
               setIsTextModalOpen={setIsTextModalOpen}
+              setPublicationID={setPublicationID}
             />
           )}
           {mainComponent === "forum" && (
@@ -172,7 +174,10 @@ function App() {
           setMainComponent={setMainComponent}
           authType={authType}
           replyTo={replyTo}
-          setReplyTo={setReplyTo}/>)}
+          setReplyTo={setReplyTo}
+          publicationID={publicationID}
+          setPublicationID={setPublicationID}/>)
+          }
           
       {isMessageModalOpen && (
         <MessageModal

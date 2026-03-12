@@ -11,16 +11,24 @@ interface newProps {
     setIsTextModalOpen: (value: boolean) => any
     setIsAddComment: (value: boolean) => any
     setModalComponent: (value: string) => any
+    setPublicationID: (value: string) => any
 }
-function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent }: newProps) {
+function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, setPublicationID }: newProps) {
     const [rQValue, setRQValue] = useState<string>("");
     const [titre, setTitre] = useState<string>("");
+    const publication = useAppSelector(state => state.publication.value[0])
     const user = useAppSelector(state => state.user.value)
     console.log("user", user)
 
     const handleNewBook = () => {
         setIsTextModalOpen(true);
         setModalComponent("newPublication");
+    }
+
+    const handleEditPublication = () => {
+        setPublicationID(publication._id)
+        setIsTextModalOpen(true);
+        setModalComponent("editPublication");
     }
     
     const handleSave = async () => {
@@ -60,7 +68,8 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent }
                     <div className=" flex flex-col  h-[50%] w-[90%] ml-4 ">
                         <div className="flex justify-center">
                             <span className="font-bold border border-2 border-red-600 rounded-md p-1" onClick={handleNewBook}>New Book</span>
-                            <span className="font-bold">Editer Text</span>
+                            <span className="font-bold"
+                            onClick={handleEditPublication}>Editer Text</span>
                         </div>
 
 
