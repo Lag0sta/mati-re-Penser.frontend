@@ -4,10 +4,10 @@ import { useAppDispatch } from "../store/hooks.js"
 
 import TextEditor from "./TextEditor.js";
 
-import { get, addThread } from '../store/reducers/topic.js'
+import { getTopic, addThread } from '../store/reducers/topic.js'
 
-import { topicThread } from "../utils/topicActions.js"
-import { addComment } from "../utils/threadActions.js"
+import { topicThreadRequest } from "../utils/topicActions.js"
+import { addCommentRequest } from "../utils/threadActions.js"
 
 interface newTopicProps {
     setIsMessageModalOpen: (value: boolean) => any
@@ -61,7 +61,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
 
         const msg: string[] = []
         try {
-            const addCommentResponse = await addComment({ threadData });
+            const addCommentResponse = await addCommentRequest({ threadData });
             console.log("addCommentResponse", addCommentResponse);
             if (addCommentResponse) {
                 const TheNewComment = {
@@ -100,10 +100,10 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         setTimeout(async () => {
             const topicData = { title };
             try {
-                const respones = await topicThread({ topicData });
+                const respones = await topicThreadRequest({ topicData });
 
                 if (respones) {
-                    dispatch(get(topic))
+                    dispatch(getTopic(topic))
                     setIsNewComment(false)
                 } else {
                     setErrorMessage(respones.error);

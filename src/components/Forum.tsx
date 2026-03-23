@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../store/hooks.js"
 
-import { get } from "../store/reducers/topic.js"
+import { getTopic } from "../store/reducers/topic.js"
 
-import { topicThread } from "../utils/topicActions.js"
+import { topicThreadRequest } from "../utils/topicActions.js"
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
 
@@ -55,13 +55,13 @@ function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsM
         console.log('TopicTitle', title)
         const topicData = { title };
         try {
-            const discussionResponse = await topicThread({ topicData })
+            const discussionResponse = await topicThreadRequest({ topicData })
 
             console.log("Thediscussion :", discussionResponse)
             if (discussionResponse){
                 console.log("yeay", discussionResponse)
                 setMainComponent('topicThread')
-                dispatch(get(discussionResponse))
+                dispatch(getTopic(discussionResponse))
             }else {
                 setErrorMessage(JSON.parse(discussionResponse.error));
                 setIsMessageModalOpen(true);

@@ -41,6 +41,7 @@ export interface reviewData {
 }
 
 export interface propData {
+    id ?: string
     titre ?: string
     text ?: string
     img ?: string

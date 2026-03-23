@@ -20,7 +20,5 @@ const commentSlice = createSlice({
     },
 });
 
-export const {
-    getComment
-} = commentSlice.actions;
+export const { getComment } = commentSlice.actions;
 export default commentSlice.reducer;

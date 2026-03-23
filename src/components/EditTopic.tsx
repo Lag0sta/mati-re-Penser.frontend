@@ -4,7 +4,7 @@ import { useAppDispatch } from "../store/hooks.js"
 import TextEditor from "./TextEditor.js";
 import { editTopicInfo } from '../store/reducers/topic.js';
 
-import { editTopic, } from "../utils/topicActions.js"
+import { editTopicRequest, } from "../utils/topicActions.js"
 
 interface topicProps {
     setMainComponent: (value: string) => any
@@ -56,7 +56,7 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
         const topicData = { token, id, title, description };
         const msg = [];
         try {
-            const editTopicResponse = await editTopic({ topicData });
+            const editTopicResponse = await editTopicRequest({ topicData });
 
             if (!editTopicResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse

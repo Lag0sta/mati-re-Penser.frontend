@@ -8,7 +8,7 @@ const authTokenSlice = createSlice({
   name: "authToken",
   initialState,
   reducers: {
-    save: (state,  action) => {
+    saveToken: (state,  action) => {
       state.value = action.payload
     },
     
@@ -19,5 +19,5 @@ const authTokenSlice = createSlice({
   },
 });
 
-export const {save, clearToken } = authTokenSlice.actions;
+export const {saveToken, clearToken } = authTokenSlice.actions;
 export default authTokenSlice.reducer;

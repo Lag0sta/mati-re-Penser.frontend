@@ -23,7 +23,7 @@ const topicSlice = createSlice({
     name: "topic",
     initialState,
     reducers: {
-        get: (state, action) => {
+        getTopic: (state, action) => {
             const discussion = action.payload.discussion;
             const sortedThreads = [...discussion.topicThread].sort((a, b) => 
         new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime()
@@ -50,11 +50,11 @@ const topicSlice = createSlice({
             }
         },
 
-        lock: (state, action) => {
+        lockTopic: (state, action) => {
             state.value.isLocked = action.payload;
         },
 
-        deleteC: (state, action) => {
+        deleteComment: (state, action) => {
             const { id } = action.payload;
             state.value.topicThread = state.value.topicThread.filter((t) => t.id !== id);
         }
@@ -64,11 +64,11 @@ const topicSlice = createSlice({
 });
 
 export const {
-    get,
+    getTopic,
     addThread,
     editTopicInfo,
     editCommentInfo,
-    lock,
-    deleteC
+    lockTopic,
+    deleteComment
 } = topicSlice.actions;
 export default topicSlice.reducer;

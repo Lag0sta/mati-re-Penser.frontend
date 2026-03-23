@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { logOut } from '../utils/authActions.js';
+import { logOutRequest } from '../utils/authActions.js';
 import { useAppSelector, useAppDispatch } from '../store/hooks.js';
 
-import { logout } from '../store/reducers/user.js';
+import { logoutUser } from '../store/reducers/user.js';
 import { clearToken } from '../store/reducers/auth.js';
 interface modalProps {
 setModalComponent: (value: string) => any
@@ -35,7 +35,7 @@ const handleLogOut = async () => {
   const authData = {token: token, userId: user.id}
 console.log("authData", authData)
   try {
-    const logOutResponse = await logOut(authData)
+    const logOutResponse = await logOutRequest(authData)
     console.log("logOutResponse", logOutResponse)
     if (!logOutResponse.result) {
       setIsMessageModalOpen(true)
@@ -47,7 +47,7 @@ console.log("authData", authData)
       setIsMessageModalOpen(true)
       setSuccessMessage(logOutResponse.message)
       dispatch(clearToken())
-      dispatch(logout())
+      dispatch(logoutUser())
       return
     }
   }catch (error) {

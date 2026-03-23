@@ -5,7 +5,7 @@ interface reviewProps {
     reviewData: reviewData
 }
 
-export async function newReview({ reviewData }: reviewProps){
+export async function newReviewRequest({ reviewData }: reviewProps){
     const { name, title, text, rating } = reviewData
     console.log("reviewData", reviewData)
     try {

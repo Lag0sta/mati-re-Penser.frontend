@@ -11,7 +11,7 @@ import TextModal from './TextModal.js';
 import UserProfile from './UserProfile.js';
 import MessageModal from './MessageModal.js';
 import { useAppSelector, useAppDispatch } from '../store/hooks.js';
-import { load } from '../store/reducers/publication.js';
+import { loadPublication } from '../store/reducers/publication.js';
 
 function App() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
@@ -45,7 +45,7 @@ function App() {
                   const response = await fetch(`${API_URL}/books/publications`)
                   const data = await response.json()
                   console.log("dataPublication", data)
-                  dispatch(load(data.topics))
+                  dispatch(loadPublication(data.topics))
               } catch (error) {
                   console.error(error)
               } finally {

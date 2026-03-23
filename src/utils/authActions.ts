@@ -36,7 +36,7 @@ export async function signUp({ authData }: authProps) {
 }
 
 //action pour se connecer
-export async function signIn({ authData }: authProps) {
+export async function signInRequest({ authData }: authProps) {
     const {email, password} = authData
 
     try {
@@ -59,7 +59,7 @@ export async function signIn({ authData }: authProps) {
 }
 
 //action de 2e auth pour sécuriser la modification
-export async function auth({ authData, }: authProps){
+export async function authRequest({ authData, }: authProps){
         const {token, password} = authData
       
     try {
@@ -92,7 +92,7 @@ export async function auth({ authData, }: authProps){
 
 }
 
-export async function logOut(profileData: authData) {
+export async function logOutRequest(profileData: authData) {
     const {token, userId} = profileData
     console.log("profileData", profileData)
     try {

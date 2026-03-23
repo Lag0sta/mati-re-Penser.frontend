@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { changeAvatar } from "../../utils/profilActions.js";
+import { changeAvatarRequest } from "../../utils/profilActions.js";
 
 
 const initialState = {
@@ -17,7 +17,7 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        login: (state, action) => {
+        loginUser: (state, action) => {
             state.value.id = action.payload.id;
             state.value.email = action.payload.email;
             state.value.pseudo = action.payload.pseudo;
@@ -26,14 +26,14 @@ const userSlice = createSlice({
             state.value.isAdmin = action.payload.isAdmin;
         },
 
-        update: (state, action) => {
+        updateUser: (state, action) => {
             state.value.id = action.payload.id;
             state.value.email = action.payload.email;
             state.value.pseudo = action.payload.pseudo;
             state.value.avatar = action.payload.avatar;
         },
 
-        logout: (state) => {
+        logoutUser: (state) => {
             state.value.id = "";
             state.value.email = "";
             state.value.pseudo = "";
@@ -45,8 +45,8 @@ const userSlice = createSlice({
 });
 
 export const {
-    login,
-    update,
-    logout,
+    loginUser,
+    updateUser,
+    logoutUser,
 } = userSlice.actions;
 export default userSlice.reducer;

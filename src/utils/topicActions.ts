@@ -5,7 +5,7 @@ interface topicProps {
     topicData: topicData
 }
 
-export async function newTopic({ topicData }: topicProps) {
+export async function newTopicRequest({ topicData }: topicProps) {
     const { token, title, description } = topicData
     
     try {
@@ -39,7 +39,7 @@ export async function newTopic({ topicData }: topicProps) {
         return error
     }
 }
-export async function editTopic({ topicData }: topicProps) {
+export async function editTopicRequest({ topicData }: topicProps) {
     const { token, id, title, description } = topicData
 
     try {
@@ -63,7 +63,7 @@ export async function editTopic({ topicData }: topicProps) {
 }
 
 // import { lockTopic } from '../store/reducers/topic.js';
-export async function lockTopic({ topicData }: topicProps) {
+export async function lockTopicRequest({ topicData }: topicProps) {
     const { id, isLocked, token } = topicData
     try {
 
@@ -86,7 +86,7 @@ export async function lockTopic({ topicData }: topicProps) {
     }
 }
 
-export async function topicThread({ topicData }: topicProps) {
+export async function topicThreadRequest({ topicData }: topicProps) {
     const { title } = topicData
         console.log("topicData", topicData.title)
         console.log("THEtitle", title)

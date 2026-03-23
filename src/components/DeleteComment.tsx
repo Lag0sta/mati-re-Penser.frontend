@@ -2,10 +2,10 @@ import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 
-import { deleteC, get } from '../store/reducers/topic.js';
+import { deleteComment, getTopic } from '../store/reducers/topic.js';
 
-import { deleteComment } from '../utils/threadActions.js';
-import { topicThread } from "../utils/topicActions.js";
+import { deleteCommentRequest } from '../utils/threadActions.js';
+import { topicThreadRequest } from "../utils/topicActions.js";
 
 interface commentProps {
     setMainComponent: (value: string) => any
@@ -34,7 +34,7 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
         try {
             console.log("threadData", threadData)
 
-            const deleteCommentResponse = await deleteComment({ threadData })
+            const deleteCommentResponse = await deleteCommentRequest({ threadData })
             console.log("deleteCommentResponse", deleteCommentResponse);
 
             if (!deleteCommentResponse.result) {
@@ -49,7 +49,7 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
                 setIsMessageModalOpen(true);
                 return;
             } else {
-                dispatch(deleteC({ id: deleteCommentResponse.id }))
+                dispatch(deleteComment({ id: deleteCommentResponse.id }))
                 setAuthType('');
                 setSuccessMessage(deleteCommentResponse.message);
                 setIsMessageModalOpen(true);
@@ -59,11 +59,11 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
                 // <-- AJOUTER CE BLOc
                 setTimeout(async () => {
                     try {
-                        const res = await topicThread({ topicData: { title: topic.title } });
+                        const res = await topicThreadRequest({ topicData: { title: topic.title } });
 
                         // --- Success case ---
                         if (res?.result && res?.discussion) {
-                            dispatch(get(res)); // <-- on envoie seulement la discussion
+                            dispatch(getTopic(res)); // <-- on envoie seulement la discussion
                             return;
                         }
 

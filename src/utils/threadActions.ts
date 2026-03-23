@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 interface threadProps {
     threadData: threadData
 }
-export async function addComment({ threadData }: threadProps) {
+export async function addCommentRequest({ threadData }: threadProps) {
     const { token, title, newComment, quote} = threadData
     console.log("initComment", threadData)
 
@@ -29,7 +29,7 @@ export async function addComment({ threadData }: threadProps) {
     }
 }
 
-export async function editComment({ threadData }: threadProps) {
+export async function editCommentRequest({ threadData }: threadProps) {
     const { token, id, text } = threadData
     try {
         const comment = await fetch(`${API_URL}/threads/editComment`, {
@@ -51,7 +51,7 @@ export async function editComment({ threadData }: threadProps) {
     }
 }
 
-export async function deleteComment({ threadData }: threadProps) {
+export async function deleteCommentRequest({ threadData }: threadProps) {
     console.log("pop")
     const { token, id, } = threadData
     console.log("threadData", threadData)

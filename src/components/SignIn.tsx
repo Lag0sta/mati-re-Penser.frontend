@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useAppDispatch } from '../store/hooks.js'
 
-import { save } from '../store/reducers/auth.js'
-import { login } from '../store/reducers/user.js'
+import { saveToken } from '../store/reducers/auth.js'
+import { loginUser } from '../store/reducers/user.js'
 
-import { signIn } from "../utils/authActions.js"
+import { signInRequest } from "../utils/authActions.js"
 
 interface signInProps {
     setModalComponent: (value: string) => any
@@ -27,14 +27,14 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
             setErrorMessage("")
             setSuccessMessage("")
 
-            const signInResponse = await signIn({ authData })
+            const signInResponse = await signInRequest({ authData })
 
             if (signInResponse.result) {
                 setEmail("");
                 setPassword("");
                 
-                dispatch(save(signInResponse.accessToken));
-                dispatch(login(signInResponse));
+                dispatch(saveToken(signInResponse.accessToken));
+                dispatch(loginUser(signInResponse));
 
                 console.log("signInResponse", signInResponse);
                 setSuccessMessage(signInResponse.message);

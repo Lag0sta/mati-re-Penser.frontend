@@ -3,7 +3,7 @@ import { useAppSelector, useAppDispatch } from "../store/hooks.js";
 
 import TextEditor from "./TextEditor.js";
 import { editCommentInfo } from "../store/reducers/topic.js";
-import { editComment } from "../utils/threadActions.js";
+import { editCommentRequest } from "../utils/threadActions.js";
 
 interface CommentProps {
   replyTo: any;
@@ -99,7 +99,7 @@ export default function EditComment({
     const threadData = { token, text, id };
 
     try {
-      const editCommentResponse = await editComment({ threadData });
+      const editCommentResponse = await editCommentRequest({ threadData });
 
       if (!editCommentResponse?.result) {
         setErrorMessage(editCommentResponse?.message ?? "Erreur lors de la modification");

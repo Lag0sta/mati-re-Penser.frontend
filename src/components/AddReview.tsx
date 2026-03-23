@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { newReview } from "../utils/reviewActions.js"
+import { newReviewRequest } from "../utils/reviewActions.js"
 import { text } from "stream/consumers"
 
 interface AddReviewsProps {
@@ -35,7 +35,7 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
 
 
         try {
-            const addReviewResponse = await newReview({ reviewData })
+            const addReviewResponse = await newReviewRequest({ reviewData })
             console.log("addReviewResponse1", JSON.stringify(addReviewResponse.error, null, 2));
 
             if (addReviewResponse.error) {

@@ -3,8 +3,8 @@ import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 
-import { get } from '../store/reducers/topic.js';
-import { newTopic } from "../utils/topicActions.js"
+import { getTopic } from '../store/reducers/topic.js';
+import { newTopicRequest } from "../utils/topicActions.js"
 
 interface topicProps {
     setMainComponent: (value: string) => any
@@ -30,7 +30,7 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
         const msg = [];
 
         try {
-            const newTopicResponse = await newTopic({ topicData });
+            const newTopicResponse = await newTopicRequest({ topicData });
 
             if (!newTopicResponse.result) {
                 const errors = JSON.parse(newTopicResponse.error);
@@ -47,7 +47,7 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
                 setSuccessMessage(newTopicResponse.success);
                 setErrorMessage('');
                 setIsMessageModalOpen(true);
-                dispatch(get(newTopicResponse))
+                dispatch(getTopic(newTopicResponse))
                 setMainComponent('topicThread')
                 setIsTextModalOpen(false);
             }

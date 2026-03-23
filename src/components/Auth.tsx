@@ -1,11 +1,11 @@
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-import { auth } from '../utils/authActions.js';
-import { editTopic, lockTopic } from "../utils/topicActions.js"
-import { deleteComment } from "../utils/threadActions.js"
+import { authRequest } from '../utils/authActions.js';
+import { editTopicRequest, lockTopicRequest } from "../utils/topicActions.js"
+import { deleteCommentRequest } from "../utils/threadActions.js"
 
-import { lock, deleteC } from "../store/reducers/topic.js";
+import { lockTopic, deleteComment } from "../store/reducers/topic.js";
 
 interface authProps {
     setIsModalOpen: (value: boolean) => void,
@@ -40,7 +40,7 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
 
         try {
             console.log("authData", authData)
-            const authResponse = await auth({ authData })
+            const authResponse = await authRequest({ authData })
             console.log("authResponse2", authResponse)
 
             if (authResponse.result) {
@@ -51,11 +51,11 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
                 if (authType === "lockTopic") {
                     setPassword('')
 
-                    const lockResponse = await lockTopic({ topicData })
+                    const lockResponse = await lockTopicRequest({ topicData })
 
                     if (lockResponse) {
                         console.log("lockResponse", lockResponse.isLocked)
-                        dispatch(lock(lockResponse.isLocked))
+                        dispatch(lockTopic(lockResponse.isLocked))
                     }
                     return
                 }

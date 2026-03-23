@@ -24,9 +24,10 @@ interface threadListProps {
     currentPage: number
     setAuthType: (value: string) => any
     setQuoteID: (value: any) => any
+    setThreadId : (value: string) => any
 }
 
-function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID }: threadListProps) {
+function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID, setThreadId }: threadListProps) {
     const token = useAppSelector((state) => state.authToken.value);
     const topic: any = useAppSelector((state) => state.topic.value);
     console.log("nThread", topic.topicThread.length)

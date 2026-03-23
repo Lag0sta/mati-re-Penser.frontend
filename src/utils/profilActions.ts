@@ -5,7 +5,7 @@ interface profilProps {
     profilData : profilData
 }
 
-export async function changeAvatar({profilData}: profilProps) {
+export async function changeAvatarRequest({profilData}: profilProps) {
     const {token, style, seed} = profilData
     
     try {

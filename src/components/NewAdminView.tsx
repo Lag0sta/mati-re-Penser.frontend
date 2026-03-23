@@ -1,10 +1,11 @@
+import DOMPurify from 'dompurify';
 import React from "react"
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 
 import TextEditor from "./TextEditor.js";
 
-import { saveBookInfo } from "../utils/newActions.js"
+import { saveBookInfoRequest } from "../utils/newActions.js"
 const Comments = React.lazy(() => import('./Comments.js'));
 
 interface newProps {
@@ -20,6 +21,7 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
     const user = useAppSelector(state => state.user.value)
     console.log("user", user)
 
+
     const handleNewBook = () => {
         setIsTextModalOpen(true);
         setModalComponent("newPublication");
@@ -30,12 +32,12 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
         setIsTextModalOpen(true);
         setModalComponent("editPublication");
     }
-    
+
     const handleSave = async () => {
         const text = rQValue
         const propData = { titre, text }
         try {
-            const response = await saveBookInfo({ propData })
+            const response = await saveBookInfoRequest({ propData })
             setModalComponent("addReview")
             setIsAddComment(true);
 
@@ -60,41 +62,38 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
                 <div className="flex w-full justify-between ">
                     <div className="mr-4">
                         <div className="flex justify-center">
-                            <span className="font-bold">Editer Image</span>
-                            <span className="font-bold">Nouvelle Image</span>
+                            {publication.img ? (
+                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1">Ajouter une Image</span>
+                            ) : (
+                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1">Editer l'Image</span>
+                            )}
                         </div>
                         <img className="object-contain  rounded-md border border-3 border-red-600 " src="../assets/img/natureDuRéelRéelDeLaNature.avif" alt="couverture du livre Nature Du Réel Réel de la Nature" />
                     </div>
                     <div className=" flex flex-col  h-[50%] w-[90%] ml-4 ">
-                        <div className="flex justify-center">
-                            <span className="font-bold border border-2 border-red-600 rounded-md p-1" onClick={handleNewBook}>New Book</span>
-                            <span className="font-bold"
-                            onClick={handleEditPublication}>Editer Text</span>
+                        <div className="flex justify-center ">
+                            {publication.text ? (
+
+                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1"
+                                    onClick={handleEditPublication}>
+                                    Editer Text
+                                </span>
+                            ) : (
+                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1" onClick={handleNewBook}>
+                                    New Book
+                                </span>
+                            )}
+
                         </div>
 
+                        <div className="bg-white rounded-md border border-3 border-red-600 p-4">
 
-                        <div className="bg-white rounded-md border border-3 border-red-600 ">
-                            
-                            <span onClick={handleSave}>SAVE</span>
+                            {publication &&
+                                <span
+                                    className="ml-1 my-1 text-sm font-semibold text-gray-700"
+                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publication.text) }}
+                                />}
 
-                            <div className=" flex flex-col pr-10 mx-4">
-                                <span className="font-bold">
-                                    Pourquoi Lire ce Livre ?
-                                </span>
-                                <span className="">"Nature du réel, réel de la nature" est une introduction accessible à l'épistémologie de la science physique. Ce livre explore les fondements de la connaissance scientifique et les questions philosophiques qui en découlent. Destiné aux étudiants en philosophie sans bagage scientifique, il offre une perspective unique sur la manière dont nous comprenons et interprétons le monde physique.</span>
-                                <div className="flex justify-end item-end my-1">
-                                    <span className="font-bold mr-1">.</span>
-                                    <span><span className="font-bold mr-1">Accessibilité : </span>Écrit dans un langage clair et compréhensible, ce livre rend les concepts complexes de l'épistémologie accessibles à tous.</span>
-                                </div>
-                                <div className="flex justify-end item-end my-1">
-                                    <span className="font-bold mr-1">.</span>
-                                    <span className=""><span className="font-bold">Interdisciplinarité :</span> Il combine la rigueur scientifique avec la profondeur philosophique, offrant une vision complète et nuancée.</span>
-                                </div>
-                                <div className="flex justify-end item-end my-1">
-                                    <span className="font-bold mr-1">.</span>
-                                    <span className=""><span className="font-bold">Réflexion Philosophique :</span> Idéal pour ceux qui souhaitent approfondir leur compréhension des sciences à travers le prisme de la philosophie.</span>
-                                </div>
-                            </div>
                         </div>
 
 
