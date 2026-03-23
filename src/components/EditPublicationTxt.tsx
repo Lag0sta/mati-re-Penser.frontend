@@ -16,18 +16,21 @@ interface topicProps {
     publicationID: string
     setPublicationID: (value: string) => any
 }
-function EditPublication({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
-    const topic: any = useAppSelector((state) => state.topic.value);
+function EditPublicationTxt({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
+    const publication: any = useAppSelector((state) => state.publication.value);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
-    const originalValue = topic?.description
-    const [rQValue, setRQValue] = useState<string>(topic?.description ?? "");
+    const originalValue = publication[0]?.text
+    const originalTitle = publication[0]?.titre
+    const [rQValue, setRQValue] = useState<string>("");
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
     const [title, setTitle] = useState<string>("");
     const dispatch = useAppDispatch();
+    
+    console.log("originalValue Real Value :", originalValue, "rQValue", rQValue);
 
     const publications = useAppSelector((state) => state.publication.value);
-    console.log("publicationsReducer", publications)
+    console.log("publicationsReducer", publications[0].text)
 
     useEffect(() => {
         if (publications[0]._id === publicationID) {
@@ -39,7 +42,6 @@ function EditPublication({ modalComponent, setModalComponent, setErrorMessage, s
 
     console.log("rQValueEditTOPIC", rQValue, "originalValue", originalValue);
 
-    const originalTitle = topic.title
     console.log("Topic title :", title, "orignalTitle", originalTitle);
 
     function normalize(str = "") {
@@ -50,6 +52,7 @@ function EditPublication({ modalComponent, setModalComponent, setErrorMessage, s
         if (title !== originalTitle ||
             normalize(rQValue) !== normalize(originalValue)) {
             console.log("goal! w2")
+            console.log("new goal title :", title, "originalTitle :", originalTitle);
             setIsButtonLocked(false)
         } else {
             console.log("no goal")
@@ -116,13 +119,13 @@ function EditPublication({ modalComponent, setModalComponent, setErrorMessage, s
             </div>
 
             <h3 className="text-3xl mb-1 text-gray-200">
-                EDIT Publication
+                Modifier la publication
             </h3>
 
             <fieldset className="flex flex-col justify-between items-center overflow-y-auto w-full max-w-3xl p-4">
 
                 <legend className="text-lg text-center text-gray-300 font-medium mb-2">
-                    Modifiez la publication
+                    Modifiez le texte
                 </legend>
                 <div className="flex flex-col w-full">
                     <label className="text-base text-gray-400 mt-2 mb-1"
@@ -165,4 +168,4 @@ function EditPublication({ modalComponent, setModalComponent, setErrorMessage, s
     )
 }
 
-export default EditPublication
+export default EditPublicationTxt

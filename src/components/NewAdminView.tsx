@@ -27,10 +27,16 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
         setModalComponent("newPublication");
     }
 
-    const handleEditPublication = () => {
+    const handleEditPublicationTxt = () => {
         setPublicationID(publication._id)
         setIsTextModalOpen(true);
-        setModalComponent("editPublication");
+        setModalComponent("editPublicationtxt");
+    }
+
+    const handleEditPublicationImg = () => {
+        setPublicationID(publication._id)
+        setIsTextModalOpen(true);
+        setModalComponent("editPublicationImg");
     }
 
     const handleSave = async () => {
@@ -62,20 +68,24 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
                 <div className="flex w-full justify-between ">
                     <div className="mr-4">
                         <div className="flex justify-center">
-                            {publication.img ? (
-                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1">Ajouter une Image</span>
+                            {!publication.isArchived && publication.img ? (
+                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1"
+                                    onClick={handleEditPublicationImg}>Editer l'Image</span>
                             ) : (
-                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1">Editer l'Image</span>
-                            )}
+                                <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1">Ajouter une Image</span>
+                            ) }
                         </div>
-                        <img className="object-contain  rounded-md border border-3 border-red-600 " src="../assets/img/natureDuRéelRéelDeLaNature.avif" alt="couverture du livre Nature Du Réel Réel de la Nature" />
+                    {!publication.isArchived && 
+                    <img className="object-contain  rounded-md border border-3 border-red-600 " src={publication.img} alt="couverture du livre Nature Du Réel Réel de la Nature" />
+                    }
+                        
                     </div>
                     <div className=" flex flex-col  h-[50%] w-[90%] ml-4 ">
                         <div className="flex justify-center ">
-                            {publication.text ? (
+                            {!publication.isArchived && publication.text ? (
 
                                 <span className="font-bold text-xs text-red-700 text-center border border-2 border-red-600 rounded-md p-1 m-1"
-                                    onClick={handleEditPublication}>
+                                    onClick={handleEditPublicationTxt}>
                                     Editer Text
                                 </span>
                             ) : (
@@ -88,7 +98,7 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
 
                         <div className="bg-white rounded-md border border-3 border-red-600 p-4">
 
-                            {publication &&
+                            {!publication.isArchived &&
                                 <span
                                     className="ml-1 my-1 text-sm font-semibold text-gray-700"
                                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publication.text) }}

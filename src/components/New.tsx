@@ -65,7 +65,7 @@ function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComp
                 <div className="w-[78%]">
                     <div className="flex w-full justify-between ">
                         <div className="mr-4">
-                            <img className="object-contain  rounded-md" src="../assets/img/natureDuRéelRéelDeLaNature.avif" alt="couverture du livre Nature Du Réel Réel de la Nature" />
+                            <img className="object-contain  rounded-md" src={publications[0]?.img} alt="couverture du livre Nature Du Réel Réel de la Nature" />
                         </div>
                         <div className=" flex flex-col bg-white rounded-md h-[50%] w-[90%] ml-4 p-10">
                             <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publications[0]?.text || "") }} />
