@@ -3,7 +3,6 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export async function addCommentRequest( addCData : addCData ) {
     const { token, title, newComment, quote} = addCData
-    console.log("initComment", addCData)
 
     try {
         const response = await fetch(`${API_URL}/threads/newComment`, {
@@ -18,7 +17,7 @@ export async function addCommentRequest( addCData : addCData ) {
         })
 
         const thread = await response.json()
-        console.log("returnComment", thread)
+
         return thread
 
     } catch (error) {

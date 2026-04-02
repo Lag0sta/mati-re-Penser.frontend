@@ -74,7 +74,7 @@ export async function authRequest(authData : authData){
 
 export async function logOutRequest(logOutData : logOutData) {
     const {token, userId} = logOutData
-    console.log("logOutData", logOutData)
+    
     try {
         const logOut = await fetch(`${API_URL}/auths/logout`, {
             method: "PUT",

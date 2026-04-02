@@ -26,7 +26,6 @@ interface modalProps {
 
 
 function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setAuthType, setResponse, response }: modalProps) {
-  console.log("modalComponent", modalComponent)
 
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "

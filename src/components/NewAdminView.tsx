@@ -25,13 +25,10 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
 
     const publications = useAppSelector((state) => state.publication.value);
     const publication = publications.find((e) => e.isArchived === false);
-    console.log("publication1", publication)
+
     const user = useAppSelector(state => state.user.value)
     const token = useAppSelector(state => state.authToken.value)
     const dispatch = useAppDispatch();
-
-    console.log("publicationMTFK", publication)
-
 
     const handleNewBook = () => {
         setIsTextModalOpen(true);
@@ -55,12 +52,9 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
     }
 
     const handleArchive = () => {
-
-        console.log("clickx4")
         setModalComponent("archiveStatus")
         setIsModalOpen(true)
         setAuthType("archiveStatus")
-
     }
 
     // const handleSave = async () => {
@@ -79,9 +73,6 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
 
     return (
         <div className=" w-full  flex flex-col items-center mb-6">
-
-
-
             {!user.isAdmin &&
                 <div className="w-[78%] flex justify-center items-center mb-4  bg-white rounded-md">
                     <h2 className=" mx-2 my-1  text-3xl text-center">À LA UNE</h2>
@@ -130,16 +121,11 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
                                     className="ml-1 my-1 text-sm font-semibold text-gray-700"
                                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publication.text) }}
                                 />}
-
                         </div>
-
-
                     </div>
-
                 </div>
                 <div className="flex flex-col justify-center items-center my-2">
-                    <a
-                        href="https://www.amazon.fr/dp/2383660558?ref=cm_sw_r_ffobk_cp_ud_dp_F9VDD9QFDXNT19DBEEXT&ref_=cm_sw_r_ffobk_cp_ud_dp_F9VDD9QFDXNT19DBEEXT&social_share=cm_sw_r_ffobk_cp_ud_dp_F9VDD9QFDXNT19DBEEXT&bestFormat=true&previewDoh=1"
+                    <a  href="https://www.amazon.fr/dp/2383660558?ref=cm_sw_r_ffobk_cp_ud_dp_F9VDD9QFDXNT19DBEEXT&ref_=cm_sw_r_ffobk_cp_ud_dp_F9VDD9QFDXNT19DBEEXT&social_share=cm_sw_r_ffobk_cp_ud_dp_F9VDD9QFDXNT19DBEEXT&bestFormat=true&previewDoh=1"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-fit px-2 py-1  bg-black text-white border-2 border-red-600 rounded-md hover:bg-red-200 hover:border-red-200 hover:text-black cursor-pointer"
@@ -147,12 +133,7 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
                         Acheter
                     </a>
                 </div>
-
             </div>
-
-
-
-
         </div>
     )
 }

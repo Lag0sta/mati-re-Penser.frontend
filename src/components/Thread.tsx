@@ -1,6 +1,6 @@
 import DOMPurify from 'dompurify';
-import {  useAppSelector } from "../store/hooks.js"
-import {  startTransition } from 'react';
+import { useAppSelector } from "../store/hooks.js"
+import { startTransition } from 'react';
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -24,14 +24,11 @@ interface threadListProps {
     currentPage: number
     setAuthType: (value: string) => any
     setQuoteID: (value: any) => any
-    setThreadId : (value: string) => any
 }
 
-function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID, setThreadId }: threadListProps) {
+function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID }: threadListProps) {
     const token = useAppSelector((state) => state.authToken.value);
     const topic: any = useAppSelector((state) => state.topic.value);
-    console.log("nThread", topic.topicThread.length)
-    console.log("topic", topic)
 
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
@@ -62,9 +59,8 @@ function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModal
                     transition={{ duration: 0.3 }}
                     className="w-[85%] max-w-[85%] px-2 py-2"
                 >
-
                     <div className="flex bg-gray-100 rounded-md mt-1 border-2 border-gray-800">
-                        
+
                         {/* UI Utilisateur à gauche */}
                         <CommentUserUI thread={thread} />
                         <div className='flex-col h-full w-[85%]'>
@@ -75,25 +71,25 @@ function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModal
                                 </div>
                                 <div className=" h-full  flex justify-end items-center">
                                     {(token && !isLocked) &&
-                                        <CommentHeader thread={thread} 
-                                                       index={index} 
-                                                       setPseudo={setPseudo}
-                                                       setIsModalOpen={setIsModalOpen}
-                                                       setIsTextModalOpen={setIsTextModalOpen}
-                                                       setMessageModalOpen={setMessageModalOpen}
-                                                       setModalComponent={setModalComponent}
-                                                       setErrorMessage={setErrorMessage}
-                                                       setIsNewComment={setIsNewComment}
-                                                       threadRef={threadRef}
-                                                       setReplyTo={setReplyTo}
-                                                       setAuthType={setAuthType}
-                                                       setQuoteID={setQuoteID}/>
+                                        <CommentHeader thread={thread}
+                                            index={index}
+                                            setPseudo={setPseudo}
+                                            setIsModalOpen={setIsModalOpen}
+                                            setIsTextModalOpen={setIsTextModalOpen}
+                                            setMessageModalOpen={setMessageModalOpen}
+                                            setModalComponent={setModalComponent}
+                                            setErrorMessage={setErrorMessage}
+                                            setIsNewComment={setIsNewComment}
+                                            threadRef={threadRef}
+                                            setReplyTo={setReplyTo}
+                                            setAuthType={setAuthType}
+                                            setQuoteID={setQuoteID} />
                                     }
                                 </div>
                             </div>
 
                             <div className="p-5 min-h-20 bg-gray-100 flex flex-col justify-between border-t-2 border-gray-800 overflow-x-auto overflow-y-hidden">
-                               
+
                                 {/* Quotes */}
                                 {thread.quote.length > 0 && (
                                     <div className="mt-2 p-2 bg-gray-800 rounded-sm text-gray-300 text-xs font-normal overflow-x-auto overflow-y-hidden scrollable-quotes box-border">
@@ -109,7 +105,6 @@ function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModal
                                             return (
                                                 <>
                                                     <Quote quotedThreads={quotedThreads} />
-
                                                 </>
                                             );
                                         })()}

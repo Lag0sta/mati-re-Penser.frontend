@@ -26,23 +26,17 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
 
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
-    console.log("authType", authType)
-    console.log("topic lock", topic)
-
     const handleAuth = async () => {
 
         const id = topic.id
         const authData = { token, password }
         const lockTData = { id, token, isLocked }
-        const threadData = { token, id }
         setSuccessMessage('');
         setErrorMessage('');
         setIsMessageModalOpen(false);
 
         try {
-            console.log("authData", authData)
             const authResponse = await authRequest( authData )
-            console.log("authResponse2", authResponse)
 
             if (authResponse.result) {
                 setPassword('')
@@ -55,16 +49,13 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
                     const lockResponse = await lockTopicRequest(lockTData)
 
                     if (lockResponse) {
-                        console.log("lockResponse", lockResponse.isLocked)
                         dispatch(lockTopic(lockResponse.isLocked))
                     }
                     return
                 }
 
-                if (authType === "editTopic") {
-                    return
-                }
-
+                if (authType === "editTopic") return
+                
                 if (authType === "deleteComment") {
                     setModalComponent("deleteComment")
                     return
@@ -73,7 +64,6 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
                 if(authType === "archiveStatus"){
                     setResponse(authResponse.result)
                     setModalComponent("archiveStatus")
-                    console.log("authResponse.result", authResponse.result)
         
                     return
                 }

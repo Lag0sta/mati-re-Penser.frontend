@@ -7,12 +7,11 @@ type ReplyValue = { quoteArr: { pseudo: string; text: string }[] };
 
 const createNestedQuoteHTML = (quotes: ReplyValue['quoteArr']): string => {
   if (!quotes.length) return '';
-console.log("quotesLength", quotes.length)
+  
   const last = quotes[quotes.length - 1];
   const rest = quotes.slice(0, -1);
   
   const innerHTML = createNestedQuoteHTML(rest);
-  console.log("last", last, "rest", rest, "innerHTML", innerHTML, "quotes", quotes);
   return `
     <div class="reply-quote-box">
 

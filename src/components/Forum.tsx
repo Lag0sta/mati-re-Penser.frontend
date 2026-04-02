@@ -29,7 +29,6 @@ function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsM
             try {
                 const response = await fetch(`${API_URL}/topics/topicsWithThreadCounts`)
                 const data = await response.json()
-                console.log("the data :", data)
                 setForum(data.threadsInTopic)
             } catch (error) {
                 console.error(error)
@@ -52,14 +51,11 @@ function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsM
     }
 
     const handleTopic = async (title: string) => {
-        console.log('TopicTitle', title)
         const tTData = { title };
         try {
             const discussionResponse = await topicThreadRequest( tTData )
 
-            console.log("Thediscussion :", discussionResponse)
             if (discussionResponse){
-                console.log("yeay", discussionResponse)
                 setMainComponent('topicThread')
                 dispatch(getTopic(discussionResponse))
             }else {

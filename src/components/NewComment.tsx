@@ -33,12 +33,9 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
     }
 
     useEffect(() => {
-        if (
-            normalize(rQValue) !== originalValue) {
-            console.log("goal! w2")
+        if (normalize(rQValue) !== originalValue) {
             setIsButtonLocked(false)
         } else {
-            console.log("no goal")
             setIsButtonLocked(true)
         }
     }, [rQValue]);
@@ -57,12 +54,11 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         const newComment = doc.body.innerHTML.trim();
 
         const addCData = { token, title, newComment, quote: quoteID }
-        console.log("addCData", addCData)
 
         const msg: string[] = []
         try {
             const addCommentResponse = await addCommentRequest( addCData );
-            console.log("addCommentResponse", addCommentResponse);
+
             if (addCommentResponse) {
                 const TheNewComment = {
                     createdBy: addCommentResponse.newThread.createdBy,
@@ -84,9 +80,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                 const errors = JSON.parse(addCommentResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
-                    msg.push(err.message)
-                
+                    msg.push(err.message)                
                 }
                 setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
@@ -148,8 +142,7 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                     onClick={handleNewComment}>
                     Valider
                 </button>
-                 )
-                }
+                )}
             </div>
         </div>
     )

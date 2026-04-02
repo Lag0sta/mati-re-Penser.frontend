@@ -26,16 +26,11 @@ function MessageModal({ successMessage, setSuccessMessage, errorMessage, setErro
             setSuccessMessage("")
             }
            
-
         } else {
             setIsMessageModalOpen(false)
             setErrorMessage("")
-
         }
     }
-
-    console.log("messageModal successMessage", successMessage)
-    console.log("messageModal errorMessage", errorMessage)
 
     return (
         <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-24 "

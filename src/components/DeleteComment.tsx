@@ -27,22 +27,17 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
     const topic: any = useAppSelector((state) => state.topic.value);
 
     const handleDeleteComment = async () => {
-        console.log("comment.id", comment.id)
         const id = comment.id
         const deleteCData = { token, id };
         const msg = [];
         try {
-            console.log("deleteCData", deleteCData)
-
-            const deleteCommentResponse = await deleteCommentRequest( deleteCData )
-            console.log("deleteCommentResponse", deleteCommentResponse);
+            const deleteCommentResponse = await deleteCommentRequest(deleteCData)
 
             if (!deleteCommentResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
                 const errors = JSON.parse(deleteCommentResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                     msg.push(err.message)
                 }
                 setErrorMessage(msg.join(", "));
@@ -61,7 +56,7 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
                     const tTData = { title: topic.title };
 
                     try {
-                        const response = await topicThreadRequest( tTData );
+                        const response = await topicThreadRequest(tTData);
 
                         // --- Success case ---
                         if (response?.result && response?.discussion) {
@@ -129,19 +124,17 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
             </fieldset >
 
             <div className="flex flex-col justify-center items-center">
-                {choice &&
+                {choice ? (
                     <button className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer "
                         onClick={handleDeleteComment}>
                         Confirmer
                     </button>
-                }
-
-                {!choice &&
+                ) : (
                     <button className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer opacity-50 cursor-not-allowed"
                     >
                         Confirmer
                     </button>
-                }
+                )}
 
             </div>
         </div >

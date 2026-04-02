@@ -31,27 +31,23 @@ const publicationSlice = createSlice({
       const { _id, text } = action.payload;
       const publicationToUpdate = state.value.find((t) => t._id === _id)
 
-      if (publicationToUpdate) {
-        publicationToUpdate.text = text
-      }
+      if (publicationToUpdate) publicationToUpdate.text = text
+      
     }
     ,
     updatePublicationImg: (state, action) => {
       const { _id, img } = action.payload;
       const publicationToUpdate = state.value.find((t) => t._id === _id)
 
-      if (publicationToUpdate) {
-        publicationToUpdate.img = img
-      }
+      if (publicationToUpdate) publicationToUpdate.img = img
+      
     }
     ,
     updateArchiveStatus: (state, action) => {
       const { _id, isArchived } = action.payload;
       const publicationToUpdate = state.value.find((t) => t._id === _id)
 
-      if (publicationToUpdate) {
-        publicationToUpdate.isArchived = isArchived
-      }
+      if (publicationToUpdate) publicationToUpdate.isArchived = isArchived
     }
   },
 });

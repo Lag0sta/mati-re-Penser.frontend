@@ -48,7 +48,6 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                 const errors = JSON.parse(signUpResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                     msg.push(err.message)
                 }
                 setErrorMessage(msg.join(", "));
@@ -161,42 +160,41 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                     <div className="-mb-1">
                         <span className="text-red-500 mr-1 font-medium">*</span>
                         <label className="text-base mt-2"
-                            htmlFor="password"
+                               htmlFor="password"
                         >
                             Mot-de-Passe :
                         </label>
                     </div>
                     <input className="border-2 border-black rounded-md pl-2"
-                        type="password"
-                        id="password"
-                        required
-                        placeholder="mot-de-passe"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                           type="password"
+                           id="password"
+                           required
+                           placeholder="mot-de-passe"
+                           value={password}
+                           onChange={(e) => setPassword(e.target.value)}
                     />
                     <input className="border-2 border-black rounded-md pl-2 mt-1"
-                        type="password"
-                        id="confirmPassword"
-                        required
-                        placeholder="Confirmation du m.d.p."
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                           type="password"
+                           id="confirmPassword"
+                           required
+                           placeholder="Confirmation du m.d.p."
+                           value={confirmPassword}
+                           onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                 </div>
-                <input
-                    type="text"
-                    id="hp"
-                    name="hp"
-                    value={hp}
-                    onChange={(e) => setHp(e.target.value)}
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                    style={{
+                <input type="text"
+                       id="hp"
+                       name="hp"
+                       value={hp}
+                       onChange={(e) => setHp(e.target.value)}
+                       tabIndex={-1}
+                       autoComplete="off"
+                       aria-hidden="true"
+                       style={{
                         position: "absolute",
                         left: "-9999px",
                         opacity: 0,
-                    }}
+                       }}
                 />
                 <button className="w-fit bg-black border-2 border-black text-white hover:bg-white hover:text-black rounded-md px-2 py-1 my-6"
                     onClick={handleSignUp}

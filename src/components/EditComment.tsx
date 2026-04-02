@@ -18,15 +18,7 @@ interface CommentProps {
   setIsMessageModalOpen: (value: boolean) => any;
 }
 
-export default function EditComment({
-  replyTo,
-  setReplyTo,
-  setModalComponent,
-  setErrorMessage,
-  setIsTextModalOpen,
-  setSuccessMessage,
-  setIsMessageModalOpen,
-}: CommentProps) {
+export default function EditComment({replyTo, setReplyTo, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen}: CommentProps) {
   const dispatch = useAppDispatch();
 
   // selectors
@@ -72,6 +64,7 @@ export default function EditComment({
   // compute displayQuotes (with ellipsis marker object to keep types consistent)
   const displayQuotes = useMemo(() => {
     if (showAllQuotes || quotedThreads.length <= 4) return quotedThreads;
+    
     return [
       ...quotedThreads.slice(0, 2),
       { __ellipsis: true },
@@ -108,12 +101,12 @@ export default function EditComment({
       }
 
       // update topic slice with edited comment
-      console.log("editCommentResponse", editCommentResponse);
       dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: editCommentResponse.editedComment.text }));
       setSuccessMessage(editCommentResponse.message ?? "Commentaire modifié");
       setIsMessageModalOpen(true);
       setIsTextModalOpen(false);
       setModalComponent("");
+
     } catch (err: any) {
       setErrorMessage(err?.message ?? String(err));
       setIsMessageModalOpen(true);
@@ -204,7 +197,7 @@ export default function EditComment({
             <div className="mt-2 p-2 bg-gray-800 rounded-sm text-gray-300 text-xs font-normal overflow-x-auto overflow-y-hidden scrollable-quotes box-border">
               <div className="flex flex-col w-full space-y-2">{renderNestedQuotes(displayQuotes)}</div>
 
-              {showAllQuotes && quotedThreads.length > 4 && (
+              {(showAllQuotes && quotedThreads.length > 4) && (
                 <button
                   className="flex flex-row justify-end items-center text-gray-400 text-xs mt-1 hover:text-gray-200 transition"
                   onClick={() => setShowAllQuotes(false)}

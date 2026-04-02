@@ -15,36 +15,31 @@ interface topicProps {
     publicationID: string
     setPublicationID: (value: string) => any
 }
-function EditPublicationTxt({  setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
+function EditPublicationTxt({ setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
     const [rQValue, setRQValue] = useState<string>("");
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
     const [title, setTitle] = useState<string>("");
     let originalValue = ""
     let originalTitle = ""
-    
+
     const publications = useAppSelector((state) => state.publication.value);
     const publication = publications.find((e) => e.isArchived === false);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
 
     const dispatch = useAppDispatch();
-    
-    if(publication){
+
+    if (publication) {
         originalValue = publication.text
         originalTitle = publication.titre
     }
-   
+
     useEffect(() => {
         if (publication && publication._id === publicationID) {
             setRQValue(publication.text)
-            console.log("publicationEPT", publication)
             setTitle(publication.titre)
         }
     }, [publicationID, publications])
-
-    console.log("rQValueEditTOPIC", rQValue, "originalValue", originalValue);
-
-    console.log("Topic title :", title, "orignalTitle", originalTitle);
 
     function normalize(str = "") {
         return str.replace(/<[^>]+>/g, "").trim();
@@ -53,11 +48,8 @@ function EditPublicationTxt({  setModalComponent, setErrorMessage, setIsTextModa
     useEffect(() => {
         if (title !== originalTitle ||
             normalize(rQValue) !== normalize(originalValue)) {
-            console.log("goal! w2")
-            console.log("new goal title :", title, "originalTitle :", originalTitle);
             setIsButtonLocked(false)
         } else {
-            console.log("no goal")
             setIsButtonLocked(true)
         }
     }, [rQValue, title]);
@@ -66,25 +58,23 @@ function EditPublicationTxt({  setModalComponent, setErrorMessage, setIsTextModa
         ("click TOPICEDIT")
         const text = rQValue
         const eBTData = { token, id: publicationID, pseudo: user.pseudo, titre: title, text };
-        console.log("descriptionPublication", eBTData)
-        const msg = [];       try {
-            const editBookResponse = await editBookTxtRequest( eBTData );
-console.log("editBookResponse", eBTData)
+        const msg = []; try {
+            const editBookResponse = await editBookTxtRequest(eBTData);
+
             if (!editBookResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
                 const errors = JSON.parse(editBookResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                     msg.push(err.message)
-
                 }
+
                 setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
                 return;
-            } else {  
+                
+            } else {
                 dispatch(updatePublicationTxt(editBookResponse.editedBook))
-                console.log("editBookResponse", editBookResponse.editedBook)
                 setSuccessMessage(editBookResponse.message);
                 setIsMessageModalOpen(true);
                 setIsTextModalOpen(false);
@@ -159,7 +149,7 @@ console.log("editBookResponse", eBTData)
                 ) : (
                     <button
                         className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer "
-                    onClick={handleUpdatePublication}
+                        onClick={handleUpdatePublication}
                     >
                         Sauvegarder
                     </button>)}

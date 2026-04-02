@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react';
 
-interface threadListProps {
-    pageSize: number
-    currentPage: number
-    topic: any
-    quotedThreads: any
-}
-
 interface QuoteProps {
     quotedThreads: any[]
 }
@@ -34,24 +27,21 @@ function Quote({ quotedThreads }: QuoteProps) {
 
         if (last === "ellipsis") {
             return (
-                <div
-                    key="ellipsis"
-                    className="w-full flex flex-row items-center justify-start text-gray-500 text-xs italic cursor-pointer hover:text-gray-300 transition"
-                    onClick={() => setShowAllQuotes(true)}
+                <div key="ellipsis"
+                     className="w-full flex flex-row items-center justify-start text-gray-500 text-xs italic cursor-pointer hover:text-gray-300 transition"
+                     onClick={() => setShowAllQuotes(true)}
                 >
                     <span>…</span>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-4 ml-1"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         strokeWidth={1.5}
+                         stroke="currentColor"
+                         className="size-4 ml-1"
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+                        <path strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
                         />
                     </svg>
                 </div>
@@ -59,9 +49,8 @@ function Quote({ quotedThreads }: QuoteProps) {
         }
 
         return (
-            <div
-                key={last.id}
-                className="flex flex-col justify-start items-start p-2 border-[3px] border-gray-600 rounded-sm text-gray-400 text-md box-border w-full"
+            <div key={last.id}
+                 className="flex flex-col justify-start items-start p-2 border-[3px] border-gray-600 rounded-sm text-gray-400 text-md box-border w-full"
             >
                 {/* Auteur */}
                 <span className="font-semibold text-gray-400 underline underline-offset-2 mb-1">
@@ -93,18 +82,16 @@ function Quote({ quotedThreads }: QuoteProps) {
 
             {/* Bouton Réduire */}
             {showAllQuotes && quotedThreads.length > 4 && (
-                <button
-                    className="flex flex-row justify-end items-center text-gray-400 text-xs mt-1 hover:text-gray-200 transition cursor-pointer hover:underline"
-                    onClick={() => setShowAllQuotes(false)}
+                <button className="flex flex-row justify-end items-center text-gray-400 text-xs mt-1 hover:text-gray-200 transition cursor-pointer hover:underline"
+                        onClick={() => setShowAllQuotes(false)}
                 >
                     Réduire les citations
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-4 ml-1"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         strokeWidth={1.5}
+                         stroke="currentColor"
+                         className="size-4 ml-1"
                     >
                         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
                     </svg>

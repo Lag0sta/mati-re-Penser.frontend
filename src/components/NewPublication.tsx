@@ -22,27 +22,21 @@ function NewPublication({ modalComponent, setModalComponent, setErrorMessage, se
     const [rQValue, setRQValue] = useState<string>(topic?.description ?? "");
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
 
-    console.log("rQValueEditTOPIC", rQValue, "originalValue", originalValue);
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.user.value);
     const token = useAppSelector((state) => state.authToken.value);
-    console.log("topic in TOPIC", topic);
 
     const [title, setTitle] = useState<string>(topic.title);
     const originalTitle = topic.title
-    console.log("Topic title :", title, "orignalTitle", originalTitle);
 
     function normalize(str = "") {
         return str.replace(/<[^>]+>/g, "").trim();
     }
 
     useEffect(() => {
-        if (title !== originalTitle ||
-            normalize(rQValue) !== normalize(originalValue)) {
-            console.log("goal! w2")
+        if (title !== originalTitle || normalize(rQValue) !== normalize(originalValue)) {
             setIsButtonLocked(false)
         } else {
-            console.log("no goal")
             setIsButtonLocked(true)
         }
     }, [rQValue, title]);
@@ -52,6 +46,7 @@ const handleSave = async () => {
         const pseudo = user.pseudo
         const text = rQValue
         const sBIData = { titre : title, text, pseudo, token }
+        
         const response = await saveBookInfoRequest( sBIData ) 
         if(response.result){
             setTitle('')
@@ -61,7 +56,6 @@ const handleSave = async () => {
             setIsMessageModalOpen(true);
         } else {
             setIsMessageModalOpen(true)
-            console.log("the Result", response.result.message)
             setErrorMessage(response.result.message)
         }
     }catch(error){

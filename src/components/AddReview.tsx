@@ -36,18 +36,15 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
 
         try {
             const addReviewResponse = await newReviewRequest( nRData )
-            console.log("addReviewResponse1", JSON.stringify(addReviewResponse.error, null, 2));
 
             if (addReviewResponse.error) {
                 // addReviewResponse.error n'est pas juste un string et à besoin d'être JSON.parse
                 const errors = JSON.parse(addReviewResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                     msg.push(err.message)
                 
                 }
-                console.log("msgArray", msg)
                 setErrorMessage(msg.join(", "))
 
                 setIsMessageModalOpen(true)

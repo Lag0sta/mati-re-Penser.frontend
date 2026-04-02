@@ -27,10 +27,6 @@ function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComp
     const publications = useAppSelector((state) => state.publication.value);
     const publication = publications.find((e) => e.isArchived === false);
 
-    console.log("THeOneAndOnlypublications", publications)
-    console.log("publicationLenght", publications.length)
-
-    console.log("user", user)
     const handleClickAddComment = () => {
         setIsModalOpen(true);
         setModalComponent("addReview")

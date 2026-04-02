@@ -45,9 +45,7 @@ const topicSlice = createSlice({
             const { id, text} = action.payload; 
             const threadToUpdate = state.value.topicThread.find((t) => t.id === id)
 
-            if(threadToUpdate){
-                threadToUpdate.text = text
-            }
+            if(threadToUpdate) threadToUpdate.text = text
         },
 
         lockTopic: (state, action) => {
@@ -63,12 +61,5 @@ const topicSlice = createSlice({
     },
 });
 
-export const {
-    getTopic,
-    addThread,
-    editTopicInfo,
-    editCommentInfo,
-    lockTopic,
-    deleteComment
-} = topicSlice.actions;
+export const {getTopic, addThread, editTopicInfo, editCommentInfo, lockTopic, deleteComment} = topicSlice.actions;
 export default topicSlice.reducer;

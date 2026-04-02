@@ -30,8 +30,6 @@ function App() {
 
   const dispatch = useAppDispatch();
   
-  console.log("modalComponent", modalComponent)
-  console.log("isModalOpen", isModalOpen)
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
@@ -126,7 +124,6 @@ function App() {
               replyTo={replyTo}
               setReplyTo={setReplyTo}
               setErrorMessage={setErrorMessage}
-              setSuccessMessage={setSuccessMessage}
               setIsModalOpen={setIsModalOpen}
               setIsTextModalOpen={setIsTextModalOpen}
               setIsMessageModalOpen={setIsMessageModalOpen}
@@ -180,7 +177,6 @@ function App() {
           setErrorMessage={setErrorMessage}
           setSuccessMessage={setSuccessMessage}
           setMainComponent={setMainComponent}
-          authType={authType}
           replyTo={replyTo}
           setReplyTo={setReplyTo}
           publicationID={publicationID}

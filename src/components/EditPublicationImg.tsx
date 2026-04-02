@@ -30,30 +30,17 @@ function EditPublicationImg({ setModalComponent, setErrorMessage, setIsTextModal
         originalURL = publication.img
         p_id = publication._id
     }
-    console.log("publicationsReducer", publications)
 
     useEffect(() => {
-        if (publication && p_id === publicationID) {
-            console.log("publications[0]", publications[0])
-            setURL(publication.img)
-        }
+        if(publication && p_id === publicationID) setURL(publication.img)
     }, [publicationID, publications])
 
     useEffect(() => {
-        if (url !== originalURL) {
-            console.log("goal! w2")
-            console.log("new goal url :", url, "originalURL :", originalURL);
-            setIsButtonLocked(false)
-        } else {
-            console.log("no goal")
-            setIsButtonLocked(true)
-        }
+            setIsButtonLocked(url === originalURL)
     }, [url, originalURL]);
 
     const handleUpdatePublication = async () => {
-        ("click TOPICEDIT")
         const eBIData = { token, id: publicationID, pseudo: user.pseudo, img: url};
-        console.log("eBIData", eBIData)
         const msg = [];
         try {
             const editBookResponse = await editBookImgRequest( eBIData );
@@ -63,16 +50,14 @@ function EditPublicationImg({ setModalComponent, setErrorMessage, setIsTextModal
                 const errors = JSON.parse(editBookResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                     msg.push(err.message)
-
                 }
+
                 setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
                 return;
             } else {  
                 dispatch(updatePublicationImg(editBookResponse.editedBook))
-                console.log("editBookResponse", editBookResponse.editedBook)
                 setSuccessMessage(editBookResponse.message);
                 setIsMessageModalOpen(true);
                 setIsTextModalOpen(false);

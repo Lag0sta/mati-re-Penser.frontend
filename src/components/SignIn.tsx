@@ -36,7 +36,6 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 dispatch(saveToken(signInResponse.accessToken));
                 dispatch(loginUser(signInResponse));
 
-                console.log("signInResponse", signInResponse);
                 setSuccessMessage(signInResponse.message);
                 setIsMessageModalOpen(true);
             } else {
@@ -44,9 +43,7 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 const errors = JSON.parse(signInResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
-                    msg.push(err.message)
-                
+                    msg.push(err.message)                
                 }
                 setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);

@@ -25,13 +25,11 @@ function TextEditor({ rQValue, setRQValue, replyTo, onInserted, mode }: TextEdit
   const quillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {
-     if (mode === 'editComment' || mode === 'editTopic' || mode === "editPublication") {
-      // On est en édition, ne pas insérer de quote
-      return;
-    }
+  // On est en édition, ne pas insérer de quote
+  if (mode === 'editComment' || mode === 'editTopic' || mode === "editPublication") return;
+    
   if (!replyTo || !quillRef.current) return;
   const quill = quillRef.current.getEditor();
-console.log("replyToTextEditor", replyTo)
 
   // Supprime l'ancien blot ReplyQuote si existant
   const delta = quill.getContents();
@@ -46,8 +44,6 @@ console.log("replyToTextEditor", replyTo)
     pseudo: DOMPurify.sanitize(q.pseudo),
     text: DOMPurify.sanitize(q.text),
   }));
-
-  console.log("safeQuoteArr", safeQuoteArr)
 
   // Vide le contenu et insère le blot avec toutes les quotes
   quill.setContents([]);
@@ -71,7 +67,6 @@ console.log("replyToTextEditor", replyTo)
         value={rQValue}
         onChange={setRQValue}
         className="my-editor"
-
       />
     </div>
   );

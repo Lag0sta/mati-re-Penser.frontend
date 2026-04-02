@@ -3,7 +3,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export async function saveBookInfoRequest( sBIData : sBIData) {
     const { titre, text, pseudo, token } = sBIData
-    console.log("sBIData", sBIData)
+
     try {
         const newBookInfo = await fetch(`${API_URL}/books/newBookInfo`, {
             method: "POST",
@@ -16,9 +16,11 @@ export async function saveBookInfoRequest( sBIData : sBIData) {
             })
         });
         const response = await newBookInfo.json();
-        console.log("responseOfNew", response)
+
         if (!response.result) return response;
+
         return response;
+
     } catch (error) {
         return error;
     }
@@ -27,7 +29,6 @@ export async function saveBookInfoRequest( sBIData : sBIData) {
 export async function editBookTxtRequest( eBTData : eBTData) {
     const { id, text, titre, pseudo, token } = eBTData
     
-console.log("eBTData", eBTData)
     try {
         const editBookInfo = await fetch(`${API_URL}/books/editBookText`, {
             method: "PUT",
@@ -41,10 +42,11 @@ console.log("eBTData", eBTData)
             })
         });
         const response = await editBookInfo.json();
-        console.log("responseOfEdit", response)
 
         if (!response.result) return response;
+
         return response;
+
     } catch (error) {
         return error;
     }
@@ -65,10 +67,11 @@ export async function editBookImgRequest(eBIData: eBIData) {
             })
         });
         const response = await editBookInfo.json();
-        console.log("responseOfEdit", response)
 
         if (!response.result) return response;
+
         return response;
+
     } catch (error) {
         return error;
     }
@@ -89,10 +92,11 @@ export async function archiveStatusRequest(aSData: aSData) {
             })
         });
         const response = await editBookInfo.json();
-        console.log("responseOfArchive", response)
 
         if (!response.result) return response;
+        
         return response;
+
     } catch (error) {
         return error;
     }

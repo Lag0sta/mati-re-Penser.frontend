@@ -19,33 +19,23 @@ interface topicProps {
     setIsMessageModalOpen: (value: boolean) => any
     setModalComponent: (value: string) => any
     setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
     setAuthType: (value: string) => any
 }
 
-function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setAuthType }: topicProps) {
+function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setAuthType }: topicProps) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
     const [responseType, setResponseType] = useState<string>("");
-    const [reply, setReply] = useState<string>("");
     const [quoteID, setQuoteID] = useState<string[]>([]);
     const [pseudo, setPseudo] = useState<string>("");
-            console.log("setReplyToTHREAD", replyTo)
-
-    const [threadID, setThreadID] = useState<string>("");
 
     const [rQValue, setRQValue] = useState<string>("");
-    console.log("replyToTopicThread", replyTo)
     const threadRef = useRef<HTMLDivElement>(null);
 
     const topic: any = useAppSelector((state) => state.topic.value);
-    const token = useAppSelector((state) => state.authToken.value);
-    console.log("token in topicthread", token);
-    console.log("topic in topicthread", topic);
 
     // Calcule et initialisation du nombre de pages
-    const totalComments = topic.topicThread.length;
     const pageSize = 15;
     const pagesNumber = useMemo(() => {
         const numberOfPages = Math.ceil(topic.topicThread.length / pageSize);
@@ -60,13 +50,11 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
                     setIsTextModalOpen={setIsTextModalOpen}
                     setAuthType={setAuthType}
                     setIsNewComment={setIsNewComment}
-                    isNewComment={isNewComment}
                     setMessageModalOpen={setIsMessageModalOpen}
                     setErrorMessage={setErrorMessage}
                     setResponseType={setResponseType}
                     threadRef={threadRef}
                 />
-
 
                 <Thread setPseudo={setPseudo}
                     setIsModalOpen={setIsModalOpen}
@@ -81,7 +69,6 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
                     currentPage={currentPage}  
                     setAuthType={setAuthType}
                     setQuoteID={setQuoteID} 
-                    setThreadId={setThreadID}
                 />
 
                 <div ref={threadRef}>
@@ -110,11 +97,8 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
                         </button>
                     ))}
                 </div>
-
             </div>
-
         </div>
-
     )
 }
 

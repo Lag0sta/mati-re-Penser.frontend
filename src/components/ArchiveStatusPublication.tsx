@@ -13,17 +13,21 @@ interface topicProps {
     response: boolean
 }
 function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSuccessMessage, setIsMessageModalOpen, setAuthType, setIsModalOpen, response }: topicProps) {
-    const publication: any = useAppSelector((state) => state.publication.value);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
     const dispatch = useAppDispatch();
-    const isArchived = publication[0]?.isArchived
     const publications = useAppSelector((state) => state.publication.value);
-    console.log("publicationsReducer", publications[0].text)
+    const publication = publications.find((e) => e.isArchived === false);
+    let isArchived: boolean;
+    let id: string;
 
+    if(publication){
+        id = publication._id
+        isArchived = publication.isArchived
+    }
     const handleArchive = async () => {
         const msg = [];
-        const aSData = { id: publication._id, pseudo: user.pseudo, token, isArchived: publication.isArchived }
+        const aSData = { id, pseudo: user.pseudo, token, isArchived }
         try {
             console.log("clickx4")
             setModalComponent("auth")
@@ -38,17 +42,15 @@ function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSucce
                     const errors = JSON.parse(archiveResponse.error);
 
                     for (const err of errors) {
-                        console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                         msg.push(err.message)
-
                     }
+
                     setErrorMessage(msg.join(", "));
                     setIsMessageModalOpen(true);
                     return;
-                } else {
 
+                } else {
                     dispatch(updateArchiveStatus(archiveResponse.isArchived))
-                    console.log("archiveResponse", archiveResponse)
                     setSuccessMessage(archiveResponse.message);
                     setIsMessageModalOpen(true);
                     setIsModalOpen(false);
@@ -75,7 +77,7 @@ function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSucce
             <fieldset className="flex flex-col justify-between items-center overflow-y-auto w-full max-w-3xl p-4">
 
                 <div className="flex flex-col w-full">
-                    {!isArchived ? (<label className="text-base text-gray-400 mt-2 mb-1"
+                    {publication && publication.isArchived ? (<label className="text-base text-gray-400 mt-2 mb-1"
                         htmlFor="subject">
                         Voulez vous archiver la publication ?
                     </label>) : (
@@ -90,7 +92,6 @@ function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSucce
                         <span className="py-1 px-3 border-2 border-gray-400 rounded-md text-gray-400 hover:bg-gray-400 hover:text-gray-200 hover:border-gray-200 cursor-pointer"
                             onClick={handleCloseModal}>NON</span>
                     </div>
-
                 </div>
 
             </fieldset>

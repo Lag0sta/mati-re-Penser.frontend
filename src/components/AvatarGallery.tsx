@@ -1,7 +1,7 @@
-import { changeAvatar } from "../utils/profilActions.js"
+import { changeAvatarRequest } from "../utils/profilActions.js"
 import { useAppSelector, useAppDispatch } from "../store/hooks.js"
 
-import { update } from "../store/reducers/user.js";
+import { updateUser } from "../store/reducers/user.js";
 
 import { setStyle } from "framer-motion"
 interface avatarGalleryProps {
@@ -26,13 +26,13 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
     }
 
     const handleChangeAvatar = async (style: string, seed: string) => {
-        const profilData = { token, style, seed }
+        const cAData = { token, style, seed }
 
         try {
-            const avatarChangeResponse = await changeAvatar({ profilData })
+            const avatarChangeResponse = await changeAvatarRequest( cAData )
 
             if (avatarChangeResponse.result) {
-                dispatch(update(avatarChangeResponse));
+                dispatch(updateUser(avatarChangeResponse));
 
                 setIsModalOpen(false);
                 setModalComponent("");
@@ -40,8 +40,7 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
                 setIsMessageModalOpen(true);
             } else {
                 setErrorMessage(avatarChangeResponse.message);
-                setIsMessageModalOpen(true);
-
+                setIsMessageModalOpen(true); 
             }
 
         } catch (error) {

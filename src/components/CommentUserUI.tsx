@@ -1,4 +1,3 @@
-import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 
 interface threadListProps {
@@ -8,9 +7,6 @@ interface threadListProps {
 function CommentUserUI({ thread }: threadListProps) {
 
     const [msgHover, setMsgHover] = useState<boolean>(false);
-    const topic: any = useAppSelector((state) => state.topic.value);
-    console.log("nThread", topic.topicThread.length)
-    console.log("topic", topic)
 
     return (
 

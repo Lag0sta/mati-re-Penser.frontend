@@ -22,18 +22,14 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
     const [rQValue, setRQValue] = useState<string>(topic?.description ?? "");
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
 
-    console.log("rQValueEditTOPIC", rQValue, "originalValue", originalValue);
     const dispatch = useAppDispatch();
 
     const token = useAppSelector((state) => state.authToken.value);
-    console.log("topic in TOPIC", topic);
 
     const id = topic.id
-    console.log("Topic id :", id);
 
     const [title, setTitle] = useState<string>(topic.title);
     const originalTitle = topic.title
-    console.log("Topic title :", title, "orignalTitle", originalTitle);
 
     function normalize(str = "") {
         return str.replace(/<[^>]+>/g, "").trim();
@@ -42,16 +38,13 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
     useEffect(() => {
         if (title !== originalTitle ||
             normalize(rQValue) !== normalize(originalValue)) {
-            console.log("goal! w2")
             setIsButtonLocked(false)
         } else {
-            console.log("no goal")
             setIsButtonLocked(true)
         }
     }, [rQValue, title]);
 
     const handleEditTopic = async () => {
-        ("click TOPICEDIT")
         const description = rQValue
         const editTData = { token, id, title, description };
         const msg = [];
@@ -63,10 +56,9 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
                 const errors = JSON.parse(editTopicResponse.error);
 
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
-                    msg.push(err.message)
-                
+                    msg.push(err.message)                
                 }
+                
                 setErrorMessage(msg.join(", "));
                 setIsMessageModalOpen(true);
                 return;

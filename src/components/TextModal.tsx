@@ -16,15 +16,13 @@ interface modalProps {
   setErrorMessage: (value: string) => any
   setSuccessMessage: (value: string) => any
   setMainComponent: (value: string) => any
-  authType: string
   setIsTextModalOpen: (value: boolean) => any
   publicationID: string
   setPublicationID: (value: string) => any
 }
 
 
-function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setIsTextModalOpen, publicationID, setPublicationID }: modalProps) {
-  console.log("modalComponent", modalComponent)
+function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent, setIsTextModalOpen, publicationID, setPublicationID }: modalProps) {
 
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "

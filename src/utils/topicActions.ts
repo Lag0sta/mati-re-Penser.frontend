@@ -86,9 +86,7 @@ export async function topicThreadRequest( tTData : tTData) {
     const { title } = tTData
         
     try {
-        
-        console.log("👉 API URL utilisée:", `${API_URL}/topics/topicContent`);
-        const topic = await fetch(`${API_URL}/topics/topicContent`, {
+            const topic = await fetch(`${API_URL}/topics/topicContent`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

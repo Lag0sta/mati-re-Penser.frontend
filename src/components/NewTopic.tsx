@@ -21,7 +21,6 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
     const [description, setDescription] = useState<string>('');
 
     const dispatch = useAppDispatch();
-    const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
 
     const handleNewTopic = async () => {
@@ -34,16 +33,15 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
 
             if (!newTopicResponse.result) {
                 const errors = JSON.parse(newTopicResponse.error);
+
                 for (const err of errors) {
-                    console.log(`Erreur sur ${err.path[0]} : ${err.message}`);
                     msg.push(err.message)
-                
                 }
+
                 setErrorMessage(msg.join(", "));
                 setSuccessMessage('');
                 setIsMessageModalOpen(true);
             } else {
-
                 setSuccessMessage(newTopicResponse.success);
                 setErrorMessage('');
                 setIsMessageModalOpen(true);
@@ -98,12 +96,6 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
                     >
                         Descriptif :
                     </label>
-                    {/* <textarea className="w-full h-32 border-2 border-black rounded-md px-3"
-                        id="email"
-                        placeholder="descriptif"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    /> */}
                     <TextEditor rQValue={rQValue}
                         setRQValue={setRQValue}
                         mode="editTopic"

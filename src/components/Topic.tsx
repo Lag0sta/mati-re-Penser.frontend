@@ -11,14 +11,13 @@ interface topicProps {
     setModalComponent: (value: string) => any
     setAuthType: (value: string) => any
     setIsNewComment: (value: boolean) => any
-    isNewComment: boolean
     setMessageModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setResponseType: (value: string) => any
     threadRef: any
 }
 
-function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, setAuthType, setIsNewComment, isNewComment, setMessageModalOpen, setErrorMessage, setResponseType, threadRef }: topicProps) {
+function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, setAuthType, setIsNewComment, setMessageModalOpen, setErrorMessage, setResponseType, threadRef }: topicProps) {
     const [lockHover, setLockHover] = useState<boolean>(false);
     const [editHover, setEditHover] = useState<boolean>(false);
     const [replyHover, setReplyHover] = useState<boolean>(false);
@@ -26,7 +25,6 @@ function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, se
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
-console.log("whatTopic", topic)
 
     const handleEditTopic = () => {
         setIsTextModalOpen(true);
@@ -58,7 +56,6 @@ console.log("whatTopic", topic)
     }
 
     const handleReplyTopic = () => {
-        console.log("clickReplyRopic")
         if (!token) {
             setMessageModalOpen(true);
             setErrorMessage("Vous devez vous connecter pour commenter");
