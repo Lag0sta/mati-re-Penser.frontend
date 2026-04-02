@@ -96,10 +96,10 @@ export default function EditComment({
       return;
     }
 
-    const threadData = { token, text, id };
+    const editCData = { token, text, id };
 
     try {
-      const editCommentResponse = await editCommentRequest({ threadData });
+      const editCommentResponse = await editCommentRequest( editCData );
 
       if (!editCommentResponse?.result) {
         setErrorMessage(editCommentResponse?.message ?? "Erreur lors de la modification");

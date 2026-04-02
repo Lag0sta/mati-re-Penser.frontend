@@ -1,13 +1,9 @@
-import { propData } from "./types.js";
+import { sBIData, eBTData, eBIData, aSData} from "../types/newActions.js";
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-interface newProps {
-    propData: propData
-}
-
-export async function saveBookInfoRequest({ propData }: newProps) {
-    const { titre, text, pseudo, token } = propData
-    console.log("propData", propData)
+export async function saveBookInfoRequest( sBIData : sBIData) {
+    const { titre, text, pseudo, token } = sBIData
+    console.log("sBIData", sBIData)
     try {
         const newBookInfo = await fetch(`${API_URL}/books/newBookInfo`, {
             method: "POST",
@@ -28,9 +24,10 @@ export async function saveBookInfoRequest({ propData }: newProps) {
     }
 }
 
-export async function editBookTxtRequest({ propData }: newProps) {
-    const { id, text, titre, pseudo, token } = propData
-
+export async function editBookTxtRequest( eBTData : eBTData) {
+    const { id, text, titre, pseudo, token } = eBTData
+    
+console.log("eBTData", eBTData)
     try {
         const editBookInfo = await fetch(`${API_URL}/books/editBookText`, {
             method: "PUT",
@@ -53,8 +50,8 @@ export async function editBookTxtRequest({ propData }: newProps) {
     }
 }
 
-export async function editBookImgRequest({ propData}: newProps) {
-    const { id, pseudo, token, img } = propData
+export async function editBookImgRequest(eBIData: eBIData) {
+    const { id, pseudo, token, img } = eBIData
 
     try {
         const editBookInfo = await fetch(`${API_URL}/books/editBookImg`, {
@@ -69,6 +66,30 @@ export async function editBookImgRequest({ propData}: newProps) {
         });
         const response = await editBookInfo.json();
         console.log("responseOfEdit", response)
+
+        if (!response.result) return response;
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+export async function archiveStatusRequest(aSData: aSData) {
+    const { id, pseudo, token, isArchived } = aSData
+
+    try {
+        const editBookInfo = await fetch(`${API_URL}/books/archiveStatus`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: id,
+                isArchived: !isArchived,
+                pseudo: pseudo,
+                token: token
+            })
+        });
+        const response = await editBookInfo.json();
+        console.log("responseOfArchive", response)
 
         if (!response.result) return response;
         return response;

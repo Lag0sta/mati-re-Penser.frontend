@@ -14,12 +14,19 @@ interface newProps {
     setModalComponent: (value: string) => any
     setIsTextModalOpen: (value: boolean) => any
     setPublicationID: (value: string) => any
+    setAuthType: (value: string) => any
+    response: boolean
+    setErrorMessage: (value: string) => any
+    setSuccessMessage: (value: string) => any
+    setIsMessageModalOpen: (value: boolean) => any
 }
-function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComponent, setPublicationID }: newProps) {
+function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComponent, setPublicationID, setAuthType, response, setErrorMessage, setSuccessMessage, setIsMessageModalOpen }: newProps) {
     const [isAdminView, setIsAdminView] = useState(false);
     const user = useAppSelector(state => state.user.value)
 
     const publications = useAppSelector((state) => state.publication.value);
+    const publication = publications.find((e) => e.isArchived === false);
+
     console.log("THeOneAndOnlypublications", publications)
     console.log("publicationLenght", publications.length)
 
@@ -58,17 +65,28 @@ function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComp
             }
             {isAdminView &&
                 <div>
-                    <NewAdminView setIsTextModalOpen={setIsTextModalOpen} setIsAddComment={setIsAddComment} setModalComponent={setModalComponent} setPublicationID={setPublicationID} />
+                    <NewAdminView setIsTextModalOpen={setIsTextModalOpen} 
+                                  setIsAddComment={setIsAddComment} 
+                                  setModalComponent={setModalComponent} 
+                                  setPublicationID={setPublicationID} 
+                                  setAuthType={setAuthType}
+                                  setIsModalOpen={setIsModalOpen}
+                                  response={response}
+                                  setErrorMessage={setErrorMessage}
+                                  setSuccessMessage={setSuccessMessage}
+                                  setIsMessageModalOpen={setIsMessageModalOpen} />
                 </div>
             }
-            {!isAdminView &&
+            {(!isAdminView && publication) &&
                 <div className="w-[78%]">
                     <div className="flex w-full justify-between ">
-                        <div className="mr-4">
-                            <img className="object-contain  rounded-md" src={publications[0]?.img} alt="couverture du livre Nature Du Réel Réel de la Nature" />
-                        </div>
+                        
+                            <div className="mr-4">
+                                <img className="object-contain  rounded-md" src={publications[0]?.img} alt="couverture du livre Nature Du Réel Réel de la Nature" />
+                            </div>
+
                         <div className=" flex flex-col bg-white rounded-md h-[50%] w-[90%] ml-4 p-10">
-                            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publications[0]?.text || "") }} />
+                            <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publication.text || "") }} />
                         </div>
 
                     </div>
@@ -80,7 +98,7 @@ function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComp
                             Laisser un Avis
                         </button>
                         <a
-                            href={publications[0].lien}
+                            href={publication.lien}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-fit px-2 py-1  bg-black text-white border-2 border-black rounded-md hover:bg-gray-200 hover:border-gray-200 hover:text-black cursor-pointer"
@@ -88,13 +106,8 @@ function New({ setIsModalOpen, setIsTextModalOpen, setIsAddComment, setModalComp
                             Acheter
                         </a>
                     </div>
-
                 </div>
             }
-            
-
-
-
         </div>
     )
 }

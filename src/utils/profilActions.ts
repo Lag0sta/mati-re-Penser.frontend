@@ -1,12 +1,8 @@
-import { profilData } from "./types.js";
+import { cAData } from "../types/profilActions.js";
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-interface profilProps {
-    profilData : profilData
-}
-
-export async function changeAvatarRequest({profilData}: profilProps) {
-    const {token, style, seed} = profilData
+export async function changeAvatarRequest( cAData: cAData ) {
+    const {token, style, seed} = cAData
     
     try {
         const AvatarChange = await fetch(`${API_URL}/users/avatar`, {

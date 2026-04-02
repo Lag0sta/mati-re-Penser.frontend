@@ -20,14 +20,14 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
     const dispatch = useAppDispatch();
 
     const handleSignIn = async () => {
-        const authData = { email, password }
+        const sIData = { email, password }
         const msg = []
         try {
             //réinitialisation des messages
             setErrorMessage("")
             setSuccessMessage("")
 
-            const signInResponse = await signInRequest({ authData })
+            const signInResponse = await signInRequest( sIData )
 
             if (signInResponse.result) {
                 setEmail("");

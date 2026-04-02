@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react';
+import { useAppSelector, useAppDispatch } from '../store/hooks.js';
+import { loadPublication } from '../store/reducers/publication.js';
 import TopicThread from './TopicThread.js';
 import Header from './Header.js';
 import Contact from './Contact.js';
@@ -10,8 +12,6 @@ import Modal from './Modal.js';
 import TextModal from './TextModal.js';
 import UserProfile from './UserProfile.js';
 import MessageModal from './MessageModal.js';
-import { useAppSelector, useAppDispatch } from '../store/hooks.js';
-import { loadPublication } from '../store/reducers/publication.js';
 
 function App() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
@@ -26,6 +26,7 @@ function App() {
   const [replyTo, setReplyTo] = useState<string>("");
   const [loading, setLoading] = useState(true)
   const [publicationID, setPublicationID] = useState<string>("");
+  const [response, setResponse] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   
@@ -72,7 +73,7 @@ function App() {
         </Suspense>
       </header>
 
-      {/* Accueil / Hero */}
+      {/* Accueil Header */}
       <div
         ref={acceuilRef}
         className={`row-start-1 row-end-2 col-start-1 col-end-5`}
@@ -103,6 +104,11 @@ function App() {
               setModalComponent={setModalComponent}
               setIsTextModalOpen={setIsTextModalOpen}
               setPublicationID={setPublicationID}
+              setAuthType={setAuthType}
+              response={response}
+              setErrorMessage={setErrorMessage}
+              setSuccessMessage={setSuccessMessage}
+              setIsMessageModalOpen={setIsMessageModalOpen}
             />
           )}
           {mainComponent === "forum" && (
@@ -160,6 +166,8 @@ function App() {
           setMainComponent={setMainComponent}
           authType={authType}
           setAuthType={setAuthType}
+          setResponse={setResponse}
+          response={response}
         />
       )}
       {isTextModalOpen && (

@@ -1,14 +1,9 @@
-import { authData } from "../utils/types.js"
+import { sUData, sIData, authData, logOutData } from "../types/authActions.js"
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-// const API_URL =  'http://localhost:4000';
-
-interface authProps {
-    authData : authData  
-}
 
 //fonction pour s'inscrire
-export async function signUp({ authData }: authProps) {
-    const {name, surname, pseudo, email, password, confirmPassword, hp} = authData
+export async function signUp(sUData: sUData) {
+    const {name, surname, pseudo, email, password, confirmPassword, hp} = sUData
 
     try {
         const response = await fetch(`${API_URL}/users/signup`, {
@@ -24,9 +19,7 @@ export async function signUp({ authData }: authProps) {
                 hp: hp
             }),
         });
-
         const data = await response.json();
-        console.log("data", data)
 
         return data
        
@@ -36,8 +29,8 @@ export async function signUp({ authData }: authProps) {
 }
 
 //action pour se connecer
-export async function signInRequest({ authData }: authProps) {
-    const {email, password} = authData
+export async function signInRequest(sIData : sIData) {
+    const {email, password} = sIData
 
     try {
         const response = await fetch(`${API_URL}/auths/signin`, {
@@ -49,7 +42,6 @@ export async function signInRequest({ authData }: authProps) {
             }),
         });
         const data = await response.json();
-        console.log("data", data)
 
         return data
     
@@ -59,7 +51,7 @@ export async function signInRequest({ authData }: authProps) {
 }
 
 //action de 2e auth pour sécuriser la modification
-export async function authRequest({ authData, }: authProps){
+export async function authRequest(authData : authData){
         const {token, password} = authData
       
     try {
@@ -73,28 +65,16 @@ export async function authRequest({ authData, }: authProps){
         })
         const data = await response.json()
         
-        console.log("dataResponse", data)
-
         return data
-
-        // const text = await response.text()
-        // try {
-        //     const data = JSON.parse(text);
-        //     console.log("Parsed JSON:", data);
-        // } catch (err) {
-        //     console.error("Not JSON:", err);
-        // }
-        // return text
 
     } catch (error) {
         return error
     }
-
 }
 
-export async function logOutRequest(profileData: authData) {
-    const {token, userId} = profileData
-    console.log("profileData", profileData)
+export async function logOutRequest(logOutData : logOutData) {
+    const {token, userId} = logOutData
+    console.log("logOutData", logOutData)
     try {
         const logOut = await fetch(`${API_URL}/auths/logout`, {
             method: "PUT",
@@ -105,8 +85,9 @@ export async function logOutRequest(profileData: authData) {
             })
         });
         const data = await logOut.json();
-        console.log("logOutdata", data)
+
         return data
+
     } catch (error) {
         console.error(error);
         return false

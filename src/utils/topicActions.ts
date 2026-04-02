@@ -1,12 +1,8 @@
-import { topicData } from './types.js';
+import { tTData, lockTData, editTData, newTData } from '../types/topicActions.js';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-interface topicProps {
-    topicData: topicData
-}
-
-export async function newTopicRequest({ topicData }: topicProps) {
-    const { token, title, description } = topicData
+export async function newTopicRequest( newTData : newTData) {
+    const { token, title, description } = newTData
     
     try {
         const topic = await fetch(`${API_URL}/topics/newTopic`, {
@@ -39,8 +35,8 @@ export async function newTopicRequest({ topicData }: topicProps) {
         return error
     }
 }
-export async function editTopicRequest({ topicData }: topicProps) {
-    const { token, id, title, description } = topicData
+export async function editTopicRequest( editTData : editTData) {
+    const { token, id, title, description } = editTData
 
     try {
         const editTopic = await fetch(`${API_URL}/topics/editTopic`, {
@@ -63,8 +59,8 @@ export async function editTopicRequest({ topicData }: topicProps) {
 }
 
 // import { lockTopic } from '../store/reducers/topic.js';
-export async function lockTopicRequest({ topicData }: topicProps) {
-    const { id, isLocked, token } = topicData
+export async function lockTopicRequest( lockTData : lockTData) {
+    const { id, isLocked, token } = lockTData
     try {
 
         const editLock = await fetch(`${API_URL}/topics/lockTopic`, {
@@ -86,10 +82,9 @@ export async function lockTopicRequest({ topicData }: topicProps) {
     }
 }
 
-export async function topicThreadRequest({ topicData }: topicProps) {
-    const { title } = topicData
-        console.log("topicData", topicData.title)
-        console.log("THEtitle", title)
+export async function topicThreadRequest( tTData : tTData) {
+    const { title } = tTData
+        
     try {
         
         console.log("👉 API URL utilisée:", `${API_URL}/topics/topicContent`);
@@ -98,14 +93,11 @@ export async function topicThreadRequest({ topicData }: topicProps) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 title : title
-            }
-            )
-        }
-        )
+            })
+        })
         const response = await topic.json()
-        console.log("reponseTopicThread :", response)
-        return response
 
+        return response
 
     } catch (error) {
         return error

@@ -26,11 +26,11 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
 
     const handleNewTopic = async () => {
        
-        const topicData = { token, title, description };
+        const nTData = { token, title, description };
         const msg = [];
 
         try {
-            const newTopicResponse = await newTopicRequest({ topicData });
+            const newTopicResponse = await newTopicRequest(nTData);
 
             if (!newTopicResponse.result) {
                 const errors = JSON.parse(newTopicResponse.error);

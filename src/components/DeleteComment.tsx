@@ -29,12 +29,12 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
     const handleDeleteComment = async () => {
         console.log("comment.id", comment.id)
         const id = comment.id
-        const threadData = { token, id };
+        const deleteCData = { token, id };
         const msg = [];
         try {
-            console.log("threadData", threadData)
+            console.log("deleteCData", deleteCData)
 
-            const deleteCommentResponse = await deleteCommentRequest({ threadData })
+            const deleteCommentResponse = await deleteCommentRequest( deleteCData )
             console.log("deleteCommentResponse", deleteCommentResponse);
 
             if (!deleteCommentResponse.result) {
@@ -58,17 +58,19 @@ function DeleteComment({ setModalComponent, setErrorMessage, setIsModalOpen, set
 
                 // <-- AJOUTER CE BLOc
                 setTimeout(async () => {
+                    const tTData = { title: topic.title };
+
                     try {
-                        const res = await topicThreadRequest({ topicData: { title: topic.title } });
+                        const response = await topicThreadRequest( tTData );
 
                         // --- Success case ---
-                        if (res?.result && res?.discussion) {
-                            dispatch(getTopic(res)); // <-- on envoie seulement la discussion
+                        if (response?.result && response?.discussion) {
+                            dispatch(getTopic(response)); // <-- on envoie seulement la discussion
                             return;
                         }
 
                         // --- API returned an error ---
-                        setErrorMessage(res?.message || "Erreur lors de la récupération");
+                        setErrorMessage(response?.message || "Erreur lors de la récupération");
                         setIsMessageModalOpen(true);
 
                     } catch (error) {

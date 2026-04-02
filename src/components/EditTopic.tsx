@@ -53,10 +53,10 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
     const handleEditTopic = async () => {
         ("click TOPICEDIT")
         const description = rQValue
-        const topicData = { token, id, title, description };
+        const editTData = { token, id, title, description };
         const msg = [];
         try {
-            const editTopicResponse = await editTopicRequest({ topicData });
+            const editTopicResponse = await editTopicRequest( editTData);
 
             if (!editTopicResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse

@@ -56,12 +56,12 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
         // Récupère le HTML restant
         const newComment = doc.body.innerHTML.trim();
 
-        const threadData = { token, title, newComment, quote: quoteID }
-        console.log("threadData", threadData)
+        const addCData = { token, title, newComment, quote: quoteID }
+        console.log("addCData", addCData)
 
         const msg: string[] = []
         try {
-            const addCommentResponse = await addCommentRequest({ threadData });
+            const addCommentResponse = await addCommentRequest( addCData );
             console.log("addCommentResponse", addCommentResponse);
             if (addCommentResponse) {
                 const TheNewComment = {
@@ -98,9 +98,9 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
 
         // Re-sync avec les vraies données du backend après 2 sec
         setTimeout(async () => {
-            const topicData = { title };
+            const tTdata = { title };
             try {
-                const respones = await topicThreadRequest({ topicData });
+                const respones = await topicThreadRequest( tTdata );
 
                 if (respones) {
                     dispatch(getTopic(topic))

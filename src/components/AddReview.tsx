@@ -30,12 +30,12 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
 
     const handleReview = async () => {
         const text = review
-        const reviewData = { name, title, text, rating }
+        const nRData = { name, title, text, rating }
         const msg: string[] = [];
 
 
         try {
-            const addReviewResponse = await newReviewRequest({ reviewData })
+            const addReviewResponse = await newReviewRequest( nRData )
             console.log("addReviewResponse1", JSON.stringify(addReviewResponse.error, null, 2));
 
             if (addReviewResponse.error) {

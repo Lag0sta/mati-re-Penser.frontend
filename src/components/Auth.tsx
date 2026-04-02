@@ -14,8 +14,9 @@ interface authProps {
     setSuccessMessage: (value: string) => void
     setIsMessageModalOpen: (value: boolean) => void
     authType: string
+    setResponse: (value: boolean) => void
 }
-function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setIsMessageModalOpen, authType }: authProps) {
+function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setIsMessageModalOpen, authType, setResponse }: authProps) {
 
     const [password, setPassword] = useState('')
 
@@ -25,14 +26,14 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
 
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
-
+    console.log("authType", authType)
     console.log("topic lock", topic)
 
     const handleAuth = async () => {
 
         const id = topic.id
         const authData = { token, password }
-        const topicData = { id, token, isLocked }
+        const lockTData = { id, token, isLocked }
         const threadData = { token, id }
         setSuccessMessage('');
         setErrorMessage('');
@@ -40,7 +41,7 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
 
         try {
             console.log("authData", authData)
-            const authResponse = await authRequest({ authData })
+            const authResponse = await authRequest( authData )
             console.log("authResponse2", authResponse)
 
             if (authResponse.result) {
@@ -51,7 +52,7 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
                 if (authType === "lockTopic") {
                     setPassword('')
 
-                    const lockResponse = await lockTopicRequest({ topicData })
+                    const lockResponse = await lockTopicRequest(lockTData)
 
                     if (lockResponse) {
                         console.log("lockResponse", lockResponse.isLocked)
@@ -66,6 +67,14 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
 
                 if (authType === "deleteComment") {
                     setModalComponent("deleteComment")
+                    return
+                }
+
+                if(authType === "archiveStatus"){
+                    setResponse(authResponse.result)
+                    setModalComponent("archiveStatus")
+                    console.log("authResponse.result", authResponse.result)
+        
                     return
                 }
             } else {

@@ -1,13 +1,10 @@
-import { reviewData } from './types.js';
+import { nRData } from '../types/reviewActions.js';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-interface reviewProps {
-    reviewData: reviewData
-}
 
-export async function newReviewRequest({ reviewData }: reviewProps){
-    const { name, title, text, rating } = reviewData
-    console.log("reviewData", reviewData)
+export async function newReviewRequest( nRData : nRData){
+    const { name, title, text, rating } = nRData
+    console.log("reviewData", nRData)
     try {
         const review = await fetch(`${API_URL}/reviews/newReview`, {
             method: "POST",

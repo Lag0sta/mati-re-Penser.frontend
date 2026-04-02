@@ -1,12 +1,9 @@
-import { threadData } from './types.js';
+import { addCData, editCData, deleteCData } from '../types/threadActions.js';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-interface threadProps {
-    threadData: threadData
-}
-export async function addCommentRequest({ threadData }: threadProps) {
-    const { token, title, newComment, quote} = threadData
-    console.log("initComment", threadData)
+export async function addCommentRequest( addCData : addCData ) {
+    const { token, title, newComment, quote} = addCData
+    console.log("initComment", addCData)
 
     try {
         const response = await fetch(`${API_URL}/threads/newComment`, {
@@ -29,8 +26,8 @@ export async function addCommentRequest({ threadData }: threadProps) {
     }
 }
 
-export async function editCommentRequest({ threadData }: threadProps) {
-    const { token, id, text } = threadData
+export async function editCommentRequest( editCData : editCData) {
+    const { token, id, text } = editCData
     try {
         const comment = await fetch(`${API_URL}/threads/editComment`, {
             method: "PUT",
@@ -44,17 +41,17 @@ export async function editCommentRequest({ threadData }: threadProps) {
         }
         )
         const thread = await comment.json()
-        console.log("thread", thread)
+
         return thread
+
     }catch (error) {
         return error
     }
 }
 
-export async function deleteCommentRequest({ threadData }: threadProps) {
-    console.log("pop")
-    const { token, id, } = threadData
-    console.log("threadData", threadData)
+export async function deleteCommentRequest( deleteCData : deleteCData) {
+    const { token, id, } = deleteCData
+    console.log("deleteCData", deleteCData)
     try {
         const deleteComment = await fetch(`${API_URL}/threads/deleteComment`, {
             method: "DELETE",
@@ -62,12 +59,12 @@ export async function deleteCommentRequest({ threadData }: threadProps) {
             body: JSON.stringify({
                 token: token,
                 id: id
-            }
-            )
-        }
-        )
+            })
+        })
         const thread = await deleteComment.json()
+
         return thread
+        
     }catch (error) {
         return error
     }

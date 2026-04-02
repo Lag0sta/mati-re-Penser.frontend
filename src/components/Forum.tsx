@@ -53,9 +53,9 @@ function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsM
 
     const handleTopic = async (title: string) => {
         console.log('TopicTitle', title)
-        const topicData = { title };
+        const tTData = { title };
         try {
-            const discussionResponse = await topicThreadRequest({ topicData })
+            const discussionResponse = await topicThreadRequest( tTData )
 
             console.log("Thediscussion :", discussionResponse)
             if (discussionResponse){

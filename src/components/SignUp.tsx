@@ -24,7 +24,7 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
     }
 
     const handleSignUp = async () => {
-        const authData = { name, surname, pseudo, email, password, confirmPassword, hp }
+        const sUData = { name, surname, pseudo, email, password, confirmPassword, hp }
         const msg = []
 
         try {
@@ -32,7 +32,7 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
             setErrorMessage("")
             setSuccessMessage("")
 
-            const signUpResponse = await signUp({ authData })
+            const signUpResponse = await signUp( sUData )
 
             if (signUpResponse.result) {
                 setName("");

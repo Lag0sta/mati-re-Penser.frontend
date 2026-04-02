@@ -2,13 +2,12 @@ import { useAppSelector } from "../store/hooks.js"
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 import TextEditor from "./TextEditor.js";
-import { updatePublication } from "../store/reducers/publication.js";
+import { updatePublicationTxt } from "../store/reducers/publication.js";
 
 import { editBookTxtRequest } from "../utils/newActions.js";
 interface topicProps {
     setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
-    modalComponent: string
     setIsTextModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
@@ -16,27 +15,30 @@ interface topicProps {
     publicationID: string
     setPublicationID: (value: string) => any
 }
-function EditPublicationTxt({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
-    const publication: any = useAppSelector((state) => state.publication.value);
-    const token = useAppSelector((state) => state.authToken.value);
-    const user = useAppSelector((state) => state.user.value);
-    const originalValue = publication[0]?.text
-    const originalTitle = publication[0]?.titre
+function EditPublicationTxt({  setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
     const [rQValue, setRQValue] = useState<string>("");
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
     const [title, setTitle] = useState<string>("");
+    let originalValue = ""
+    let originalTitle = ""
+    
+    const publications = useAppSelector((state) => state.publication.value);
+    const publication = publications.find((e) => e.isArchived === false);
+    const token = useAppSelector((state) => state.authToken.value);
+    const user = useAppSelector((state) => state.user.value);
+
     const dispatch = useAppDispatch();
     
-    console.log("originalValue Real Value :", originalValue, "rQValue", rQValue);
-
-    const publications = useAppSelector((state) => state.publication.value);
-    console.log("publicationsReducer", publications[0].text)
-
+    if(publication){
+        originalValue = publication.text
+        originalTitle = publication.titre
+    }
+   
     useEffect(() => {
-        if (publications[0]._id === publicationID) {
-            setRQValue(publications[0].text)
-            console.log("publications[0]", publications[0])
-            setTitle(publications[0].titre)
+        if (publication && publication._id === publicationID) {
+            setRQValue(publication.text)
+            console.log("publicationEPT", publication)
+            setTitle(publication.titre)
         }
     }, [publicationID, publications])
 
@@ -63,12 +65,11 @@ function EditPublicationTxt({ modalComponent, setModalComponent, setErrorMessage
     const handleUpdatePublication = async () => {
         ("click TOPICEDIT")
         const text = rQValue
-        const propData = { token, id: publicationID, pseudo: user.pseudo, title, text };
-        console.log("descriptionPublication", text)
-        const msg = [];
-        try {
-            const editBookResponse = await editBookTxtRequest({ propData });
-
+        const eBTData = { token, id: publicationID, pseudo: user.pseudo, titre: title, text };
+        console.log("descriptionPublication", eBTData)
+        const msg = [];       try {
+            const editBookResponse = await editBookTxtRequest( eBTData );
+console.log("editBookResponse", eBTData)
             if (!editBookResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
                 const errors = JSON.parse(editBookResponse.error);
@@ -82,7 +83,7 @@ function EditPublicationTxt({ modalComponent, setModalComponent, setErrorMessage
                 setIsMessageModalOpen(true);
                 return;
             } else {  
-                dispatch(updatePublication(editBookResponse.editedBook))
+                dispatch(updatePublicationTxt(editBookResponse.editedBook))
                 console.log("editBookResponse", editBookResponse.editedBook)
                 setSuccessMessage(editBookResponse.message);
                 setIsMessageModalOpen(true);

@@ -1,37 +1,41 @@
 import { useAppSelector } from "../store/hooks.js"
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-import TextEditor from "./TextEditor.js";
-import { updatePublication } from "../store/reducers/publication.js";
+import { updatePublicationImg } from "../store/reducers/publication.js";
 
 import { editBookImgRequest } from "../utils/newActions.js";
+
 interface topicProps {
-    setMainComponent: (value: string) => any
     setModalComponent: (value: string) => any
-    modalComponent: string
     setIsTextModalOpen: (value: boolean) => any
     setErrorMessage: (value: string) => any
     setSuccessMessage: (value: string) => any
     setIsMessageModalOpen: (value: boolean) => any
     publicationID: string
-    setPublicationID: (value: string) => any
 }
-function EditPublicationImg({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID, setPublicationID }: topicProps) {
-    const publication: any = useAppSelector((state) => state.publication.value);
-    const token = useAppSelector((state) => state.authToken.value);
-    const user = useAppSelector((state) => state.user.value);
-    const originalURL = publication[0]?.img
+function EditPublicationImg({ setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID }: topicProps) {
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
     const [url, setURL] = useState<string>("");
-    const dispatch = useAppDispatch();
+    let originalURL = ""
+    let p_id = ""
 
     const publications = useAppSelector((state) => state.publication.value);
+    const publication = publications.find((e) => e.isArchived === false);
+    const token = useAppSelector((state) => state.authToken.value);
+    const user = useAppSelector((state) => state.user.value);
+    
+    const dispatch = useAppDispatch();
+
+    if(publication){
+        originalURL = publication.img
+        p_id = publication._id
+    }
     console.log("publicationsReducer", publications)
 
     useEffect(() => {
-        if (publications[0]._id === publicationID) {
+        if (publication && p_id === publicationID) {
             console.log("publications[0]", publications[0])
-            setURL(publications[0].img)
+            setURL(publication.img)
         }
     }, [publicationID, publications])
 
@@ -48,10 +52,11 @@ function EditPublicationImg({ modalComponent, setModalComponent, setErrorMessage
 
     const handleUpdatePublication = async () => {
         ("click TOPICEDIT")
-        const propData = { token, id: publicationID, pseudo: user.pseudo};
+        const eBIData = { token, id: publicationID, pseudo: user.pseudo, img: url};
+        console.log("eBIData", eBIData)
         const msg = [];
         try {
-            const editBookResponse = await editBookImgRequest({ propData });
+            const editBookResponse = await editBookImgRequest( eBIData );
 
             if (!editBookResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
@@ -66,7 +71,7 @@ function EditPublicationImg({ modalComponent, setModalComponent, setErrorMessage
                 setIsMessageModalOpen(true);
                 return;
             } else {  
-                dispatch(updatePublication(editBookResponse.editedBook))
+                dispatch(updatePublicationImg(editBookResponse.editedBook))
                 console.log("editBookResponse", editBookResponse.editedBook)
                 setSuccessMessage(editBookResponse.message);
                 setIsMessageModalOpen(true);

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 import TextEditor from "./TextEditor.js";
 
-import { updatePublication } from '../store/reducers/publication.js';
+import { addPublication } from '../store/reducers/publication.js';
 import { saveBookInfoRequest } from "../utils/newActions.js"
 
 interface topicProps {
@@ -51,12 +51,12 @@ const handleSave = async () => {
     try{
         const pseudo = user.pseudo
         const text = rQValue
-        const propData = { title, text, pseudo, token }
-        const response = await saveBookInfoRequest({ propData }) 
+        const sBIData = { titre : title, text, pseudo, token }
+        const response = await saveBookInfoRequest( sBIData ) 
         if(response.result){
             setTitle('')
             setRQValue('')
-            dispatch(updatePublication)
+            dispatch(addPublication(response.result));
             setSuccessMessage(response.message);
             setIsMessageModalOpen(true);
         } else {

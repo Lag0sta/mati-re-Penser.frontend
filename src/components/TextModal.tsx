@@ -77,7 +77,6 @@ function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
           {modalComponent === "editPublicationtxt" && 
           <EditPublicationTxt 
             setMainComponent={(value: string) => setMainComponent(value)}
-              modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
@@ -89,15 +88,12 @@ function TextModal({ replyTo, setReplyTo, setIsModalOpen, setModalComponent, mod
 
           {modalComponent === "editPublicationImg"&& 
             <EditPublicationImg 
-            setMainComponent={(value: string) => setMainComponent(value)}
-              modalComponent={modalComponent}
               setModalComponent={(value: string) => setModalComponent(value)}
               setErrorMessage={(value: string) => setErrorMessage(value)}
               setIsTextModalOpen={(value: boolean) => setIsTextModalOpen(value)}
               setSuccessMessage={(value: string) => setSuccessMessage(value)}
               setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
               publicationID={publicationID}
-              setPublicationID={(value: string) => setPublicationID(value)}
             />
           }
           

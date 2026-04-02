@@ -76,14 +76,12 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
                     setErrorMessage={setErrorMessage}
                     setIsNewComment={setIsNewComment}
                     threadRef={threadRef}
-                    setThreadID={setThreadID}
-                    setResponseType={setResponseType}
                     setReplyTo={setReplyTo}
                     pageSize={pageSize}
                     currentPage={currentPage}  
                     setAuthType={setAuthType}
-                    quoteID={quoteID}
                     setQuoteID={setQuoteID} 
+                    setThreadId={setThreadID}
                 />
 
                 <div ref={threadRef}>
@@ -94,11 +92,9 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
                             replyTo={replyTo}
                             setReplyTo={(value: any) => setReplyTo(value)}
                             setResponseType={(value: string) => setResponseType(value)}
-                            responseType={responseType}
                             rQValue={rQValue}
                             setRQValue={(value: string) => setRQValue(value)}
                             quoteID={quoteID}
-                            setQuoteID={(value: string[]) => setQuoteID(value)}
                         />
                     )}
                 </div>
