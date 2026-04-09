@@ -12,7 +12,7 @@ interface ReplyData {
   quoteArr?: { pseudo: string; text: string }[];
 }
 
-interface TextEditorProps {
+interface props {
   rQValue: string;
   setRQValue: (value: string) => void;
   replyTo?: ReplyData | null;         // données pour insérer une citation
@@ -21,7 +21,7 @@ interface TextEditorProps {
   mode?: 'editComment' | 'reply' | 'editTopic' | 'editPublication';
 }
 
-function TextEditor({ rQValue, setRQValue, replyTo, onInserted, mode }: TextEditorProps) {
+function TextEditor({ rQValue, setRQValue, replyTo, onInserted, mode }: props) {
   const quillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {

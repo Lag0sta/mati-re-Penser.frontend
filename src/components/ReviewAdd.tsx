@@ -3,16 +3,15 @@ import { useState } from "react"
 import { newReviewRequest } from "../utils/reviewActions.js"
 import { text } from "stream/consumers"
 
-interface AddReviewsProps {
-    setIsModalOpen: (value: boolean) => any
-    setModalComponent: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
-    setMessageModal: (value: string) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
+import { modalProps, msgProps } from "../types/Props.js";
+
+interface props {
+    modalProps: modalProps
+    msgProps: msgProps
+    book: string
 }
 
-function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setMessageModal, setErrorMessage, setSuccessMessage }: AddReviewsProps) {
+function ReviewAdd({ modalProps, msgProps, book }: props) {
     const [name, setName] = useState<string>('')
     const [title, setTitle] = useState<string>('')
     const [review, setReview] = useState<string>('')
@@ -24,13 +23,13 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
         setTitle('')
         setReview('')
         setRating(0)
-        setIsModalOpen(false)
-        setModalComponent('')
+        modalProps.setIsModalOpen(false)
+        modalProps.setModalComponent('')
     }
 
     const handleReview = async () => {
         const text = review
-        const nRData = { name, title, text, rating }
+        const nRData = { book, name, title, text, rating }
         const msg: string[] = [];
 
 
@@ -43,22 +42,21 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
 
                 for (const err of errors) {
                     msg.push(err.message)
-                
                 }
-                setErrorMessage(msg.join(", "))
+                msgProps.setErrorMessage(msg.join(", "))
 
-                setIsMessageModalOpen(true)
+                modalProps.setIsMessageModalOpen(true)
                 return
             }
 
-            setSuccessMessage(addReviewResponse.message)
-            setIsMessageModalOpen(true)
+            msgProps.setSuccessMessage(addReviewResponse.message)
+            modalProps.setIsMessageModalOpen(true)
             setName('')
             setTitle('')
             setReview('')
             setRating(0)
-            setIsModalOpen(false)
-            setModalComponent('')
+            modalProps.setIsModalOpen(false)
+            modalProps.setModalComponent('')
         } catch (error) {
             console.log("error", error)
         }
@@ -99,4 +97,4 @@ function AddReview({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, s
     )
 }
 
-export default AddReview
+export default ReviewAdd

@@ -1,24 +1,24 @@
 import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
-interface userProfilProps {
-    setIsModalOpen: (value: boolean) => any
-    setModalComponent: (value: string) => any
+import { modalProps } from "../types/Props.js";
+interface props {
+    modalProps: modalProps
 }
 
-function UserProfile({ setIsModalOpen, setModalComponent }: userProfilProps) {
+function UserProfile({ modalProps }: props) {
     const user = useAppSelector(state => state.user.value)
     const topic = useAppSelector(state=>state.topic.value)
     const [email, setEmail] = useState(user.email)
     const [pseudo, setPseudo] = useState(user.pseudo)
 
     const handleAvatar = () => {
-        setIsModalOpen(true);
-        setModalComponent("avatarGallery");
+        modalProps.setIsModalOpen(true);
+        modalProps.setModalComponent("avatarGallery");
     }
 
     const handleChangePassword = () => {
-        setIsModalOpen(true);
-        setModalComponent("changePassword");
+        modalProps.setIsModalOpen(true);
+        modalProps.setModalComponent("changePassword");
     }
     return (
 

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-interface threadListProps {
+interface props {
     thread: any
 }
 
-function CommentUserUI({ thread }: threadListProps) {
+function CommentUserUI({ thread }: props) {
 
     const [msgHover, setMsgHover] = useState<boolean>(false);
 

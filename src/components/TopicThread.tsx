@@ -5,24 +5,19 @@ import '../styles/TopicThreads.css';
 
 import Topic from "./Topic.js";
 import Thread from "./Thread.js";
-import NewComment from "./NewComment.js";
+import CommentNew from "./CommentNew.js";
 
-interface ReplyData {
-    author: string;
-    text: string;
-}
-interface topicProps {
+import { msgProps, modalProps } from "../types/Props.js";
+
+interface props {
     replyTo: string
     setReplyTo: (value: string) => any
-    setIsModalOpen: (value: boolean) => any
-    setIsTextModalOpen: (value: boolean) => any
-    setIsMessageModalOpen: (value: boolean) => any
-    setModalComponent: (value: string) => any
-    setErrorMessage: (value: string) => any
+    modalProps: modalProps
+    msgProps: msgProps
     setAuthType: (value: string) => any
 }
 
-function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, setIsMessageModalOpen, setModalComponent, setErrorMessage, setAuthType }: topicProps) {
+function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }: props) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
@@ -35,6 +30,8 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
 
     const topic: any = useAppSelector((state) => state.topic.value);
 
+    
+
     // Calcule et initialisation du nombre de pages
     const pageSize = 15;
     const pagesNumber = useMemo(() => {
@@ -45,23 +42,17 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
     return (
         <div className="w-full  flex justify-center pt-24 pb-6 ">
             <div className='w-[65%] py-4 flex flex-col justify-start items-center bg-gray-800 rounded-md'>
-                <Topic setIsModalOpen={setIsModalOpen}
-                    setModalComponent={setModalComponent}
-                    setIsTextModalOpen={setIsTextModalOpen}
+                <Topic modalProps={modalProps}
                     setAuthType={setAuthType}
                     setIsNewComment={setIsNewComment}
-                    setMessageModalOpen={setIsMessageModalOpen}
-                    setErrorMessage={setErrorMessage}
+                    msgProps={msgProps}
                     setResponseType={setResponseType}
                     threadRef={threadRef}
                 />
 
                 <Thread setPseudo={setPseudo}
-                    setIsModalOpen={setIsModalOpen}
-                    setIsTextModalOpen={setIsTextModalOpen}
-                    setMessageModalOpen={setIsMessageModalOpen}
-                    setModalComponent={setModalComponent}
-                    setErrorMessage={setErrorMessage}
+                    modalProps={modalProps}
+                    msgProps={msgProps}
                     setIsNewComment={setIsNewComment}
                     threadRef={threadRef}
                     setReplyTo={setReplyTo}
@@ -73,8 +64,8 @@ function TopicThread({ replyTo, setReplyTo, setIsModalOpen, setIsTextModalOpen, 
 
                 <div ref={threadRef}>
                     {(isNewComment) && (
-                        <NewComment setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-                            setErrorMessage={(value: string) => setErrorMessage(value)}
+                        <CommentNew modalProps={modalProps}
+                            msgProps={msgProps}
                             setIsNewComment={(value: boolean) => setIsNewComment(value)}
                             replyTo={replyTo}
                             setReplyTo={(value: any) => setReplyTo(value)}

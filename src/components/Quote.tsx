@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
-interface QuoteProps {
+interface props {
     quotedThreads: any[]
 }
 
-function Quote({ quotedThreads }: QuoteProps) {
+function Quote({ quotedThreads }: props) {
     const [showAllQuotes, setShowAllQuotes] = useState(false);
 
     if (!quotedThreads || quotedThreads.length === 0) return null;

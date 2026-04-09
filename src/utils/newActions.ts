@@ -29,6 +29,7 @@ export async function saveBookInfoRequest( sBIData : sBIData) {
 export async function editBookTxtRequest( eBTData : eBTData) {
     const { id, text, titre, pseudo, token } = eBTData
     
+    console.log("eBTData22", eBTData)
     try {
         const editBookInfo = await fetch(`${API_URL}/books/editBookText`, {
             method: "PUT",
@@ -94,7 +95,7 @@ export async function archiveStatusRequest(aSData: aSData) {
         const response = await editBookInfo.json();
 
         if (!response.result) return response;
-        
+
         return response;
 
     } catch (error) {

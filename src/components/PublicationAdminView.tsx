@@ -1,75 +1,44 @@
 import DOMPurify from 'dompurify';
-import React from "react"
-import { useAppSelector, useAppDispatch } from "../store/hooks.js"
-import { useState } from 'react';
+import { useAppSelector } from "../store/hooks.js"
+import { modalProps } from "../types/Props.js";
 
-import { saveBookInfoRequest } from "../utils/newActions.js"
-
-const Comments = React.lazy(() => import('./Comments.js'));
-
-interface newProps {
-    setIsTextModalOpen: (value: boolean) => any
-    setIsAddComment: (value: boolean) => any
-    setModalComponent: (value: string) => any
+interface props {
+    modalProps: modalProps
     setPublicationID: (value: string) => any
     setAuthType: (value: string) => any
-    setIsModalOpen: (value: boolean) => any
-    response: boolean
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
 }
-function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, setPublicationID, setAuthType, setIsModalOpen, response, setErrorMessage, setSuccessMessage, setIsMessageModalOpen, }: newProps) {
-    const [rQValue, setRQValue] = useState<string>("");
-    const [titre, setTitre] = useState<string>("");
-
+function PublicationAdminView({ modalProps, setPublicationID, setAuthType }: props) {
     const publications = useAppSelector((state) => state.publication.value);
     const publication = publications.find((e) => e.isArchived === false);
 
     const user = useAppSelector(state => state.user.value)
-    const token = useAppSelector(state => state.authToken.value)
-    const dispatch = useAppDispatch();
 
     const handleNewBook = () => {
-        setIsTextModalOpen(true);
-        setModalComponent("newPublication");
+        modalProps.setIsTextModalOpen(true);
+        modalProps.setModalComponent("newPublication");
     }
 
     const handleEditPublicationTxt = () => {
         if (publication) {
             setPublicationID(publication._id)
-            setIsTextModalOpen(true);
-            setModalComponent("editPublicationtxt");
+            modalProps.setIsTextModalOpen(true);
+            modalProps.setModalComponent("editPublicationtxt");
         }
     }
 
     const handleEditPublicationImg = () => {
         if (publication) {
             setPublicationID(publication._id)
-            setIsTextModalOpen(true);
-            setModalComponent("editPublicationImg");
+            modalProps.setIsTextModalOpen(true);
+            modalProps.setModalComponent("editPublicationImg");
         }
     }
 
     const handleArchive = () => {
-        setModalComponent("archiveStatus")
-        setIsModalOpen(true)
+        modalProps.setModalComponent("archiveStatus")
+        modalProps.setIsModalOpen(true)
         setAuthType("archiveStatus")
     }
-
-    // const handleSave = async () => {
-    //     const text = rQValue
-    //     const propData = { titre, text }
-    //     try {
-    //         const response = await saveBookInfoRequest({ propData })
-    //         setModalComponent("addReview")
-    //         setIsAddComment(true);
-
-    //     } catch (error) {
-    //         console.log("error", error)
-    //     }
-
-    // }
 
     return (
         <div className=" w-full  flex flex-col items-center mb-6">
@@ -138,4 +107,4 @@ function NewAdminView({ setIsTextModalOpen, setIsAddComment, setModalComponent, 
     )
 }
 
-export default NewAdminView
+export default PublicationAdminView

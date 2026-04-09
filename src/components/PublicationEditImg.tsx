@@ -5,15 +5,14 @@ import { updatePublicationImg } from "../store/reducers/publication.js";
 
 import { editBookImgRequest } from "../utils/newActions.js";
 
-interface topicProps {
-    setModalComponent: (value: string) => any
-    setIsTextModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
+import { modalProps, msgProps } from "../types/Props.js";
+
+interface props {
+    msgProps: msgProps
+    modalProps: modalProps
     publicationID: string
 }
-function EditPublicationImg({ setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen, publicationID }: topicProps) {
+function PublicationEditImg({ msgProps, modalProps, publicationID }: props) {
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
     const [url, setURL] = useState<string>("");
     let originalURL = ""
@@ -53,26 +52,26 @@ function EditPublicationImg({ setModalComponent, setErrorMessage, setIsTextModal
                     msg.push(err.message)
                 }
 
-                setErrorMessage(msg.join(", "));
-                setIsMessageModalOpen(true);
+                msgProps.setErrorMessage(msg.join(", "));
+                modalProps.setIsMessageModalOpen(true);
                 return;
             } else {  
                 dispatch(updatePublicationImg(editBookResponse.editedBook))
-                setSuccessMessage(editBookResponse.message);
-                setIsMessageModalOpen(true);
-                setIsTextModalOpen(false);
-                setModalComponent("");
+                msgProps.setSuccessMessage(editBookResponse.message);
+                modalProps.setIsMessageModalOpen(true);
+                modalProps.setIsTextModalOpen(false);
+                modalProps.setModalComponent("");
             }
         } catch (error) {
-            setErrorMessage(error as string);
-            setIsMessageModalOpen(true);
+            msgProps.setErrorMessage(error as string);
+            modalProps.setIsMessageModalOpen(true);
             return
         }
     }
 
     const handleCloseModal = () => {
-        setModalComponent('');
-        setIsTextModalOpen(false);
+        modalProps.setModalComponent('');
+        modalProps.setIsTextModalOpen(false);
     }
 
     return (
@@ -128,9 +127,8 @@ function EditPublicationImg({ setModalComponent, setErrorMessage, setIsTextModal
                         Sauvegarder
                     </button>)}
             </div>
-
         </div>
     )
 }
 
-export default EditPublicationImg
+export default PublicationEditImg

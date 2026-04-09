@@ -8,10 +8,11 @@ import { getTopic, addThread } from '../store/reducers/topic.js'
 
 import { topicThreadRequest } from "../utils/topicActions.js"
 import { addCommentRequest } from "../utils/threadActions.js"
+import { modalProps, msgProps } from "../types/Props.js";
 
-interface newTopicProps {
-    setIsMessageModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
+interface props {
+    modalProps: modalProps
+    msgProps: msgProps
     setIsNewComment: (value: boolean) => any
     replyTo: any
     setReplyTo: (value: any) => any
@@ -21,7 +22,7 @@ interface newTopicProps {
     quoteID: string[]
 }
 
-function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, replyTo, setReplyTo, rQValue, setRQValue, setResponseType, quoteID,  }: newTopicProps) {
+function CommentNew({ modalProps, msgProps, setIsNewComment, replyTo, setReplyTo, rQValue, setRQValue, setResponseType, quoteID,  }: props) {
     const dispatch = useAppDispatch();
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
@@ -82,12 +83,12 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                 for (const err of errors) {
                     msg.push(err.message)                
                 }
-                setErrorMessage(msg.join(", "));
-                setIsMessageModalOpen(true);
+                msgProps.setErrorMessage(msg.join(", "));
+                modalProps.setIsMessageModalOpen(true);
             }
         } catch (error) {
-            setErrorMessage(error as string)
-            setIsMessageModalOpen(true)
+            msgProps.setErrorMessage(error as string)
+            modalProps.setIsMessageModalOpen(true)
         }
 
         // Re-sync avec les vraies données du backend après 2 sec
@@ -100,12 +101,12 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
                     dispatch(getTopic(topic))
                     setIsNewComment(false)
                 } else {
-                    setErrorMessage(respones.error);
-                    setIsMessageModalOpen(true);
+                    msgProps.setErrorMessage(respones.error);
+                    modalProps.setIsMessageModalOpen(true);
                 }
 
             } catch (error) {
-                setErrorMessage(error as string);
+                msgProps.setErrorMessage(error as string);
             }
         }, 2000);
     }
@@ -148,4 +149,4 @@ function NewComment({ setIsMessageModalOpen, setErrorMessage, setIsNewComment, r
     )
 }
 
-export default NewComment
+export default CommentNew

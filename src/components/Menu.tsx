@@ -5,30 +5,27 @@ import { useAppSelector, useAppDispatch } from '../store/hooks.js';
 
 import { logoutUser } from '../store/reducers/user.js';
 import { clearToken } from '../store/reducers/auth.js';
-interface modalProps {
-setModalComponent: (value: string) => any
-setIsMessageModalOpen: (value: boolean) => any
-setIsModalOpen: (value: boolean) => any
-setMainComponent: (value: string) => any
-setSuccessMessage: (value: string) => any
-setErrorMessage: (value: string) => any
+import {modalProps, msgProps, screenActionProps} from "../types/Props.js";
+interface props {
+modalProps: modalProps
+screenActionProps: screenActionProps
+msgProps: msgProps
 }
 
-
-function MenuModal({setModalComponent, setIsMessageModalOpen, setIsModalOpen, setMainComponent, setSuccessMessage, setErrorMessage }: modalProps) {
+function Menu({modalProps, screenActionProps, msgProps }: props) {
 
   const dispatch = useAppDispatch()
   const token = useAppSelector(state => state.authToken.value)
   const user = useAppSelector(state => state.user.value)
 const handleCloseModal = () => {
-        setModalComponent("");
-        setIsModalOpen(false);
+        modalProps.setModalComponent("");
+        modalProps.setIsModalOpen(false);
     }
 
 const handleUserProfile = () => {
-  setMainComponent("userProfile")
-  setIsModalOpen(false);
-  setModalComponent("");
+  screenActionProps.setMainComponent("userProfile")
+  modalProps.setIsModalOpen(false);
+  modalProps.setModalComponent("");
 }
 
 const handleLogOut = async () => {
@@ -36,14 +33,14 @@ const handleLogOut = async () => {
   try {
     const logOutResponse = await logOutRequest(authData)
     if (!logOutResponse.result) {
-      setIsMessageModalOpen(true)
-      setErrorMessage("Une erreur est survenue")
+      modalProps.setIsMessageModalOpen(true)
+      msgProps.setErrorMessage("Une erreur est survenue")
       return
     }
 
     if(logOutResponse.result) {
-      setIsMessageModalOpen(true)
-      setSuccessMessage(logOutResponse.message)
+      modalProps.setIsMessageModalOpen(true)
+      msgProps.setSuccessMessage(logOutResponse.message)
       dispatch(clearToken())
       dispatch(logoutUser())
       return
@@ -74,10 +71,8 @@ const handleLogOut = async () => {
                 déconnection
               </button>
             </div>
-
-            
         </div>
   )
 }
 
-export default MenuModal
+export default Menu

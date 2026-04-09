@@ -1,6 +1,6 @@
 import { useAppSelector } from "../store/hooks.js"
 
-function Publications() {
+function Archive() {
     const publications = useAppSelector((state) => state.publication.value);
 console.log("archivedpublications", publications)
     const archived = publications.filter((e) => e.isArchived === true);
@@ -17,4 +17,4 @@ console.log("archived", archived)
     )
 }
 
-export default Publications
+export default Archive

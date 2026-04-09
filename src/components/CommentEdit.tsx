@@ -5,48 +5,39 @@ import TextEditor from "./TextEditor.js";
 import { editCommentInfo } from "../store/reducers/topic.js";
 import { editCommentRequest } from "../utils/threadActions.js";
 
-interface CommentProps {
+import { modalProps, msgProps } from "../types/Props.js";
+
+interface props {
   replyTo: any;
   setReplyTo: (value: any) => any;
   setMainComponent?: (value: string) => any;
-  setModalComponent: (value: string) => any;
-  modalComponent?: string;
-  setIsModalOpen?: (value: boolean) => any;
-  setIsTextModalOpen: (value: boolean) => any;
-  setErrorMessage: (value: string) => any;
-  setSuccessMessage: (value: string) => any;
-  setIsMessageModalOpen: (value: boolean) => any;
+  modalProps : modalProps;
+  msgProps : msgProps;
 }
 
-export default function EditComment({replyTo, setReplyTo, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen}: CommentProps) {
+function CommentEdit({replyTo, setReplyTo, modalProps, msgProps}: props) {
   const dispatch = useAppDispatch();
 
-  // selectors
   const comment: any = useAppSelector((state) => (state as any).comment?.value ?? {});
   const topic: any = useAppSelector((state) => (state as any).topic?.value ?? {});
   const token: string | undefined = useAppSelector((state) => (state as any).authToken?.value);
 
-  // local state for editor values — initialize from comment, and keep synced when comment changes
   const [originalValue, setOriginalValue] = useState<string>(comment?.text ?? "");
   const [rQValue, setRQValue] = useState<string>(comment?.text ?? "");
 
   useEffect(() => {
-    // when comment changes (new id or text), update local editor state
     setOriginalValue(comment?.text ?? "");
     setRQValue(comment?.text ?? "");
   }, [comment?.id]);
 
-  // threads list from topic slice
   const topicThreads: any[] = Array.isArray(topic?.topicThread) ? topic.topicThread : [];
 
-  // quoted threads (deduplicated, in order) — comment.quote is expected to be an array of ids
   const quotedThreads = useMemo(() => {
     const ids: string[] = Array.isArray(comment?.quote) ? comment.quote : [];
     const mapped = ids
       .map((id) => topicThreads.find((t: any) => t?.id === id))
       .filter(Boolean) as any[];
 
-    // remove duplicates while preserving order
     const unique: any[] = [];
     const seen = new Set<string>();
     for (const q of mapped) {
@@ -58,10 +49,8 @@ export default function EditComment({replyTo, setReplyTo, setModalComponent, set
     return unique;
   }, [comment?.quote, topicThreads]);
 
-  // show/hide all quotes (hook must be top-level)
   const [showAllQuotes, setShowAllQuotes] = useState(false);
 
-  // compute displayQuotes (with ellipsis marker object to keep types consistent)
   const displayQuotes = useMemo(() => {
     if (showAllQuotes || quotedThreads.length <= 4) return quotedThreads;
     
@@ -72,11 +61,10 @@ export default function EditComment({replyTo, setReplyTo, setModalComponent, set
     ];
   }, [quotedThreads, showAllQuotes]);
 
-  // handle submit edit
   const handleEditComment = async () => {
     if (!token) {
-      setErrorMessage("Vous devez être connecté pour modifier un commentaire.");
-      setIsMessageModalOpen(true);
+      msgProps.setErrorMessage("Vous devez être connecté pour modifier un commentaire.");
+      modalProps.setIsMessageModalOpen(true);
       return;
     }
 
@@ -84,41 +72,43 @@ export default function EditComment({replyTo, setReplyTo, setModalComponent, set
     const id = comment?.id;
 
     if (!id) {
-      setErrorMessage("Aucun commentaire sélectionné.");
-      setIsMessageModalOpen(true);
+      msgProps.setErrorMessage("Aucun commentaire sélectionné.");
+      modalProps.setIsMessageModalOpen(true);
       return;
     }
 
     const editCData = { token, text, id };
 
     try {
-      const editCommentResponse = await editCommentRequest( editCData );
+      const editCommentResponse = await editCommentRequest(editCData);
 
       if (!editCommentResponse?.result) {
-        setErrorMessage(editCommentResponse?.message ?? "Erreur lors de la modification");
-        setIsMessageModalOpen(true);
+        msgProps.setErrorMessage(editCommentResponse?.message ?? "Erreur lors de la modification");
+        modalProps.setIsMessageModalOpen(true);
         return;
       }
 
-      // update topic slice with edited comment
-      dispatch(editCommentInfo({ id: editCommentResponse.editedComment._id, text: editCommentResponse.editedComment.text }));
-      setSuccessMessage(editCommentResponse.message ?? "Commentaire modifié");
-      setIsMessageModalOpen(true);
-      setIsTextModalOpen(false);
-      setModalComponent("");
+      dispatch(editCommentInfo({
+        id: editCommentResponse.editedComment._id,
+        text: editCommentResponse.editedComment.text
+      }));
+
+      msgProps.setSuccessMessage(editCommentResponse.message ?? "Commentaire modifié");
+      modalProps.setIsMessageModalOpen(true);
+      modalProps.setIsTextModalOpen(false);
+      modalProps.setModalComponent("");
 
     } catch (err: any) {
-      setErrorMessage(err?.message ?? String(err));
-      setIsMessageModalOpen(true);
+      msgProps.setErrorMessage(err?.message ?? String(err));
+      modalProps.setIsMessageModalOpen(true);
     }
   };
 
   const handleCloseModal = () => {
-    setModalComponent("");
-    setIsTextModalOpen(false);
+    modalProps.setModalComponent("");
+    modalProps.setIsTextModalOpen(false);
   };
 
-  // helper to render nested quotes recursively
   const renderNestedQuotes = (quotes: any[]): JSX.Element | null => {
     if (!quotes || quotes.length === 0) return null;
     const last = quotes[quotes.length - 1];
@@ -132,16 +122,6 @@ export default function EditComment({replyTo, setReplyTo, setModalComponent, set
           onClick={() => setShowAllQuotes(true)}
         >
           <span>…</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-4 ml-1"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-          </svg>
         </div>
       );
     }
@@ -234,3 +214,5 @@ export default function EditComment({replyTo, setReplyTo, setModalComponent, set
     </div>
   );
 }
+
+export default CommentEdit;

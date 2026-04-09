@@ -1,71 +1,35 @@
 import DOMPurify from 'dompurify';
 
 import { useAppSelector } from "../store/hooks.js"
-import { useState, startTransition } from 'react';
+import { useState } from "react"
+import IconResponse from './IconResponse.js';
+import IconEdit from './IconEdit.js';
+import IconLock from './IconLock.js';
 
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
+import { msgProps, modalProps } from "../types/Props.js";
 
-interface topicProps {
-    setIsModalOpen: (value: boolean) => any
-    setIsTextModalOpen: (value: boolean) => any
-    setModalComponent: (value: string) => any
+interface props {
+    modalProps: modalProps
     setAuthType: (value: string) => any
     setIsNewComment: (value: boolean) => any
-    setMessageModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
+    msgProps: msgProps
     setResponseType: (value: string) => any
     threadRef: any
 }
 
-function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, setAuthType, setIsNewComment, setMessageModalOpen, setErrorMessage, setResponseType, threadRef }: topicProps) {
-    const [lockHover, setLockHover] = useState<boolean>(false);
-    const [editHover, setEditHover] = useState<boolean>(false);
-    const [replyHover, setReplyHover] = useState<boolean>(false);
+function Topic({ modalProps, msgProps, setAuthType, setIsNewComment, setResponseType, threadRef }: props) {
 
+    const thread: any = useAppSelector((state) => state.topic.value);
     const topic: any = useAppSelector((state) => state.topic.value);
     const token = useAppSelector((state) => state.authToken.value);
-    const isLocked = useAppSelector((state) => state.topic.value.isLocked);
+    const iconOrigin = "topic"
 
-    const handleEditTopic = () => {
-        setIsTextModalOpen(true);
-        setModalComponent('editTopic');
-    }
-
-    const handleLockTopic = async () => {
-        setAuthType("lockTopic");
-        setIsModalOpen(true)
-        setModalComponent('auth');
-    }
-
-    const handleUnlockTopic = () => {
-        setAuthType("lockTopic");
-        setIsModalOpen(true)
-        setModalComponent('auth');
-    }
-
-    const handleScroll = () => {
-        startTransition(() => {
-
-            if (threadRef.current) {
-                window.scrollTo({
-                    top: threadRef.current.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        })
-    }
-
-    const handleReplyTopic = () => {
-        if (!token) {
-            setMessageModalOpen(true);
-            setErrorMessage("Vous devez vous connecter pour commenter");
-            return
-        }
-        setResponseType("topic");
-        setIsNewComment(true)
-        handleScroll()
-    }
-
+    const index = 0;
+    const [replyTo, setReplyTo] = useState()
+    const [keyNumber, setKeyNumber] = useState(0)
+    const [quoteID, setQuoteID] = useState("")
+    const [pseudo, setPseudo] = useState("")
     return (
         <div className="w-[85%] px-2 py-2 flex flex-col justify-center items-center border-2 border-gray-800  rounded-md"
             style={{ backgroundColor: "#3b566fff" }}>
@@ -88,84 +52,39 @@ function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, se
                             <div className="w-fit flex justify-between ">
 
                                 {/* Icône Répondre au Topic */}
-                                <div className="relative group inline-block">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth={1.5}
-                                        stroke={replyHover ? "#D1D5DB" : "#9CA3AF"}
-                                        className="size-6 m-1 cursor-pointer"
-                                        onMouseEnter={() => setReplyHover(true)}
-                                        onMouseLeave={() => setReplyHover(false)}
-                                        onClick={handleReplyTopic}
-                                    >
-                                        <path strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="m15 15-6 6m0 0-6-6m6 6V9a6 6 0 0 1 12 0v3"
-                                        />
-                                    </svg>
-                                    <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                        commenter
-                                    </span>
-                                </div>
+                                <IconResponse setIsNewComment={setIsNewComment}
+                                    modalProps={modalProps}
+                                    msgProps={msgProps}
+                                    setResponseType={setResponseType}
+                                    threadRef={threadRef}
+                                    iconOrigin={iconOrigin}
+                                    keyNumber={keyNumber}
+                                    setKeyNumber={setKeyNumber}
+                                    topic={topic}
+                                    setReplyTo={setReplyTo}
+                                    setPseudo={setPseudo}
+                                    setQuoteID={setQuoteID}
+                                    thread={thread}
+                                    index={index}
+                                    />
 
                                 {/* Icône Modifier le Topic */}
-                                <div className="relative group inline-block">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        className="size-6 m-1 cursor-pointer"
-                                        style={{ color: editHover ? '#D1D5DB' : " #9CA3AF" }}
-                                        onMouseEnter={() => setEditHover(true)}
-                                        onMouseLeave={() => setEditHover(false)}
-                                        onClick={handleEditTopic}>
-                                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                        <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                                    </svg>
-                                    <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                        modifier
-                                    </span>
-                                </div>
+                                <IconEdit modalProps={modalProps}
+                                    iconOrigin={iconOrigin}
+                                    topic={topic}
+                                    token={token}
+                                    msgProps={msgProps}
+                                    setReplyTo={setReplyTo}
+                                    index={index}
+                                    keyNumber={keyNumber}
+                                    setKeyNumber={setKeyNumber}
+                                    thread={thread}/>
+                                
                                 {/* Icône dégeler le Topic */}
-                                {isLocked &&
-                                    <div className="relative group inline-block">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            className="size-6 m-1 cursor-pointer"
-                                            style={{ color: lockHover ? '#D1D5DB' : " #9CA3AF" }} onMouseEnter={() => setLockHover(true)}
-                                            onMouseLeave={() => setLockHover(false)}
-                                            onClick={handleUnlockTopic}>
-                                            <path fillRule="evenodd"
-                                                d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z"
-                                                clipRule="evenodd" />
-                                        </svg>
-                                        <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                            dégeler la discussion
-                                        </span>
-                                    </div>
-                                }
-
-                                {/* Icône geler le Topic */}
-                                {!isLocked &&
-                                    <div className="relative group inline-block">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 24 24"
-                                            fill="currentColor"
-                                            className="size-6 m-1 cursor-pointer"
-                                            style={{ color: lockHover ? '#D1D5DB' : " #9CA3AF" }} onMouseEnter={() => setLockHover(true)}
-                                            onMouseLeave={() => setLockHover(false)}
-                                            onClick={handleLockTopic}>
-                                            <path d="M18 1.5c2.9 0 5.25 2.35 5.25 5.25v3.75a.75.75 0 0 1-1.5 0V6.75a3.75 3.75 0 1 0-7.5 0v3a3 3 0 0 1 3 3v6.75a3 3 0 0 1-3 3H3.75a3 3 0 0 1-3-3v-6.75a3 3 0 0 1 3-3h9v-3c0-2.9 2.35-5.25 5.25-5.25Z" />
-                                        </svg>
-                                        <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-max px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition">
-                                            geler la discussion
-                                        </span>
-                                    </div>
-                                }
+                                <IconLock modalProps={modalProps}
+                                          setAuthType={setAuthType}
+                                          iconOrigin={iconOrigin}/>
+                                          
                             </div>
                         }
                     </div>
@@ -176,12 +95,12 @@ function TopicThread({ setIsModalOpen, setIsTextModalOpen, setModalComponent, se
                     <span className="ml-1  text-3xl font-bold text-white">
                         {topic.title}
                     </span>
-                    <span className="ml-2  text-md text-gray-300" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(topic.description) }}/>
-                        
+                    <span className="ml-2  text-md text-gray-300" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(topic.description) }} />
+
                 </div>
             </div>
         </div>
     )
 }
 
-export default TopicThread
+export default Topic

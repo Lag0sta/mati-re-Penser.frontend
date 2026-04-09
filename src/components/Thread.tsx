@@ -1,6 +1,5 @@
 import DOMPurify from 'dompurify';
 import { useAppSelector } from "../store/hooks.js"
-import { startTransition } from 'react';
 
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -10,13 +9,11 @@ import CommentHeader from './CommentHeader.js';
 
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
-interface threadListProps {
+import { modalProps, msgProps } from "../types/Props.js";
+interface props {
     setPseudo: (value: string) => any
-    setIsModalOpen: (value: boolean) => any
-    setIsTextModalOpen: (value: boolean) => any
-    setMessageModalOpen: (value: boolean) => any
-    setModalComponent: (value: string) => any
-    setErrorMessage: (value: string) => any
+    modalProps: modalProps
+    msgProps: msgProps
     setIsNewComment: (value: boolean) => any
     threadRef: any
     setReplyTo: (value: any) => any
@@ -26,7 +23,7 @@ interface threadListProps {
     setQuoteID: (value: any) => any
 }
 
-function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModalOpen, setModalComponent, setErrorMessage, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID }: threadListProps) {
+function Thread({ setPseudo, modalProps, msgProps, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID }: props) {
     const token = useAppSelector((state) => state.authToken.value);
     const topic: any = useAppSelector((state) => state.topic.value);
 
@@ -37,16 +34,6 @@ function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModal
     const endIndex = startIndex + pageSize;
     const visibleComments = topic.topicThread.slice(startIndex, endIndex);
 
-    const handleScroll = () => {
-        startTransition(() => {
-            if (threadRef.current) {
-                window.scrollTo({
-                    top: threadRef.current.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
-        })
-    }
 
     return (
         <AnimatePresence initial={false}>
@@ -74,11 +61,8 @@ function Thread({ setPseudo, setIsModalOpen, setIsTextModalOpen, setMessageModal
                                         <CommentHeader thread={thread}
                                             index={index}
                                             setPseudo={setPseudo}
-                                            setIsModalOpen={setIsModalOpen}
-                                            setIsTextModalOpen={setIsTextModalOpen}
-                                            setMessageModalOpen={setMessageModalOpen}
-                                            setModalComponent={setModalComponent}
-                                            setErrorMessage={setErrorMessage}
+                                            modalProps={modalProps}
+                                            msgProps={msgProps}
                                             setIsNewComment={setIsNewComment}
                                             threadRef={threadRef}
                                             setReplyTo={setReplyTo}

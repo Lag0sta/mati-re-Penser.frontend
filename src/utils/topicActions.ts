@@ -84,7 +84,7 @@ export async function lockTopicRequest( lockTData : lockTData) {
 
 export async function topicThreadRequest( tTData : tTData) {
     const { title } = tTData
-        
+    console.log("topicContentData", tTData)
     try {
             const topic = await fetch(`${API_URL}/topics/topicContent`, {
             method: "POST",
@@ -94,7 +94,7 @@ export async function topicThreadRequest( tTData : tTData) {
             })
         })
         const response = await topic.json()
-
+        console.log("topicActionResponse", response)
         return response
 
     } catch (error) {

@@ -28,12 +28,14 @@ const publicationSlice = createSlice({
     }
     ,
     updatePublicationTxt: (state, action) => {
-      const { _id, text } = action.payload;
+      const { _id, text, titre } = action.payload;
       const publicationToUpdate = state.value.find((t) => t._id === _id)
 
-      if (publicationToUpdate) publicationToUpdate.text = text
-      
+      if (publicationToUpdate) {
+        publicationToUpdate.text = text
+        publicationToUpdate.titre = titre
     }
+  }
     ,
     updatePublicationImg: (state, action) => {
       const { _id, img } = action.payload;

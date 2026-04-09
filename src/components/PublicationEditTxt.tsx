@@ -2,34 +2,43 @@ import { useAppSelector } from "../store/hooks.js"
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 import TextEditor from "./TextEditor.js";
-import { editTopicInfo } from '../store/reducers/topic.js';
+import { updatePublicationTxt } from "../store/reducers/publication.js";
 
-import { editTopicRequest, } from "../utils/topicActions.js"
+import { editBookTxtRequest } from "../utils/newActions.js";
 
-interface topicProps {
+import { modalProps, msgProps } from "../types/Props.js";
+
+interface props {
     setMainComponent: (value: string) => any
-    setModalComponent: (value: string) => any
-    modalComponent: string
-    setIsTextModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
-
+    modalProps: modalProps
+    msgProps: msgProps
+    publicationID: string
 }
-function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
-    const topic: any = useAppSelector((state) => state.topic.value);
-    const originalValue = topic?.description
-    const [rQValue, setRQValue] = useState<string>(topic?.description ?? "");
+function PublicationEditTxt({ msgProps, modalProps, publicationID }: props) {
+    const [rQValue, setRQValue] = useState<string>("");
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
+    const [title, setTitle] = useState<string>("");
+    let originalValue = ""
+    let originalTitle = ""
+
+    const publications = useAppSelector((state) => state.publication.value);
+    const publication = publications.find((e) => e.isArchived === false);
+    const token = useAppSelector((state) => state.authToken.value);
+    const user = useAppSelector((state) => state.user.value);
 
     const dispatch = useAppDispatch();
 
-    const token = useAppSelector((state) => state.authToken.value);
+    if (publication) {
+        originalValue = publication.text
+        originalTitle = publication.titre
+    }
 
-    const id = topic.id
-
-    const [title, setTitle] = useState<string>(topic.title);
-    const originalTitle = topic.title
+    useEffect(() => {
+        if (publication && publication._id === publicationID) {
+            setRQValue(publication.text)
+            setTitle(publication.titre)
+        }
+    }, [publicationID, publications])
 
     function normalize(str = "") {
         return str.replace(/<[^>]+>/g, "").trim();
@@ -44,41 +53,48 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
         }
     }, [rQValue, title]);
 
-    const handleEditTopic = async () => {
-        const description = rQValue
-        const editTData = { token, id, title, description };
-        const msg = [];
-        try {
-            const editTopicResponse = await editTopicRequest( editTData);
+    const handleUpdatePublication = async () => {
+        ("click TOPICEDIT")
+        const text = rQValue
+        const eBTData = { token, id: publicationID, pseudo: user.pseudo, titre: title, text };
+        const msg = []; 
+        
+        console.log("eBTData", eBTData)
 
-            if (!editTopicResponse.result) {
+        try {
+            const editBookResponse = await editBookTxtRequest(eBTData);
+
+            if (!editBookResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
-                const errors = JSON.parse(editTopicResponse.error);
+                const errors = JSON.parse(editBookResponse.error);
 
                 for (const err of errors) {
-                    msg.push(err.message)                
+                    msg.push(err.message)
                 }
-                
-                setErrorMessage(msg.join(", "));
-                setIsMessageModalOpen(true);
+
+                msgProps.setErrorMessage(msg.join(", "));
+                modalProps.setIsMessageModalOpen(true);
                 return;
+
             } else {
-                dispatch(editTopicInfo(editTopicResponse.topic))
-                setSuccessMessage(editTopicResponse.success);
-                setIsMessageModalOpen(true);
-                setIsTextModalOpen(false);
-                setModalComponent("");
+                        console.log("editBookResponse", editBookResponse)
+
+                dispatch(updatePublicationTxt(editBookResponse.editedBook))
+                msgProps.setSuccessMessage(editBookResponse.message);
+                modalProps.setIsMessageModalOpen(true);
+                modalProps.setIsTextModalOpen(false);
+                modalProps.setModalComponent("");
             }
         } catch (error) {
-            setErrorMessage(error as string);
-            setIsMessageModalOpen(true);
+            msgProps.setErrorMessage(error as string);
+            modalProps.setIsMessageModalOpen(true);
             return
         }
     }
 
     const handleCloseModal = () => {
-        setModalComponent('');
-        setIsTextModalOpen(false);
+        modalProps.setModalComponent('');
+        modalProps.setIsTextModalOpen(false);
     }
 
     return (
@@ -99,13 +115,13 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
             </div>
 
             <h3 className="text-3xl mb-1 text-gray-200">
-                EDIT TOPIC
+                Modifier la publication
             </h3>
 
             <fieldset className="flex flex-col justify-between items-center overflow-y-auto w-full max-w-3xl p-4">
 
                 <legend className="text-lg text-center text-gray-300 font-medium mb-2">
-                    Modifiez le Sujet
+                    Modifiez le texte
                 </legend>
                 <div className="flex flex-col w-full">
                     <label className="text-base text-gray-400 mt-2 mb-1"
@@ -126,8 +142,8 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
                     </span>
                     <TextEditor rQValue={rQValue}
                         setRQValue={setRQValue}
-                        mode="editTopic"
-                     />
+                        mode="editPublication"
+                    />
                 </div>
             </fieldset>
             <div className="flex flex-col justify-center items-center mt-4">
@@ -138,9 +154,9 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
                 ) : (
                     <button
                         className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer "
-                        onClick={handleEditTopic}
+                        onClick={handleUpdatePublication}
                     >
-                        Modifier
+                        Sauvegarder
                     </button>)}
             </div>
 
@@ -148,4 +164,4 @@ function EditTopic({ modalComponent, setModalComponent, setErrorMessage, setIsTe
     )
 }
 
-export default EditTopic
+export default PublicationEditTxt

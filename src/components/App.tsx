@@ -1,24 +1,19 @@
-import React, { useState, useRef, useEffect, Suspense } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks.js';
 import { loadPublication } from '../store/reducers/publication.js';
-import TopicThread from './TopicThread.js';
 import Header from './Header.js';
 import Contact from './Contact.js';
-import Forum from './Forum.js';
-import Publications from './Publications.js';
-import About from './About.js';
-import New from './New.js';
 import Modal from './Modal.js';
-import TextModal from './TextModal.js';
-import UserProfile from './UserProfile.js';
-import MessageModal from './MessageModal.js';
+import MainComponent from './MainComponent.js';
+
+import { getReview } from '../store/reducers/reviews.js';
+import { reviewsRequest } from '../utils/reviewActions.js';
 
 function App() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
   const [modalComponent, setModalComponent] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isTextModalOpen, setIsTextModalOpen] = useState<boolean>(false);
-  const [isAddComment, setIsAddComment] = useState<boolean>(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -27,61 +22,78 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [publicationID, setPublicationID] = useState<string>("");
   const [response, setResponse] = useState<boolean>(false);
-
-  const dispatch = useAppDispatch();
+  const [book, setBook] = useState<string>("");
   
+  const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
+  let pID: string = "";
+
+  const publications = useAppSelector((state) => state.publication.value);
+  const dispatch = useAppDispatch();
+
   const acceuilRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
-  const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
+  //Props List
+  const msgProps = {successMessage, setSuccessMessage, errorMessage, setErrorMessage};
+  const modalProps = {modalComponent, setModalComponent, isModalOpen, setIsModalOpen, isMessageModalOpen, setIsMessageModalOpen, isTextModalOpen,setIsTextModalOpen}
+  const screenActionProps = {mainComponent, setMainComponent, acceuilRef, mainRef, contactRef}
+  for (const publication of publications) {
+    if (publication) pID = publication._id
+  }
 
   useEffect(() => {
-          const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-  
-          const fetchData = async () => {
-              try {
-                  const response = await fetch(`${API_URL}/books/publications`)
-                  const data = await response.json()
-                  console.log("dataPublication", data)
-                  dispatch(loadPublication(data.topics))
-              } catch (error) {
-                  console.error(error)
-              } finally {
-                  setLoading(false);
-              }
-          }
-          fetchData();
-      }, [])
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/books/publications`)
+        const data = await response.json()
+        console.log("dataPublication", data)
+        dispatch(loadPublication(data.books))
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false);
+      }
+    }
 
-      return (
+    fetchData();
+  }, [])
+
+  useEffect(() => {
+    if (!pID) return
+    const fetchReviews = async () => {
+      try {
+        const rData = { id: pID };
+        const response = await reviewsRequest(rData);
+        console.log("responseReviewsRequest", response)
+        if (response.result) dispatch(getReview(response.reviews));
+      } catch (error) {
+        console.log("error", error)
+      }
+    }
+    fetchReviews();
+
+  }, [pID])
+
+  return (
     <main className="max-w-screen mx-auto grid grid-rows-[auto_1fr_auto] grid-cols-4 bg-gray-200 min-h-screen">
-      
+
       {/* Header */}
       <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed w-full">
         <Suspense fallback={<div>Chargement...</div>}>
-          <Header
-            acceuilRef={acceuilRef}
-            mainRef={mainRef}
-            contactRef={contactRef}
-            setMainComponent={setMainComponent}
-            setModalComponent={setModalComponent}
-            setIsModalOpen={setIsModalOpen}
-          />
+          <Header screenActionProps={screenActionProps}
+            modalProps={modalProps}/>
         </Suspense>
       </header>
 
-      {/* Accueil Header */}
-      <div
-        ref={acceuilRef}
+      {/* Accueil Banderole */}
+      <div ref={acceuilRef}
         className={`row-start-1 row-end-2 col-start-1 col-end-5`}
-        style={{ paddingTop: `${headerHeight}px` }}
-
-      >
+        style={{ paddingTop: `${headerHeight}px` }}>
         <div
           className="w-full flex flex-col justify-center items-center h-[calc(100vh-80px)]  bg-cover bg-center bg-no-repeat "
-          style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}
-        >
+          style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}>
           <h1 className="text-7xl text-white">MATIÈRE À PENSER</h1>
           <h2 className="text-1xl mt-4 text-white">
             Site de discussion philosophique et de publication de Jean Christophe Ronnet
@@ -90,112 +102,36 @@ function App() {
       </div>
 
       {/* Main */}
-      <div
-        ref={mainRef}
-        className="row-start-2 row-end-3 col-start-1 col-end-5"
-      >
-        <Suspense fallback={<div>Chargement...</div>}>
-          {mainComponent === "acceuil" && (
-            <New
-              setIsModalOpen={setIsModalOpen}
-              setIsAddComment={setIsAddComment}
-              setModalComponent={setModalComponent}
-              setIsTextModalOpen={setIsTextModalOpen}
-              setPublicationID={setPublicationID}
-              setAuthType={setAuthType}
-              response={response}
-              setErrorMessage={setErrorMessage}
-              setSuccessMessage={setSuccessMessage}
-              setIsMessageModalOpen={setIsMessageModalOpen}
-            />
-          )}
-          {mainComponent === "forum" && (
-            <Forum
-              setMainComponent={setMainComponent}
-              setModalComponent={setModalComponent}
-              setIsTextModalOpen={setIsTextModalOpen}
-              setErrorMessage={setErrorMessage}
-              setIsMessageModalOpen={setIsMessageModalOpen}
-            />
-          )}
-          {mainComponent === "publication" && <Publications />}
-          {mainComponent === "topicThread" && (
-            <TopicThread
-              replyTo={replyTo}
-              setReplyTo={setReplyTo}
-              setErrorMessage={setErrorMessage}
-              setIsModalOpen={setIsModalOpen}
-              setIsTextModalOpen={setIsTextModalOpen}
-              setIsMessageModalOpen={setIsMessageModalOpen}
-              setModalComponent={setModalComponent}
-              setAuthType={setAuthType}
-            />
-          )}
-          {mainComponent === "about" && <About />}
-          {mainComponent === "userProfile" && (
-            <UserProfile
-              setIsModalOpen={setIsModalOpen}
-              setModalComponent={setModalComponent}
-            />
-          )}
-        </Suspense>
-      </div>
+      <MainComponent msgProps={msgProps}
+        modalProps={modalProps}
+        screenActionProps={screenActionProps}
+        setPublicationID={setPublicationID}
+        setAuthType={setAuthType}
+        setBook={setBook}
+        setReplyTo={setReplyTo}
+        replyTo={replyTo}/>
 
       {/* Footer */}
-      <footer
-        ref={contactRef}
-        className="row-start-3 row-end-4 col-start-1 col-end-5 pt-24"
-      >
+      <footer ref={contactRef}
+        className="row-start-3 row-end-4 col-start-1 col-end-5 pt-24">
         <Suspense fallback={<div>Chargement...</div>}>
           <Contact />
         </Suspense>
       </footer>
 
       {/* Modals */}
-      {isModalOpen && (
-        <Modal
-          setIsModalOpen={setIsModalOpen}
-          setModalComponent={setModalComponent}
-          modalComponent={modalComponent}
-          setIsMessageModalOpen={setIsMessageModalOpen}
-          setErrorMessage={setErrorMessage}
-          setSuccessMessage={setSuccessMessage}
-          setMainComponent={setMainComponent}
+        <Modal modalProps={modalProps}
+          msgProps={msgProps}
+          screenActionProps={screenActionProps}
           authType={authType}
           setAuthType={setAuthType}
           setResponse={setResponse}
-          response={response}
-        />
-      )}
-      {isTextModalOpen && (
-        <TextModal
-        setIsModalOpen={setIsModalOpen}
-          setModalComponent={setModalComponent}
-          modalComponent={modalComponent}
-          setIsMessageModalOpen={setIsMessageModalOpen}
-          setIsTextModalOpen={setIsTextModalOpen}
-          setErrorMessage={setErrorMessage}
-          setSuccessMessage={setSuccessMessage}
-          setMainComponent={setMainComponent}
+          book={book}
           replyTo={replyTo}
           setReplyTo={setReplyTo}
-          publicationID={publicationID}
-          setPublicationID={setPublicationID}/>)
-          }
-          
-      {isMessageModalOpen && (
-        <MessageModal
-          successMessage={successMessage}
-          setSuccessMessage={setSuccessMessage}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
-          setIsMessageModalOpen={setIsMessageModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          setModalComponent={setModalComponent}
-          modalComponent={modalComponent}
-          authType={authType}
-        />
-      )}
+          publicationID={publicationID}/>
+     
+      
     </main>
   );
 }

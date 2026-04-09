@@ -49,7 +49,7 @@ export async function editCommentRequest( editCData : editCData) {
 }
 
 export async function deleteCommentRequest( deleteCData : deleteCData) {
-    const { token, id, } = deleteCData
+    const { token, id, pseudo, password } = deleteCData
     console.log("deleteCData", deleteCData)
     try {
         const deleteComment = await fetch(`${API_URL}/threads/deleteComment`, {
@@ -57,10 +57,13 @@ export async function deleteCommentRequest( deleteCData : deleteCData) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 token: token,
+                pseudo: pseudo,
+                password: password,
                 id: id
             })
         })
         const thread = await deleteComment.json()
+        console.log("threadRESPONSE", thread)
 
         return thread
         

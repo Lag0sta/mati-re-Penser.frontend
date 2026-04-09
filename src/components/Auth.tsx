@@ -7,16 +7,14 @@ import { deleteCommentRequest } from "../utils/threadActions.js"
 
 import { lockTopic, deleteComment } from "../store/reducers/topic.js";
 
-interface authProps {
-    setIsModalOpen: (value: boolean) => void,
-    setModalComponent: (value: string) => void
-    setErrorMessage: (value: string) => void
-    setSuccessMessage: (value: string) => void
-    setIsMessageModalOpen: (value: boolean) => void
+import { modalProps, msgProps } from "../types/Props.js";
+interface props {
+    modalProps: modalProps
+    msgProps: msgProps
     authType: string
     setResponse: (value: boolean) => void
 }
-function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMessage, setIsMessageModalOpen, authType, setResponse }: authProps) {
+function Auth({ modalProps, msgProps, authType, setResponse }: props) {
 
     const [password, setPassword] = useState('')
 
@@ -31,17 +29,17 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
         const id = topic.id
         const authData = { token, password }
         const lockTData = { id, token, isLocked }
-        setSuccessMessage('');
-        setErrorMessage('');
-        setIsMessageModalOpen(false);
+        msgProps.setSuccessMessage('');
+        msgProps.setErrorMessage('');
+        modalProps.setIsMessageModalOpen(false);
 
         try {
             const authResponse = await authRequest( authData )
 
             if (authResponse.result) {
                 setPassword('')
-                setSuccessMessage(authResponse.message)
-                setIsMessageModalOpen(true);
+                msgProps.setSuccessMessage(authResponse.message)
+                modalProps.setIsMessageModalOpen(true);
 
                 if (authType === "lockTopic") {
                     setPassword('')
@@ -57,31 +55,31 @@ function Auth({ setIsModalOpen, setModalComponent, setErrorMessage, setSuccessMe
                 if (authType === "editTopic") return
                 
                 if (authType === "deleteComment") {
-                    setModalComponent("deleteComment")
+                    modalProps.setModalComponent("deleteComment")
                     return
                 }
 
                 if(authType === "archiveStatus"){
                     setResponse(authResponse.result)
-                    setModalComponent("archiveStatus")
+                    modalProps.setModalComponent("archiveStatus")
         
                     return
                 }
             } else {
-                setErrorMessage(authResponse.message)
-                setIsMessageModalOpen(true);
+                msgProps.setErrorMessage(authResponse.message)
+                modalProps.setIsMessageModalOpen(true);
 
             }
         } catch (error) {
-            setErrorMessage(error as string);
-            setIsMessageModalOpen(true);
+            msgProps.setErrorMessage(error as string);
+            modalProps.setIsMessageModalOpen(true);
         }
 
     }
 
     const handleCloseModal = () => {
-        setModalComponent('');
-        setIsModalOpen(false);
+        modalProps.setModalComponent('');
+        modalProps.setIsModalOpen(false);
     }
 
     return (

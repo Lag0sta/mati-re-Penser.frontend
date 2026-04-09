@@ -6,16 +6,14 @@ import { useAppDispatch } from "../store/hooks.js"
 import { getTopic } from '../store/reducers/topic.js';
 import { newTopicRequest } from "../utils/topicActions.js"
 
-interface topicProps {
+import { modalProps, msgProps } from "../types/Props.js";
+
+interface props {
     setMainComponent: (value: string) => any
-    setModalComponent: (value: string) => any
-    modalComponent: string
-    setIsTextModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
+    msgProps: msgProps
+    modalProps: modalProps
 }
-function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErrorMessage, setSuccessMessage, setIsTextModalOpen, setIsMessageModalOpen }: topicProps) {
+function TopicNew({ setMainComponent, msgProps, modalProps }: props) {
     const [title, setTitle] = useState<string>('');
     const [rQValue, setRQValue] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -38,27 +36,27 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
                     msg.push(err.message)
                 }
 
-                setErrorMessage(msg.join(", "));
-                setSuccessMessage('');
-                setIsMessageModalOpen(true);
+                msgProps.setErrorMessage(msg.join(", "));
+                msgProps.setSuccessMessage('');
+                modalProps.setIsMessageModalOpen(true);
             } else {
-                setSuccessMessage(newTopicResponse.success);
-                setErrorMessage('');
-                setIsMessageModalOpen(true);
+                msgProps.setSuccessMessage(newTopicResponse.success);
+                msgProps.setErrorMessage('');
+                modalProps.setIsMessageModalOpen(true);
                 dispatch(getTopic(newTopicResponse))
                 setMainComponent('topicThread')
-                setIsTextModalOpen(false);
+                modalProps.setIsTextModalOpen(false);
             }
         } catch (error) {
-            setErrorMessage(error as string);
-            setIsMessageModalOpen(true);
+            msgProps.setErrorMessage(error as string);
+            modalProps.setIsMessageModalOpen(true);
             return
         }
     }
 
     const handleCloseModal = () => {
-        setModalComponent('');
-        setIsTextModalOpen(false);
+        modalProps.setModalComponent('');
+        modalProps.setIsTextModalOpen(false);
     }
 
     return (
@@ -113,4 +111,4 @@ function NewTopic({ setMainComponent, modalComponent, setModalComponent, setErro
     )
 }
 
-export default NewTopic
+export default TopicNew

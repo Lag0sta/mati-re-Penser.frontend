@@ -6,17 +6,14 @@ import TextEditor from "./TextEditor.js";
 import { addPublication } from '../store/reducers/publication.js';
 import { saveBookInfoRequest } from "../utils/newActions.js"
 
-interface topicProps {
+import { modalProps, msgProps } from "../types/Props.js";
+interface props {
     setMainComponent: (value: string) => any
-    setModalComponent: (value: string) => any
-    modalComponent: string
-    setIsTextModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
-
+    modalProps: modalProps
+    msgProps: msgProps
 }
-function NewPublication({ modalComponent, setModalComponent, setErrorMessage, setIsTextModalOpen, setSuccessMessage, setIsMessageModalOpen }: topicProps) {
+
+function PublicationNew({ msgProps, modalProps }: props) {
     const topic: any = useAppSelector((state) => state.topic.value);
     const originalValue = topic?.description
     const [rQValue, setRQValue] = useState<string>(topic?.description ?? "");
@@ -52,19 +49,19 @@ const handleSave = async () => {
             setTitle('')
             setRQValue('')
             dispatch(addPublication(response.result));
-            setSuccessMessage(response.message);
-            setIsMessageModalOpen(true);
+            msgProps.setSuccessMessage(response.message);
+            modalProps.setIsMessageModalOpen(true);
         } else {
-            setIsMessageModalOpen(true)
-            setErrorMessage(response.result.message)
+            modalProps.setIsMessageModalOpen(true)
+            msgProps.setErrorMessage(response.result.message)
         }
     }catch(error){
         console.log("error", error)
     }
 }
     const handleCloseModal = () => {
-        setModalComponent('');
-        setIsTextModalOpen(false);
+        modalProps.setModalComponent('');
+        modalProps.setIsTextModalOpen(false);
     }
 
     return (
@@ -133,4 +130,4 @@ const handleSave = async () => {
     )
 }
 
-export default NewPublication
+export default PublicationNew

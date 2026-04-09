@@ -1,14 +1,14 @@
 import { useState } from "react"
 import { signUp } from "../utils/authActions.js"
 
-interface signUpProps {
-    setModalComponent: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
+import { modalProps, msgProps } from "../types/Props.js";
+
+interface props {
+    modalProps: modalProps
+    msgProps: msgProps
 }
 
-function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signUpProps) {
+function SignUp({ modalProps, msgProps }: props) {
 
     const [name, setName] = useState("")
     const [surname, setSurname] = useState("")
@@ -19,8 +19,8 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
     const [hp, setHp] = useState("")
 
     const handleReturn = () => {
-        setModalComponent("signIn");
-        setErrorMessage("")
+        modalProps.setModalComponent("signIn");
+        msgProps.setErrorMessage("")
     }
 
     const handleSignUp = async () => {
@@ -29,8 +29,8 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
 
         try {
             //réinitialisation des messages
-            setErrorMessage("")
-            setSuccessMessage("")
+            msgProps.setErrorMessage("")
+            msgProps.setSuccessMessage("")
 
             const signUpResponse = await signUp( sUData )
 
@@ -41,8 +41,8 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                 setEmail("");
                 setPassword("");
                 setConfirmPassword("");
-                setSuccessMessage(signUpResponse.success);
-                setIsMessageModalOpen(true);
+                msgProps.setSuccessMessage(signUpResponse.success);
+                modalProps.setIsMessageModalOpen(true);
             } else {
                  // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
                 const errors = JSON.parse(signUpResponse.error);
@@ -50,32 +50,23 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                 for (const err of errors) {
                     msg.push(err.message)
                 }
-                setErrorMessage(msg.join(", "));
-                setIsMessageModalOpen(true)
+                msgProps.setErrorMessage(msg.join(", "));
+                modalProps.setIsMessageModalOpen(true)
             }
         } catch (error) {
-            setErrorMessage(error as string)
-            setIsMessageModalOpen(true)
+            msgProps.setErrorMessage(error as string)
+            modalProps.setIsMessageModalOpen(true)
         }
-
     }
 
     return (
         <div className="h-full w-full bg-white flex flex-col justify-center items-center">
             <div className="w-full flex justify-end "
-                onClick={handleReturn}
-            >
-                <svg className="size-8  mt-3 mr-2 p-1 bg-black border-2 border-black stroke-white rounded-full hover:bg-white hover:stroke-black  hover:cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                >
-                    <path strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                    />
+                onClick={handleReturn}>
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     className="size-8  mt-3 mr-2 p-1 bg-black border-2 border-black stroke-white rounded-full hover:bg-white hover:stroke-black  hover:cursor-pointer"
+                     fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
                 </svg>
             </div>
             <h3 className="text-4xl font-bold mt-2 mb-1">
@@ -98,8 +89,7 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                         required
                         placeholder="prénom"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                        onChange={(e) => setName(e.target.value)}/>
                 </div>
                 <div className="flex flex-col">
                     <div className="-mb-1">
@@ -116,8 +106,7 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                         required
                         placeholder="nom"
                         value={surname}
-                        onChange={(e) => setSurname(e.target.value)}
-                    />
+                        onChange={(e) => setSurname(e.target.value)}/>
                 </div>
                 <div className="flex flex-col">
                     <div className="-mb-1">
@@ -135,8 +124,7 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                         required
                         placeholder="pseudo"
                         value={pseudo}
-                        onChange={(e) => setPseudo(e.target.value)}
-                    />
+                        onChange={(e) => setPseudo(e.target.value)}/>
                 </div>
                 <div className="flex flex-col">
                     <div className="-mb-1">
@@ -153,8 +141,7 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                         required
                         placeholder="@mail"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                        onChange={(e) => setEmail(e.target.value)}/>
                 </div>
                 <div className="flex flex-col">
                     <div className="-mb-1">
@@ -171,34 +158,28 @@ function SignUp({ setModalComponent, setIsMessageModalOpen, setErrorMessage, set
                            required
                            placeholder="mot-de-passe"
                            value={password}
-                           onChange={(e) => setPassword(e.target.value)}
-                    />
+                           onChange={(e) => setPassword(e.target.value)}/>
                     <input className="border-2 border-black rounded-md pl-2 mt-1"
                            type="password"
                            id="confirmPassword"
                            required
                            placeholder="Confirmation du m.d.p."
                            value={confirmPassword}
-                           onChange={(e) => setConfirmPassword(e.target.value)}
-                    />
+                           onChange={(e) => setConfirmPassword(e.target.value)}/>
                 </div>
-                <input type="text"
-                       id="hp"
-                       name="hp"
+                <input type="text" id="hp" name="hp"
                        value={hp}
-                       onChange={(e) => setHp(e.target.value)}
-                       tabIndex={-1}
-                       autoComplete="off"
-                       aria-hidden="true"
-                       style={{
+                        style={{
                         position: "absolute",
                         left: "-9999px",
                         opacity: 0,
                        }}
-                />
+                       onChange={(e) => setHp(e.target.value)}
+                       tabIndex={-1}
+                       autoComplete="off"
+                       aria-hidden="true"/>
                 <button className="w-fit bg-black border-2 border-black text-white hover:bg-white hover:text-black rounded-md px-2 py-1 my-6"
-                    onClick={handleSignUp}
-                >
+                    onClick={handleSignUp}>
                     Créer un Compte
                 </button>
             </fieldset>

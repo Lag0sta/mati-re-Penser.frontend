@@ -12,6 +12,8 @@ export interface editCData {
 }
 
 export interface deleteCData {
-    id?: string
-    token?: string
+    id : string
+    token : string
+    pseudo : string 
+    password : string
 }

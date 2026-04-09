@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { changeAvatarRequest } from "../../utils/profilActions.js";
 
-
 const initialState = {
     value: {
         id: "",

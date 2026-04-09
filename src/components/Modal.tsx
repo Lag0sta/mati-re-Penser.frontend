@@ -1,122 +1,53 @@
 import React from 'react';
-import { useState, Suspense } from 'react'
-import AddReview from './AddReview.js';
-import DeleteComment from './DeleteComment.js';
-import NewTopic from './NewTopic.js';
-import Auth from './Auth.js';
-import MenuModal from './MenuModal.js';
-import ArchiveStatusPublication from './ArchiveStatusPublication.js';
-const SignIn = React.lazy(() => import('./SignIn.js'));
-const SignUp = React.lazy(() => import('./SignUp.js'));
-const AvatarGallery = React.lazy(() => import('./AvatarGallery.js'));
+import ModalText from './ModalText.js';
+import ModalAction from './ModalAction.js';
+import ModalMessage from './ModalMessage.js';
 
-interface modalProps {
-  setIsModalOpen: (value: boolean) => any
-  modalComponent: string
-  setModalComponent: (value: string) => any
-  setIsMessageModalOpen: (value: boolean) => any
-  setErrorMessage: (value: string) => any
-  setSuccessMessage: (value: string) => any
-  setMainComponent: (value: string) => any
+import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
+interface Props {
+  modalProps: modalProps
+  msgProps: msgProps
+  screenActionProps: screenActionProps
   authType: string
   setAuthType: (value: string) => any
   setResponse: (value: boolean) => any
-  response: boolean
+  book: string
+  replyTo: string
+  setReplyTo: (value: string) => any
+  publicationID: string
 }
 
 
-function Modal({ setIsModalOpen, setModalComponent, modalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage, setMainComponent , authType, setAuthType, setResponse, response }: modalProps) {
+function Modal({ modalProps, msgProps, screenActionProps , authType, setAuthType, setResponse, book, replyTo, setReplyTo, publicationID }: Props) {
 
   return (
-    <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
-      role="dialog"
-      aria-labelledby="modal-title"
-      aria-modal="true">
-      <div className="fixed inset-0 bg-black/75 backdrop-blur-xs   " />
-      <div className='z-50 w-[20rem]  bg-white rounded-lg overflow-hidden'>
-        <Suspense fallback={<div>Chargement...</div>}>
+    <div>
+       {modalProps.isModalOpen && (
+      <ModalAction modalProps={modalProps}
+          msgProps={msgProps}
+          screenActionProps={screenActionProps}
+          authType={authType}
+          setAuthType={setAuthType}
+          setResponse={setResponse}
+          book={book}/>
+      )}
+      {modalProps.isTextModalOpen && (
+        <ModalText
+          modalProps={modalProps}
+          msgProps={msgProps}
+          screenActionProps={screenActionProps}
+          replyTo={replyTo}
+          setReplyTo={setReplyTo}
+          publicationID={publicationID}/>
+        )}
 
-          {modalComponent === "signIn" &&
-            <SignIn setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-            />}
-          {modalComponent === "signUp" &&
-            <SignUp setModalComponent={(value: string) => setModalComponent(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-
-            />
-          }
-          {modalComponent === "avatarGallery" &&
-            <AvatarGallery setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)} />
-          }          
-          
-          {modalComponent === "auth" &&
-            <Auth setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              authType={authType} 
-              setResponse={(value: boolean) => setResponse(value)}
-            />
-          }
-          {modalComponent === "modalMenu" &&
-              <MenuModal setModalComponent={(value: string) => setModalComponent(value)}
-                setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-                setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-                setMainComponent={(value: string) => setMainComponent(value)}
-                setErrorMessage={(value: string) => setErrorMessage(value)}
-                setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              />
-          }
-          {modalComponent === "deleteComment" &&
-          <DeleteComment setMainComponent={(value: string) => setMainComponent(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)}
-              setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-              setAuthType={(value: string) => setAuthType(value)}/>
-          }
-          
-          {modalComponent === "addReview" && 
-            <AddReview setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-                       setModalComponent={(value: string) => setModalComponent(value)}
-                       setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-                       setMessageModal={(value: string) => setErrorMessage(value)}
-                       setErrorMessage={(value: string) => setErrorMessage(value)}
-                       setSuccessMessage={(value: string) => setSuccessMessage(value)}/>
-          
-          }
-
-          {modalComponent === "archiveStatus" && 
-           <ArchiveStatusPublication
-            setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-            setModalComponent={(value: string) => setModalComponent(value)}
-            setIsMessageModalOpen={(value: boolean) => setIsMessageModalOpen(value)}
-            setErrorMessage={(value: string) => setErrorMessage(value)}
-            setSuccessMessage={(value: string) => setSuccessMessage(value)}
-            setAuthType={(value: string) => setAuthType(value)}
-            response={response}
-            />
-           }
-          {/* {modalComponent === "deleteTopic" &&
-            <DeleteTopic setIsModalOpen={(value: boolean) => setIsModalOpen(value)}
-              setModalComponent={(value: string) => setModalComponent(value)}
-              setErrorMessage={(value: string) => setErrorMessage(value)}
-              setSuccessMessage={(value: string) => setSuccessMessage(value)} />
-          } */}
-        </Suspense>
-      </div>
+      {modalProps.isMessageModalOpen && (
+        <ModalMessage
+          msgProps={msgProps}
+          modalProps={modalProps}
+          authType={authType}
+        />
+      )}
     </div>
   )
 }

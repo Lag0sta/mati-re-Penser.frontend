@@ -1,17 +1,13 @@
 import { startTransition } from "react";
 import { useAppSelector } from "../store/hooks.js";
+import { modalProps, screenActionProps } from "../types/Props.js";
 
-
-interface HeaderProps {
-  acceuilRef: any;
-  mainRef: any;
-  contactRef: any;
-  setMainComponent: (value: string) => any
-  setModalComponent: (value: string) => any
-  setIsModalOpen: (value: boolean) => any
+interface props {
+  screenActionProps: screenActionProps
+  modalProps: modalProps
 }
 
-function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalComponent, setIsModalOpen, }: HeaderProps) {
+function Header({ screenActionProps, modalProps }: props) {
   const token = useAppSelector((state: any) => state.authToken.value);
   const user = useAppSelector((state: any) => state.user.value);
   let avatar;
@@ -29,14 +25,14 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
       }
 
       // MAJ des états en fonction de la ref passée en parametre
-      if (ref === mainRef && refTitle === "forum") {
-        setMainComponent("forum")
-      } else if (ref === mainRef && refTitle === "publication") {
-        setMainComponent("publication")
-      } else if (ref === mainRef && refTitle === "about") {
-        setMainComponent("about")
+      if (ref === screenActionProps.mainRef && refTitle === "forum") {
+        screenActionProps.setMainComponent("forum")
+      } else if (ref === screenActionProps.mainRef && refTitle === "publication") {
+        screenActionProps.setMainComponent("publication")
+      } else if (ref === screenActionProps.mainRef && refTitle === "about") {
+        screenActionProps.setMainComponent("about")
       } else {
-        setMainComponent("acceuil")
+        screenActionProps.setMainComponent("acceuil")
       }
     })
   }
@@ -44,9 +40,9 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
   const handleContactScroll = () => {
     startTransition(() => {
 
-      if (contactRef.current) {
+      if (screenActionProps.contactRef.current) {
         window.scrollTo({
-          top: contactRef.current.offsetTop,
+          top: screenActionProps.contactRef.current.offsetTop,
           behavior: 'smooth'
         });
       }
@@ -55,15 +51,15 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
 
   const handleClickSign = () => {
     startTransition(() => {
-      setIsModalOpen(true);
-      setModalComponent("signIn");
+      modalProps.setIsModalOpen(true);
+      modalProps.setModalComponent("signIn");
     })
   }
 
   const handleClickAvatar = () => {
     startTransition(() => {
-      setIsModalOpen(true);
-      setModalComponent("modalMenu");
+      modalProps.setIsModalOpen(true);
+      modalProps.setModalComponent("modalMenu");
     })
   }
 
@@ -91,7 +87,7 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
       <div className="h-24 flex  justify-between items-center bg-black border-b-1 border-white">
         <div className=" flex justify-between items-center ml-10">
           <nav className=" text-white">
-            <button onClick={() => handleScroll(acceuilRef, "acceuil")}
+            <button onClick={() => handleScroll(screenActionProps.acceuilRef, "acceuil")}
               aria-label="Aller à la section Accueil"
               className="cursor-pointer"
             >
@@ -103,19 +99,19 @@ function Header({ acceuilRef, mainRef, contactRef, setMainComponent, setModalCom
         <div className="mt-10">
           <nav className="mr-4">
             <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-              onClick={() => handleScroll(mainRef, "forum")}
+              onClick={() => handleScroll(screenActionProps.mainRef, "forum")}
               aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des forum"
             >
               discussions
             </button>
             <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-              onClick={() => handleScroll(mainRef, "publication")}
+              onClick={() => handleScroll(screenActionProps.mainRef, "publication")}
               aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section des publications de l'auteur"
             >
               publications
             </button>
             <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
-              onClick={() => handleScroll(mainRef, "about")}
+              onClick={() => handleScroll(screenActionProps.mainRef, "about")}
               aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section à propos de l'auteur"
             >
               A propos

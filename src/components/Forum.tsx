@@ -6,16 +6,15 @@ import { getTopic } from "../store/reducers/topic.js"
 import { topicThreadRequest } from "../utils/topicActions.js"
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
+import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
 
-interface discussionProps {
-    setMainComponent: (value: string) => any
-    setModalComponent: (value: string) => any
-    setIsTextModalOpen: (value: boolean) => any
-    setIsMessageModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
+interface props {
+    screenActionProps: screenActionProps
+    modalProps: modalProps
+    msgProps: msgProps
 }
 
-function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsMessageModalOpen, setErrorMessage }: discussionProps) {
+function Forum({ screenActionProps, modalProps, msgProps }: props) {
     const [forum, setForum] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -41,31 +40,31 @@ function Forum({ setMainComponent, setModalComponent, setIsTextModalOpen, setIsM
 
     const createNewTopic = () => {
         if (!token) {
-            setIsMessageModalOpen(true);
-            setErrorMessage("Veuillez vous connecter");
+            modalProps.setIsMessageModalOpen(true);
+            msgProps.setErrorMessage("Veuillez vous connecter");
             return
         }
 
-        setModalComponent('newTopic')
-        setIsTextModalOpen(true)
+        modalProps.setModalComponent('newTopic')
+        modalProps.setIsTextModalOpen(true)
     }
 
     const handleTopic = async (title: string) => {
         const tTData = { title };
         try {
             const discussionResponse = await topicThreadRequest( tTData )
-
+            console.log("discussionResponse", discussionResponse)
             if (discussionResponse){
-                setMainComponent('topicThread')
+                screenActionProps.setMainComponent('topicThread')
                 dispatch(getTopic(discussionResponse))
             }else {
-                setErrorMessage(JSON.parse(discussionResponse.error));
-                setIsMessageModalOpen(true);
+                msgProps.setErrorMessage(JSON.parse(discussionResponse.error));
+                modalProps.setIsMessageModalOpen(true);
             }
             
 
         } catch (error) {
-            setErrorMessage(error as string);
+            msgProps.setErrorMessage(error as string);
         }
 
 

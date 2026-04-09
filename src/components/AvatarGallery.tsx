@@ -3,16 +3,13 @@ import { useAppSelector, useAppDispatch } from "../store/hooks.js"
 
 import { updateUser } from "../store/reducers/user.js";
 
-import { setStyle } from "framer-motion"
-interface avatarGalleryProps {
-    setIsModalOpen: (value: boolean) => any
-    setIsMessageModalOpen: (value: boolean) => any
-    setModalComponent: (value: string) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
+import { modalProps, msgProps } from "../types/Props.js";
+interface props {
+    modalProps: modalProps
+    msgProps: msgProps
 }
 
-function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessage, setErrorMessage, setModalComponent }: avatarGalleryProps) {
+function AvatarGallery({ modalProps, msgProps }: props) {
     const token = useAppSelector((state) => state.authToken.value);
     const dispatch = useAppDispatch();
 
@@ -21,8 +18,8 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
     const seed = ["kimberly", "adrian", "ryan", "sarah", "amaya", "jude", "riley", "jade", "george", "jessica", "liam", "brooklyn", "jameson", "katherine", "sawyer", "andrea", "aidan", "luis", "christopher", "liliana"]
 
     const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setModalComponent("");
+        modalProps.setIsModalOpen(false);
+        modalProps.setModalComponent("");
     }
 
     const handleChangeAvatar = async (style: string, seed: string) => {
@@ -34,18 +31,17 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
             if (avatarChangeResponse.result) {
                 dispatch(updateUser(avatarChangeResponse));
 
-                setIsModalOpen(false);
-                setModalComponent("");
-                setSuccessMessage(avatarChangeResponse.message);
-                setIsMessageModalOpen(true);
+                modalProps.setIsModalOpen(false);
+                modalProps.setModalComponent("");
+                msgProps.setSuccessMessage(avatarChangeResponse.message);
+                modalProps.setIsMessageModalOpen(true);
             } else {
-                setErrorMessage(avatarChangeResponse.message);
-                setIsMessageModalOpen(true); 
+                msgProps.setErrorMessage(avatarChangeResponse.message);
+                modalProps.setIsMessageModalOpen(true); 
             }
-
         } catch (error) {
-            setErrorMessage(error as string);
-            setIsMessageModalOpen(true);
+            msgProps.setErrorMessage(error as string);
+            modalProps.setIsMessageModalOpen(true);
         }
     }
 
@@ -73,9 +69,7 @@ function AvatarGallery({ setIsModalOpen, setIsMessageModalOpen, setSuccessMessag
                     </div>
                 ))}
             </div>
-
         </div>
-
     )
 }
 

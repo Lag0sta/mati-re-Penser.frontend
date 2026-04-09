@@ -3,16 +3,12 @@ import { useAppDispatch } from "../store/hooks.js"
 import { archiveStatusRequest } from "../utils/newActions.js"
 import { updateArchiveStatus } from "../store/reducers/publication.js";
 
-interface topicProps {
-    setModalComponent: (value: string) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
-    setAuthType: (value: string) => any
-    setIsModalOpen: (value: boolean) => any
-    response: boolean
+import { modalProps, msgProps } from "../types/Props.js";
+interface props {
+    msgProps: msgProps
+    modalProps: modalProps
 }
-function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSuccessMessage, setIsMessageModalOpen, setAuthType, setIsModalOpen, response }: topicProps) {
+function PublicationArchiveStatus({ msgProps, modalProps }: props) {
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
     const dispatch = useAppDispatch();
@@ -29,12 +25,6 @@ function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSucce
         const msg = [];
         const aSData = { id, pseudo: user.pseudo, token, isArchived }
         try {
-            console.log("clickx4")
-            setModalComponent("auth")
-            setIsModalOpen(true)
-            setAuthType("archiveStatus")
-
-            if (response) {
                 const archiveResponse = await archiveStatusRequest( aSData )
 
                 if (!archiveResponse.result) {
@@ -45,26 +35,26 @@ function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSucce
                         msg.push(err.message)
                     }
 
-                    setErrorMessage(msg.join(", "));
-                    setIsMessageModalOpen(true);
+                    msgProps.setErrorMessage(msg.join(", "));
+                    modalProps.setIsMessageModalOpen(true);
                     return;
 
                 } else {
                     dispatch(updateArchiveStatus(archiveResponse.isArchived))
-                    setSuccessMessage(archiveResponse.message);
-                    setIsMessageModalOpen(true);
-                    setIsModalOpen(false);
-                    setModalComponent("");
+                    msgProps.setSuccessMessage(archiveResponse.message);
+                    modalProps.setIsMessageModalOpen(true);
+                    modalProps.setIsModalOpen(false);
+                    modalProps.setModalComponent("");
                 }
-            }
+            
         } catch (error) {
             console.log("error", error)
         }
     }
 
     const handleCloseModal = () => {
-        setModalComponent('');
-        setIsModalOpen(false);
+        modalProps.setModalComponent('');
+        modalProps.setIsModalOpen(false);
     }
 
     return (
@@ -93,11 +83,9 @@ function ArchiveStatusPublication({ setModalComponent, setErrorMessage, setSucce
                             onClick={handleCloseModal}>NON</span>
                     </div>
                 </div>
-
             </fieldset>
-
         </div>
     )
 }
 
-export default ArchiveStatusPublication
+export default PublicationArchiveStatus

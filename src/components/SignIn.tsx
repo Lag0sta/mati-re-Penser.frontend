@@ -6,15 +6,13 @@ import { loginUser } from '../store/reducers/user.js'
 
 import { signInRequest } from "../utils/authActions.js"
 
-interface signInProps {
-    setModalComponent: (value: string) => any
-    setIsModalOpen: (value: boolean) => any
-    setErrorMessage: (value: string) => any
-    setSuccessMessage: (value: string) => any
-    setIsMessageModalOpen: (value: boolean) => any
+import {modalProps, msgProps} from "../types/Props.js";
+interface props {
+    modalProps: modalProps
+    msgProps: msgProps
 }
 
-function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setErrorMessage, setSuccessMessage }: signInProps) {
+function SignIn({ modalProps, msgProps }: props) {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const dispatch = useAppDispatch();
@@ -24,8 +22,8 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
         const msg = []
         try {
             //réinitialisation des messages
-            setErrorMessage("")
-            setSuccessMessage("")
+            msgProps.setErrorMessage("")
+            msgProps.setSuccessMessage("")
 
             const signInResponse = await signInRequest( sIData )
 
@@ -36,8 +34,8 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 dispatch(saveToken(signInResponse.accessToken));
                 dispatch(loginUser(signInResponse));
 
-                setSuccessMessage(signInResponse.message);
-                setIsMessageModalOpen(true);
+                msgProps.setSuccessMessage(signInResponse.message);
+                modalProps.setIsMessageModalOpen(true);
             } else {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
                 const errors = JSON.parse(signInResponse.error);
@@ -45,23 +43,23 @@ function SignIn({ setIsModalOpen, setModalComponent, setIsMessageModalOpen, setE
                 for (const err of errors) {
                     msg.push(err.message)                
                 }
-                setErrorMessage(msg.join(", "));
-                setIsMessageModalOpen(true);
+                msgProps.setErrorMessage(msg.join(", "));
+                modalProps.setIsMessageModalOpen(true);
             }
         } catch (error) {
-            setErrorMessage(error as string);
-            setIsMessageModalOpen(true);
+            msgProps.setErrorMessage(error as string);
+            modalProps.setIsMessageModalOpen(true);
             return
         }
     }
 
     const handleIsSignUp = () => {
-        setModalComponent("signUp");
+        modalProps.setModalComponent("signUp");
     }
 
     const handleCloseModal = () => {
-        setModalComponent("");
-        setIsModalOpen(false);
+        modalProps.setModalComponent("");
+        modalProps.setIsModalOpen(false);
     }
 
     return (

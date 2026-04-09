@@ -4,10 +4,11 @@ import user from './reducers/user.js';
 import topic from './reducers/topic.js';
 import comment from './reducers/comment.js';
 import publication from './reducers/publication.js'
+import review from './reducers/reviews.js'
 
 // Typage du store
 export const store = configureStore({
-  reducer: {authToken, user, topic, comment, publication},
+  reducer: {authToken, user, topic, comment, publication, review},
 });
 
 // Définition du type RootState
