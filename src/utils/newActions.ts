@@ -1,4 +1,4 @@
-import { sBIData, eBTData, eBIData, aSData} from "../types/newActions.js";
+import { sBIData, eBTData, eBIData, aSData, eRData} from "../types/newActions.js";
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export async function saveBookInfoRequest( sBIData : sBIData) {
@@ -78,16 +78,16 @@ export async function editBookImgRequest(eBIData: eBIData) {
     }
 }
 
-export async function archiveStatusRequest(aSData: aSData) {
-    const { id, pseudo, token, isArchived } = aSData
-
+export async function editMarketURLRequest(eRData: eRData) {
+    const { id, pseudo, token, url } = eRData
+    console.log("newAction eRData", eRData)
     try {
-        const editBookInfo = await fetch(`${API_URL}/books/archiveStatus`, {
+        const editBookInfo = await fetch(`${API_URL}/books/editBookMarketURL`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 id: id,
-                isArchived: !isArchived,
+                url: url,
                 pseudo: pseudo,
                 token: token
             })
@@ -102,3 +102,29 @@ export async function archiveStatusRequest(aSData: aSData) {
         return error;
     }
 }
+
+export async function archiveStatusRequest(aSData: aSData) {
+    const { id, pseudo, token, isArchived } = aSData
+
+    try {
+        const editBookMarketURL = await fetch(`${API_URL}/books/archiveStatus`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: id,
+                isArchived: !isArchived,
+                pseudo: pseudo,
+                token: token
+            })
+        });
+        const response = await editBookMarketURL.json();
+
+        if (!response.result) return response;
+
+        return response;
+
+    } catch (error) {
+        return error;
+    }
+}
+

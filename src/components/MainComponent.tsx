@@ -17,8 +17,9 @@ interface props {
   setBook: (value: string) => any
   setReplyTo: (value: any) => any
   replyTo: any
+  setMarketURL: (value: string) => any
 }
-function MainComponent({msgProps, modalProps, screenActionProps, setPublicationID, setAuthType, setBook, setReplyTo, replyTo} : props) {
+function MainComponent({msgProps, modalProps, screenActionProps, setPublicationID, setAuthType, setBook, setReplyTo, replyTo, setMarketURL} : props) {
  
   return (
       <div ref={screenActionProps.mainRef}
@@ -28,14 +29,19 @@ function MainComponent({msgProps, modalProps, screenActionProps, setPublicationI
             <PublicationLatest modalProps={modalProps}
               setPublicationID={setPublicationID}
               setAuthType={setAuthType}
-              setBook={setBook}/>
+              setBook={setBook}
+              setMarketURL={setMarketURL}
+              />
           )}
           {screenActionProps.mainComponent === "forum" && (
             <Forum screenActionProps={screenActionProps}
               msgProps={msgProps}
               modalProps={modalProps}/>
           )}
-          {screenActionProps.mainComponent === "publication" && <Publications />}
+          {screenActionProps.mainComponent === "publication" && (
+            <Publications 
+            />
+          )}
           {screenActionProps.mainComponent === "topicThread" && (
             <TopicThread replyTo={replyTo}
               setReplyTo={setReplyTo}

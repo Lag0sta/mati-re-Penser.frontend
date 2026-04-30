@@ -15,10 +15,11 @@ interface Props {
   replyTo: string
   setReplyTo: (value: string) => any
   publicationID: string
+  marketURL: string
 }
 
 
-function Modal({ modalProps, msgProps, screenActionProps , authType, setAuthType, setResponse, book, replyTo, setReplyTo, publicationID }: Props) {
+function Modal({ modalProps, msgProps, screenActionProps , authType, setAuthType, setResponse, book, replyTo, setReplyTo, publicationID, marketURL }: Props) {
 
   return (
     <div>
@@ -29,7 +30,8 @@ function Modal({ modalProps, msgProps, screenActionProps , authType, setAuthType
           authType={authType}
           setAuthType={setAuthType}
           setResponse={setResponse}
-          book={book}/>
+          book={book}
+          marketURL={marketURL}/>
       )}
       {modalProps.isTextModalOpen && (
         <ModalText

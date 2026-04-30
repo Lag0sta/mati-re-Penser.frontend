@@ -26,3 +26,10 @@ export interface aSData {
     token: string
     isArchived: boolean
 }
+
+export interface eRData {
+    id: string
+    pseudo: string
+    token: string
+    url: string
+}

@@ -10,8 +10,9 @@ interface props {
     setAuthType: (value: string) => any
     setBook: (value: string) => any
     isAdminView: boolean
+    setMarketURL: (value: string) => any
 }
-function PublicationAdminView({ modalProps, setPublicationID, setAuthType, setBook, isAdminView }: props) {
+function PublicationAdminView({ modalProps, setPublicationID, setAuthType, setBook, isAdminView, setMarketURL }: props) {
     const publications = useAppSelector((state) => state.publication.value);
     const publication = publications.find((e) => e.isArchived === false);
 
@@ -53,6 +54,13 @@ function PublicationAdminView({ modalProps, setPublicationID, setAuthType, setBo
 
     function raccourcirUrl(url: any) {
         return url.length > 27 ? url.slice(0, 27) + "..." : url;
+    }
+
+    function handleClickEditURL() {
+        modalProps.setModalComponent("editMarketURL")
+        modalProps.setIsModalOpen(true)
+        setMarketURL(publication?.lien ?? "")
+        
     }
 
     return (
@@ -129,7 +137,8 @@ function PublicationAdminView({ modalProps, setPublicationID, setAuthType, setBo
                             </div>
 
                             <div className="w-fit flex flex justify-center items-center   px-3">
-                                <span className='font-bold mr-2 border-3 border-red-600 rounded-md text-xs text-red-600  p-2  cursor-pointer hover:bg-red-400 hover:text-white'>Modifier l'URL d'achat : </span>
+                                <span className='font-bold mr-2 border-3 border-red-600 rounded-md text-xs text-red-600  p-2  cursor-pointer hover:bg-red-400 hover:text-white'
+                                    onClick={handleClickEditURL}>Modifier l'URL d'achat : </span>
                                 <span className='font-semibold pointer-events-none text-xs text-gray-600'>{raccourcirUrl(publication?.lien)}</span>
                             </div>
                         </div>

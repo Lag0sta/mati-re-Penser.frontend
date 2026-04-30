@@ -23,6 +23,7 @@ function App() {
   const [publicationID, setPublicationID] = useState<string>("");
   const [response, setResponse] = useState<boolean>(false);
   const [book, setBook] = useState<string>("");
+  const [marketURL, setMarketURL] = useState<string>("");
   
   const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
   let pID: string = "";
@@ -109,7 +110,8 @@ function App() {
         setAuthType={setAuthType}
         setBook={setBook}
         setReplyTo={setReplyTo}
-        replyTo={replyTo}/>
+        replyTo={replyTo}
+        setMarketURL={setMarketURL}/>
 
       {/* Footer */}
       <footer ref={contactRef}
@@ -129,7 +131,8 @@ function App() {
           book={book}
           replyTo={replyTo}
           setReplyTo={setReplyTo}
-          publicationID={publicationID}/>
+          publicationID={publicationID}
+          marketURL={marketURL}/>
      
       
     </main>

@@ -6,6 +6,7 @@ import CommentDelete from './CommentDelete.js';
 import Auth from './Auth.js';
 import Menu from './Menu.js';
 import PublicationArchiveStatus from './PublicationArchiveStatus.js';
+import PublicationMarketEdit from './PublicationMarketEdit.js';
 
 import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
 import ReviewDelete from './ReviewDelete.js';
@@ -22,9 +23,10 @@ interface Props {
   setAuthType: (value: string) => any
   setResponse: (value: boolean) => any
   book: string
+  marketURL: string
 }
 
-function ModalAction({ modalProps, msgProps, screenActionProps, authType, setAuthType, setResponse, book }: Props) {
+function ModalAction({ modalProps, msgProps, screenActionProps, authType, setAuthType, setResponse, book, marketURL }: Props) {
 
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
@@ -83,6 +85,13 @@ function ModalAction({ modalProps, msgProps, screenActionProps, authType, setAut
               modalProps={modalProps}
               msgProps={msgProps}
             />
+          }
+          {modalProps.modalComponent === "editMarketURL" &&
+          <PublicationMarketEdit
+          modalProps={modalProps}
+          msgProps={msgProps}
+          setAuthType={setAuthType}
+          marketURL={marketURL}/>
           }
         </Suspense>
       </div>

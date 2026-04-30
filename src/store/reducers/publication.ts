@@ -43,6 +43,14 @@ const publicationSlice = createSlice({
 
       if (publicationToUpdate) publicationToUpdate.img = img
       
+    },
+
+    updatePublicationURL: (state, action) => {
+      const { _id, lien } = action.payload;
+      const publicationToUpdate = state.value.find((t) => t._id === _id)
+
+      if (publicationToUpdate) publicationToUpdate.lien = lien
+      
     }
     ,
     updateArchiveStatus: (state, action) => {
@@ -54,5 +62,5 @@ const publicationSlice = createSlice({
   },
 });
 
-export const { loadPublication, addPublication, updatePublicationTxt, updatePublicationImg, updateArchiveStatus } = publicationSlice.actions;
+export const { loadPublication, addPublication, updatePublicationTxt, updatePublicationImg, updatePublicationURL, updateArchiveStatus } = publicationSlice.actions;
 export default publicationSlice.reducer;

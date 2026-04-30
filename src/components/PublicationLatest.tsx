@@ -10,8 +10,9 @@ interface props {
     setPublicationID: (value: string) => any
     setAuthType: (value: string) => any
     setBook: (value: string) => any
+    setMarketURL: (value: string) => any
 }
-function PublicationLatest({ modalProps, setPublicationID, setAuthType, setBook }: props) {
+function PublicationLatest({ modalProps, setPublicationID, setAuthType, setBook, setMarketURL }: props) {
     const [isAdminView, setIsAdminView] = useState(false);
     const [showReviews, setShowReviews] = useState(false);
     const user = useAppSelector(state => state.user.value)
@@ -66,7 +67,9 @@ function PublicationLatest({ modalProps, setPublicationID, setAuthType, setBook 
                         setPublicationID={setPublicationID}
                         setAuthType={setAuthType}
                         setBook={setBook}
-                        isAdminView={isAdminView} />
+                        isAdminView={isAdminView}
+                        setMarketURL={setMarketURL}
+                         />
                 </div>
             }
             {(!isAdminView && publication) &&
