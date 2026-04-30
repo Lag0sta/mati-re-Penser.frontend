@@ -1,4 +1,4 @@
-import { nRData, rData } from '../types/reviewActions.js';
+import { nRData, rData, deleteRData } from '../types/reviewActions.js';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 
@@ -46,6 +46,30 @@ export async function reviewsRequest( rData : rData){
         return response
 
     } catch (error) {
+        return error
+    }
+}
+
+export async function deleteReviewRequest( deleteRData : deleteRData) {
+    const { token, id, pseudo, password } = deleteRData
+    console.log("deleteRData", deleteRData)
+    try {
+        const deleteReview = await fetch(`${API_URL}/reviews/deleteReview`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                token: token,
+                pseudo: pseudo,
+                password: password,
+                id: id
+            })
+        })
+        const review = await deleteReview.json()
+        console.log("reviewRESPONSE", review)
+
+        return review
+        
+    }catch (error) {
         return error
     }
 }

@@ -18,3 +18,10 @@ export type Review = {
   rating: number;
   creationDate: string;
 };
+
+export type deleteRData = {
+ id : string
+    token : string
+    pseudo : string 
+    password : string
+};

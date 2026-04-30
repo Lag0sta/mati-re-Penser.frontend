@@ -8,6 +8,7 @@ import Menu from './Menu.js';
 import PublicationArchiveStatus from './PublicationArchiveStatus.js';
 
 import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
+import ReviewDelete from './ReviewDelete.js';
 
 const SignIn = React.lazy(() => import('./SignIn.js'));
 const SignUp = React.lazy(() => import('./SignUp.js'));
@@ -23,7 +24,7 @@ interface Props {
   book: string
 }
 
-function ModalAction({ modalProps, msgProps, screenActionProps , authType, setAuthType, setResponse, book }: Props) {
+function ModalAction({ modalProps, msgProps, screenActionProps, authType, setAuthType, setResponse, book }: Props) {
 
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
@@ -36,48 +37,53 @@ function ModalAction({ modalProps, msgProps, screenActionProps , authType, setAu
 
           {modalProps.modalComponent === "signIn" &&
             <SignIn modalProps={modalProps}
-              msgProps={msgProps}/>
+              msgProps={msgProps} />
           }
           {modalProps.modalComponent === "signUp" &&
             <SignUp modalProps={modalProps}
-              msgProps={msgProps}/>
+              msgProps={msgProps} />
           }
           {modalProps.modalComponent === "avatarGallery" &&
             <AvatarGallery modalProps={modalProps}
-              msgProps={msgProps}/>
-          }          
-          
+              msgProps={msgProps} />
+          }
+
           {modalProps.modalComponent === "auth" &&
             <Auth modalProps={modalProps}
               msgProps={msgProps}
-              authType={authType} 
+              authType={authType}
               setResponse={(value: boolean) => setResponse(value)}
             />
           }
           {modalProps.modalComponent === "modalMenu" &&
-              <Menu modalProps={modalProps}
-                screenActionProps={screenActionProps}
-                msgProps={msgProps}
-              />
+            <Menu modalProps={modalProps}
+              screenActionProps={screenActionProps}
+              msgProps={msgProps}
+            />
           }
           {modalProps.modalComponent === "deleteComment" &&
-          <CommentDelete screenActionProps={screenActionProps}
+            <CommentDelete screenActionProps={screenActionProps}
               msgProps={msgProps}
               modalProps={modalProps}
-              setAuthType={(value: string) => setAuthType(value)}/>
-          }       
-          {modalProps.modalComponent === "addReview" && 
-            <ReviewAdd modalProps={modalProps}
-                       msgProps={msgProps}
-                       book={book}/>
-          
+              setAuthType={(value: string) => setAuthType(value)} />
           }
-          {modalProps.modalComponent === "archiveStatus" && 
-           <PublicationArchiveStatus
-            modalProps={modalProps}
-            msgProps={msgProps}
+          {modalProps.modalComponent === "addReview" &&
+            <ReviewAdd modalProps={modalProps}
+              msgProps={msgProps}
+              book={book} />
+
+          }
+          {modalProps.modalComponent === "deleteReview" &&
+            <ReviewDelete modalProps={modalProps}
+              msgProps={msgProps}
+              setAuthType={(value: string) => setAuthType(value)} />
+          }
+          {modalProps.modalComponent === "archiveStatus" &&
+            <PublicationArchiveStatus
+              modalProps={modalProps}
+              msgProps={msgProps}
             />
-           }
+          }
         </Suspense>
       </div>
     </div>

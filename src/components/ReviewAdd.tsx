@@ -1,8 +1,8 @@
 import { useState } from "react"
-
+import { useAppDispatch } from "../store/hooks.js"
 import { newReviewRequest } from "../utils/reviewActions.js"
 import { text } from "stream/consumers"
-
+import { addReview } from "../store/reducers/reviews.js"
 import { modalProps, msgProps } from "../types/Props.js";
 
 interface props {
@@ -17,6 +17,8 @@ function ReviewAdd({ modalProps, msgProps, book }: props) {
     const [review, setReview] = useState<string>('')
     const [rating, setRating] = useState<number>(0)
     const [ratingHover, setRatingHover] = useState<number>(0)
+
+    const dispatch = useAppDispatch()
 
     const handleCloseModal = () => {
         setName('')
@@ -48,7 +50,8 @@ function ReviewAdd({ modalProps, msgProps, book }: props) {
                 modalProps.setIsMessageModalOpen(true)
                 return
             }
-
+            console.log("addReviewResponse", addReviewResponse.review)
+            dispatch(addReview(addReviewResponse.review))
             msgProps.setSuccessMessage(addReviewResponse.message)
             modalProps.setIsMessageModalOpen(true)
             setName('')

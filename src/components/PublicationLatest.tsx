@@ -16,12 +16,14 @@ function PublicationLatest({ modalProps, setPublicationID, setAuthType, setBook 
     const [showReviews, setShowReviews] = useState(false);
     const user = useAppSelector(state => state.user.value)
     let rating: number = 0
+    const roundedRating = Math.floor(rating);
 
     const reviews = useAppSelector((state) => state.review.value);
 
     if (reviews.length > 0) {
         for (const review of reviews) {
             rating += review.rating / reviews.length
+            
         }
     }
 
@@ -62,7 +64,9 @@ function PublicationLatest({ modalProps, setPublicationID, setAuthType, setBook 
                 <div>
                     <PublicationAdminView modalProps={modalProps}
                         setPublicationID={setPublicationID}
-                        setAuthType={setAuthType}/>
+                        setAuthType={setAuthType}
+                        setBook={setBook}
+                        isAdminView={isAdminView} />
                 </div>
             }
             {(!isAdminView && publication) &&
@@ -80,18 +84,20 @@ function PublicationLatest({ modalProps, setPublicationID, setAuthType, setBook 
                                     <span className="text-md" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publication.text || "") }} />
                                 ) : (
                                     <ReviewView modalProps={modalProps} 
-                                                setBook={setBook} />
+                                                setBook={setBook}
+                                                isAdminView={isAdminView} />
                                 )}
                             </div>
                             <div className='h-[10%]  mt-2 ml-4 p-2 rounded-md flex justify-evenly items-center bg-white'>
                                 <div>
                                     <div className="flex justify-end gap-1">
+                                        <span>{rating.toFixed(1)}</span>
                                         {[...Array(5)].map((_, index) => (
                                         <svg className="w-4 h-4  "
-                                            fill={(rating > 0 && index >= rating) ?
+                                            fill={(index > 0 && index >= rating -1) ?
                                                 "#1F2937" : "#FFD700"
                                             }
-                                            key={index + 1}
+                                            key={index}
                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                             <path d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
                                         </svg>
