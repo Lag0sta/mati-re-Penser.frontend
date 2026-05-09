@@ -1,6 +1,16 @@
-import { sBIData, eBTData, eBIData, aSData, eRData} from "../types/newActions.js";
+import { sBIData, eBTData, eBIData, aSData, eRData} from "../types/bookActions.js";
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
+
+export async function getBooksRequest(){
+    try {
+            const response = await fetch(`${API_URL}/books/publications`)
+            return response.json()
+             
+          } catch (error) {
+            return error
+        }
+}
 export async function saveBookInfoRequest( sBIData : sBIData) {
     const { titre, text, pseudo, token } = sBIData
 

@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 import TextEditor from "./TextEditor.js";
 
-import { addPublication } from '../store/reducers/publication.js';
-import { saveBookInfoRequest } from "../utils/newActions.js"
+import { addPublications } from '../store/reducers/publications.js';
+import { saveBookInfoRequest } from "../utils/bookActions.js"
 
 import { modalProps, msgProps } from "../types/Props.js";
 interface props {
@@ -48,7 +48,7 @@ const handleSave = async () => {
         if(response.result){
             setTitle('')
             setRQValue('')
-            dispatch(addPublication(response.result));
+            dispatch(addPublications(response.result));
             msgProps.setSuccessMessage(response.message);
             modalProps.setIsMessageModalOpen(true);
         } else {

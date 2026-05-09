@@ -2,15 +2,11 @@ import { useAppSelector } from "../store/hooks.js"
 import { useState } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 
-import { deleteComment, getTopic } from '../store/reducers/topic.js';
-import { deleteReview } from "../store/reducers/reviews.js";
+import { deleteLatestReview } from "../store/reducers/latestReviews.js";
 
 import { deleteReviewRequest } from "../utils/reviewActions.js"
-import { reviewsRequest
 
- } from "../utils/reviewActions.js";
-import { modalProps, msgProps, screenActionProps } from "../types/Props.js";
-import { getReview } from "../store/reducers/reviews.js";
+import { modalProps, msgProps } from "../types/Props.js";
 
 interface props {
     modalProps: modalProps
@@ -26,8 +22,7 @@ function ReviewDelete({ modalProps, msgProps, setAuthType }: props) {
     const [password, setPassword] = useState('');
 
     const reviewID: any = useAppSelector((state) => state.reviewID.value);
-    const review = useAppSelector((state) => state.review.value);
-console.log("reviewNew", review)
+
     const handleDeleteReview = async () => {
         const deleteRData = { token, pseudo: user.pseudo, password: password, id: reviewID.id }
         console.log("deleteCData", deleteRData)
@@ -37,7 +32,7 @@ console.log("reviewNew", review)
 
             if (!deleteReviewResponse.result) {
                 const errors = JSON.parse(deleteReviewResponse.error);
-
+                console.log("errors", errors)
                 for (const err of errors) {
                     msg.push(err.message)
                 }
@@ -45,7 +40,7 @@ console.log("reviewNew", review)
                 modalProps.setIsMessageModalOpen(true)
             } else {
                 console.log("reviewID", reviewID)
-                dispatch(deleteReview( reviewID.id ))
+                dispatch(deleteLatestReview( reviewID.id ))
                 setAuthType('');
                 msgProps.setSuccessMessage(deleteReviewResponse.message);
                 modalProps.setIsMessageModalOpen(true);

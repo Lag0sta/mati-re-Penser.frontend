@@ -14,23 +14,18 @@ interface props {
     marketURL: string
 }
 
-function PublicationMarketEdit({ modalProps, msgProps, setAuthType, marketURL }: props) {
+function ArchivedPublicationMarketEdit({ modalProps, msgProps, setAuthType, marketURL }: props) {
     const dispatch = useAppDispatch();
 
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
-    const [url, setUrl] = useState(marketURL);
 
-    const publication = useAppSelector((state) => state.publications.value);
-    let latestPublication: any;
-    for (const pub of publication) {
-            if (!pub.isArchived) {
-                latestPublication = pub
-            }
-    }
+    const publication = useAppSelector((state) => state.publication.value);
+    const [url, setUrl] = useState(publication.lien);
+
 
     const handleEditURL = async () => {
-        const eRData = { token, pseudo: user.pseudo, url: url, id: latestPublication._id }
+        const eRData = { token, pseudo: user.pseudo, url: url, id: publication._id }
         const msg = [];
         try {
             const editReviewResponse = await editMarketURLRequest(eRData)
@@ -44,7 +39,7 @@ function PublicationMarketEdit({ modalProps, msgProps, setAuthType, marketURL }:
                 msgProps.setErrorMessage(msg.join(", "));
                 modalProps.setIsMessageModalOpen(true)
             } else {
-                dispatch(updatePublicationsURL({_id: latestPublication._id, lien: url}))
+                dispatch(updatePublicationsURL({_id: publication._id, lien: url}))
                 setAuthType('');
                 msgProps.setSuccessMessage(editReviewResponse.message);
                 modalProps.setIsMessageModalOpen(true);
@@ -107,4 +102,4 @@ function PublicationMarketEdit({ modalProps, msgProps, setAuthType, marketURL }:
     )
 }
 
-export default PublicationMarketEdit
+export default ArchivedPublicationMarketEdit

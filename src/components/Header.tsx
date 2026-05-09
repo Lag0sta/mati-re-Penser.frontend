@@ -87,12 +87,9 @@ function Header({ screenActionProps, modalProps }: props) {
       <div className="h-24 flex  justify-between items-center bg-black border-b-1 border-white">
         <div className=" flex justify-between items-center ml-10">
           <nav className=" text-white">
-            <button onClick={() => handleScroll(screenActionProps.acceuilRef, "acceuil")}
-              aria-label="Aller à la section Accueil"
-              className="cursor-pointer"
-            >
-              Logo
-            </button>
+            
+            <img className="flex justify-center items-center w-[5rem] h-[5rem]  hover:border-2 hover:border-gray-600 hover:bg-gray-900 object-contain rounded-full " src="../public/assets/img/mAP_Logo_NB.png"
+              alt="Logo" onClick={() => handleScroll(screenActionProps.acceuilRef, "acceuil")} />
           </nav>
 
         </div>

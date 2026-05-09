@@ -23,3 +23,8 @@ export interface screenActionProps {
     mainRef : any;
     contactRef : any;
 }
+
+export interface adminProps {
+    isAdminView : boolean;
+    setIsAdminView : (value : boolean) => void;
+}

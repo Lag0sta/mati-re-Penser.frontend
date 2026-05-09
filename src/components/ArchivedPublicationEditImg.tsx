@@ -1,53 +1,42 @@
 import { useAppSelector } from "../store/hooks.js"
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-import TextEditor from "./TextEditor.js";
-import { updatePublicationsTxt } from "../store/reducers/publications.js";
+import { updatePublicationImg } from "../store/reducers/publication.js";
 
-import { editBookTxtRequest } from "../utils/bookActions.js";
+import { editBookImgRequest } from "../utils/bookActions.js";
 
 import { modalProps, msgProps } from "../types/Props.js";
 
 interface props {
-    setMainComponent: (value: string) => any
-    modalProps: modalProps
     msgProps: msgProps
+    modalProps: modalProps
 }
-function PublicationEditTxt({ msgProps, modalProps }: props) {
+function ArchivedPublicationEditImg({ msgProps, modalProps }: props) {
     const publication = useAppSelector((state) => state.publication.value);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
 
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
-    const [rQValue, setRQValue] = useState<string>(publication.text ?? "");
-    const [title, setTitle] = useState<string>(publication.titre ?? "");
-    const originalValue = publication.text ?? ""
-    const originalTitle = publication.titre ?? ""
+    const [url, setURL] = useState<string>(publication.img);
+    let originalURL = ""
 
     const dispatch = useAppDispatch();
 
-    function normalize(str = "") {
-        return str.replace(/<[^>]+>/g, "").trim();
+    console.log("publicationIMG", publication)
+    if(publication){
+        originalURL = publication.img
     }
 
     useEffect(() => {
-        if (title !== originalTitle ||
-            normalize(rQValue) !== normalize(originalValue)) {
-            setIsButtonLocked(false)
-        } else {
-            setIsButtonLocked(true)
-        }
-    }, [rQValue, title]);
+            setIsButtonLocked(url === originalURL)
+    }, [url, originalURL]);
 
     const handleUpdatePublication = async () => {
-        const text = rQValue
-        const eBTData = { token, id: publication._id, pseudo: user.pseudo, titre: title, text };
-        const msg = []; 
-        
-        console.log("eBTData", eBTData)
-
+        const eBIData = { token, id: publication._id, pseudo: user.pseudo, img: url};
+        console.log("eBIDataArchived", eBIData)
+        const msg = [];
         try {
-            const editBookResponse = await editBookTxtRequest(eBTData);
+            const editBookResponse = await editBookImgRequest( eBIData );
 
             if (!editBookResponse.result) {
                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
@@ -60,11 +49,8 @@ function PublicationEditTxt({ msgProps, modalProps }: props) {
                 msgProps.setErrorMessage(msg.join(", "));
                 modalProps.setIsMessageModalOpen(true);
                 return;
-
-            } else {
-                        console.log("editBookResponse", editBookResponse)
-
-                dispatch(updatePublicationsTxt(editBookResponse.editedBook))
+            } else {  
+                dispatch(updatePublicationImg(editBookResponse.editedBook))
                 msgProps.setSuccessMessage(editBookResponse.message);
                 modalProps.setIsMessageModalOpen(true);
                 modalProps.setIsTextModalOpen(false);
@@ -100,34 +86,25 @@ function PublicationEditTxt({ msgProps, modalProps }: props) {
             </div>
 
             <h3 className="text-3xl mb-1 text-gray-200">
-                Modifier la publication
+                Modifier la Publication wesh
             </h3>
 
             <fieldset className="flex flex-col justify-between items-center overflow-y-auto w-full max-w-3xl p-4">
 
                 <legend className="text-lg text-center text-gray-300 font-medium mb-2">
-                    Modifiez le texte
+                    Modifiez l'image wesh
                 </legend>
                 <div className="flex flex-col w-full">
                     <label className="text-base text-gray-400 mt-2 mb-1"
                         htmlFor="subject">
-                        Sujet :
+                        URL :
                     </label>
                     <input className="border-2 border-none bg-gray-400 rounded-md pl-2"
                         id="subject"
                         type="text"
                         placeholder="sujet"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </div>
-                <div className="flex flex-col">
-                    <span className="text-base text-gray-400 mt-2 mb-1">
-                        Descriptif :
-                    </span>
-                    <TextEditor rQValue={rQValue}
-                        setRQValue={setRQValue}
-                        mode="editPublication"
+                        value={url}
+                        onChange={(e) => setURL(e.target.value)}
                     />
                 </div>
             </fieldset>
@@ -139,14 +116,13 @@ function PublicationEditTxt({ msgProps, modalProps }: props) {
                 ) : (
                     <button
                         className="w-fit bg-black border-2 border-black text-white rounded-md px-2 py-1 mt-2 mb-6 hover:bg-white hover:text-black hover:cursor-pointer "
-                        onClick={handleUpdatePublication}
+                    onClick={handleUpdatePublication}
                     >
                         Sauvegarder
                     </button>)}
             </div>
-
         </div>
     )
 }
 
-export default PublicationEditTxt
+export default ArchivedPublicationEditImg

@@ -2,51 +2,57 @@ import { useAppSelector } from "../store/hooks.js"
 import { useAppDispatch } from "../store/hooks.js"
 import { archiveStatusRequest } from "../utils/bookActions.js"
 import { updateArchiveStatus } from "../store/reducers/publications.js";
-import { deletePIV } from "../store/reducers/publication.js";
-import { archiveLatestReviews } from "../store/reducers/latestReviews.js";
+import { addLatestReview } from "../store/reducers/latestReviews.js";
+import { unArchive } from "../store/reducers/archReviews.js";
 
-import { modalProps, msgProps } from "../types/Props.js";
+import { modalProps, msgProps, screenActionProps, adminProps } from "../types/Props.js";
 interface props {
     msgProps: msgProps
     modalProps: modalProps
+    screenActionProps: screenActionProps
+    adminProps: adminProps
 }
-function PublicationArchiveStatus({ msgProps, modalProps }: props) {
+function ArchiveStatus({ msgProps, modalProps, screenActionProps, adminProps }: props) {
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
-    const dispatch = useAppDispatch();
     const publication = useAppSelector((state) => state.publication.value);
-    
-    const isArchived = publication.isArchived ?? false
-    const id = publication._id ?? ""
+    const reviews = useAppSelector((state) => state.archReviews.value);
+
+    const dispatch = useAppDispatch();
 
     const handleArchive = async () => {
         const msg = [];
-        const aSData = { id, pseudo: user.pseudo, token, isArchived }
+        const aSData = { id: publication._id, pseudo: user.pseudo, token, isArchived: publication.isArchived }
         try {
-                const archiveResponse = await archiveStatusRequest( aSData )
+            const archiveResponse = await archiveStatusRequest(aSData)
 
-                if (!archiveResponse.result) {
-                    // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
-                    const errors = JSON.parse(archiveResponse.error);
+            if (!archiveResponse.result) {
+                // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
+                const errors = JSON.parse(archiveResponse.error);
 
-                    for (const err of errors) {
-                        msg.push(err.message)
-                    }
-
-                    msgProps.setErrorMessage(msg.join(", "));
-                    modalProps.setIsMessageModalOpen(true);
-                    return;
-
-                } else {
-                    dispatch(updateArchiveStatus({_id:archiveResponse.editedBook._id, isArchived: archiveResponse.editedBook.isArchived}));
-                    dispatch(deletePIV())
-                    dispatch(archiveLatestReviews())
-                    msgProps.setSuccessMessage(archiveResponse.message);
-                    modalProps.setIsMessageModalOpen(true);
-                    modalProps.setIsModalOpen(false);
-                    modalProps.setModalComponent("");
+                for (const err of errors) {
+                    msg.push(err.message)
                 }
-            
+
+                msgProps.setErrorMessage(msg.join(", "));
+                modalProps.setIsMessageModalOpen(true);
+                return;
+
+            } else {
+                console.log("archiveResponse", archiveResponse)
+                console.log("dispatch _id:", archiveResponse.editedBook._id, "isArchived:", archiveResponse.editedBook.isArchived)
+                dispatch(updateArchiveStatus({ _id: archiveResponse.editedBook._id, isArchived: archiveResponse.editedBook.isArchived }));
+                dispatch(addLatestReview(reviews))
+                dispatch(unArchive())
+                msgProps.setSuccessMessage(archiveResponse.message);
+                modalProps.setIsMessageModalOpen(true);
+                modalProps.setIsModalOpen(false);
+                modalProps.setModalComponent("");
+                adminProps.setIsAdminView(false);
+                screenActionProps.setMainComponent("publication")
+
+            }
+
         } catch (error) {
             console.log("error", error)
         }
@@ -88,4 +94,4 @@ function PublicationArchiveStatus({ msgProps, modalProps }: props) {
     )
 }
 
-export default PublicationArchiveStatus
+export default ArchiveStatus

@@ -6,6 +6,8 @@ import TopicNew from './TopicNew.js';
 import PublicationNew from './PublicationNew.js';
 import PublicationEditTxt from './PublicationEditTxt.js';
 import PublicationEditImg from './PublicationEditImg.js';
+import ArchivedPublicationEditImg from './ArchivedPublicationEditImg.js';
+import ArchivedPublicationEditTxt from './ArchivedPublicationEditTxt.js';
 
 import { modalProps, msgProps, screenActionProps } from "../types/Props.js";
 interface props {
@@ -53,13 +55,27 @@ function ModalText({ replyTo, setReplyTo, modalProps, msgProps, screenActionProp
             <PublicationEditTxt setMainComponent={(value: string) => screenActionProps.setMainComponent(value)}
               msgProps={msgProps}
               modalProps={modalProps}
-              publicationID={publicationID} />
+            />
           }
           {modalProps.modalComponent === "editPublicationImg" &&
             <PublicationEditImg
               msgProps={msgProps}
               modalProps={modalProps}
               publicationID={publicationID}
+            />
+          }
+
+          {modalProps.modalComponent === "editArchivedPublicationImg" &&
+            <ArchivedPublicationEditImg
+              msgProps={msgProps}
+              modalProps={modalProps}
+            />
+          }
+
+          {modalProps.modalComponent === "editArchivedPublicationTxt" &&
+          <ArchivedPublicationEditTxt setMainComponent={(value: string) => screenActionProps.setMainComponent(value)}
+              msgProps={msgProps}
+              modalProps={modalProps}
             />
           }
         </Suspense>

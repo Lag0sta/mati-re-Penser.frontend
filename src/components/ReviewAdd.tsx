@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useAppDispatch } from "../store/hooks.js"
 import { newReviewRequest } from "../utils/reviewActions.js"
 import { text } from "stream/consumers"
-import { addReview } from "../store/reducers/reviews.js"
+import { addLatestReview } from "../store/reducers/latestReviews.js"
 import { modalProps, msgProps } from "../types/Props.js";
 
 interface props {
@@ -51,7 +51,7 @@ function ReviewAdd({ modalProps, msgProps, book }: props) {
                 return
             }
             console.log("addReviewResponse", addReviewResponse.review)
-            dispatch(addReview(addReviewResponse.review))
+            dispatch(addLatestReview(addReviewResponse.review))
             msgProps.setSuccessMessage(addReviewResponse.message)
             modalProps.setIsMessageModalOpen(true)
             setName('')

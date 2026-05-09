@@ -2,7 +2,7 @@ import { useAppSelector } from "../store/hooks.js"
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
 import TextEditor from "./TextEditor.js";
-import { updatePublicationsTxt } from "../store/reducers/publications.js";
+import { updatePublicationTxt } from "../store/reducers/publication.js";
 
 import { editBookTxtRequest } from "../utils/bookActions.js";
 
@@ -13,18 +13,19 @@ interface props {
     modalProps: modalProps
     msgProps: msgProps
 }
-function PublicationEditTxt({ msgProps, modalProps }: props) {
+function ArchivedPublicationEditTxt({ msgProps, modalProps }: props) {
     const publication = useAppSelector((state) => state.publication.value);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
-
+    
+    const [rQValue, setRQValue] = useState<string>(publication.text);
     const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
-    const [rQValue, setRQValue] = useState<string>(publication.text ?? "");
-    const [title, setTitle] = useState<string>(publication.titre ?? "");
-    const originalValue = publication.text ?? ""
-    const originalTitle = publication.titre ?? ""
+    const [title, setTitle] = useState<string>(publication.titre);
+    let originalValue = publication.text
+    let originalTitle = publication.titre
 
     const dispatch = useAppDispatch();
+
 
     function normalize(str = "") {
         return str.replace(/<[^>]+>/g, "").trim();
@@ -40,6 +41,7 @@ function PublicationEditTxt({ msgProps, modalProps }: props) {
     }, [rQValue, title]);
 
     const handleUpdatePublication = async () => {
+        ("click TOPICEDIT")
         const text = rQValue
         const eBTData = { token, id: publication._id, pseudo: user.pseudo, titre: title, text };
         const msg = []; 
@@ -64,7 +66,7 @@ function PublicationEditTxt({ msgProps, modalProps }: props) {
             } else {
                         console.log("editBookResponse", editBookResponse)
 
-                dispatch(updatePublicationsTxt(editBookResponse.editedBook))
+                dispatch(updatePublicationTxt(editBookResponse.editedBook))
                 msgProps.setSuccessMessage(editBookResponse.message);
                 modalProps.setIsMessageModalOpen(true);
                 modalProps.setIsTextModalOpen(false);
@@ -149,4 +151,4 @@ function PublicationEditTxt({ msgProps, modalProps }: props) {
     )
 }
 
-export default PublicationEditTxt
+export default ArchivedPublicationEditTxt

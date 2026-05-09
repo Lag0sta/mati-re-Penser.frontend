@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks.js';
+import { loadPublications } from '../store/reducers/publications.js';
 import { loadPublication } from '../store/reducers/publication.js';
 import Header from './Header.js';
 import Contact from './Contact.js';
 import Modal from './Modal.js';
 import MainComponent from './MainComponent.js';
 
-import { getReview } from '../store/reducers/reviews.js';
+import { getLatestReview } from '../store/reducers/latestReviews.js';
+import {getBooksRequest} from '../utils/bookActions.js'
 import { reviewsRequest } from '../utils/reviewActions.js';
 
 function App() {
@@ -24,11 +26,13 @@ function App() {
   const [response, setResponse] = useState<boolean>(false);
   const [book, setBook] = useState<string>("");
   const [marketURL, setMarketURL] = useState<string>("");
+  const [isAdminView, setIsAdminView] = useState(false);
+
   
   const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
   let pID: string = "";
 
-  const publications = useAppSelector((state) => state.publication.value);
+  const publications = useAppSelector((state) => state.publications.value);
   const dispatch = useAppDispatch();
 
   const acceuilRef = useRef<HTMLDivElement>(null);
@@ -39,18 +43,22 @@ function App() {
   const msgProps = {successMessage, setSuccessMessage, errorMessage, setErrorMessage};
   const modalProps = {modalComponent, setModalComponent, isModalOpen, setIsModalOpen, isMessageModalOpen, setIsMessageModalOpen, isTextModalOpen,setIsTextModalOpen}
   const screenActionProps = {mainComponent, setMainComponent, acceuilRef, mainRef, contactRef}
+  const adminProps = {isAdminView, setIsAdminView}
   for (const publication of publications) {
     if (publication) pID = publication._id
   }
 
   useEffect(() => {
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+    
+    getBooksRequest()
     const fetchData = async () => {
       try {
         const response = await fetch(`${API_URL}/books/publications`)
         const data = await response.json()
         console.log("dataPublication", data)
-        dispatch(loadPublication(data.books))
+        dispatch(loadPublications(data.books))
+        dispatch(loadPublication(data.books.find((e : any) => e.isArchived === false))) 
       } catch (error) {
         console.error(error)
       } finally {
@@ -68,7 +76,7 @@ function App() {
         const rData = { id: pID };
         const response = await reviewsRequest(rData);
         console.log("responseReviewsRequest", response)
-        if (response.result) dispatch(getReview(response.reviews));
+        if (response.result) dispatch(getLatestReview(response.reviews));
       } catch (error) {
         console.log("error", error)
       }
@@ -106,6 +114,7 @@ function App() {
       <MainComponent msgProps={msgProps}
         modalProps={modalProps}
         screenActionProps={screenActionProps}
+        adminProps={adminProps}
         setPublicationID={setPublicationID}
         setAuthType={setAuthType}
         setBook={setBook}
@@ -125,6 +134,7 @@ function App() {
         <Modal modalProps={modalProps}
           msgProps={msgProps}
           screenActionProps={screenActionProps}
+          adminProps={adminProps}
           authType={authType}
           setAuthType={setAuthType}
           setResponse={setResponse}

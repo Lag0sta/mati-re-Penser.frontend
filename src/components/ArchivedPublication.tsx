@@ -1,50 +1,53 @@
 import DOMPurify from 'dompurify';
-import { useEffect, useState } from "react"
-import { useAppSelector, } from "../store/hooks.js"
+import { useState } from "react"
+import { useAppSelector, useAppDispatch  } from "../store/hooks.js"
 
-import PublicationAdminView from "./PublicationAdminView.js";
-import ReviewView from './ReviewView.js';
-import { modalProps, adminProps } from "../types/Props.js";
+import ArchivedPublicationAdminView from "./ArchivedPublicationAdminView.js";
+import ArchivedReviewView from './ArchivedReviewView.js';
+
+import { reviewsRequest } from "../utils/reviewActions.js";
+import { modalProps } from "../types/Props.js";
+
+import { getArchReview } from "../store/reducers/archReviews.js";
 interface props {
     modalProps: modalProps
-    adminProps: adminProps
     setPublicationID: (value: string) => any
     setAuthType: (value: string) => any
     setBook: (value: string) => any
     setMarketURL: (value: string) => any
 }
-function PublicationLatest({ modalProps, adminProps, setPublicationID, setAuthType, setBook, setMarketURL }: props) {
+function ArchivedPublication({ modalProps, setPublicationID, setAuthType, setBook, setMarketURL }: props) {
+    const reviews = useAppSelector((state) => state.archReviews.value);
     const publication = useAppSelector((state) => state.publication.value);
-    const reviews = useAppSelector((state) => state.latestReviews.value);
-    const user = useAppSelector(state => state.user.value)
 
+    const [isAdminView, setIsAdminView] = useState(false);
     const [showReviews, setShowReviews] = useState(false);
-    const [rating, setRating] = useState<number>(0);
+    const user = useAppSelector(state => state.user.value)
+    let rating: number = 0
 
-    //Moyenne des notes
-    useEffect(() => {
-        if (reviews.length === 0) {
-            setRating(0)
-            return
-        }
+    const dispatch = useAppDispatch();
 
-        let total = 0
-
+    if (reviews.length > 0) {
         for (const review of reviews) {
-            total += review.rating / reviews.length
-
+            rating += review.rating / reviews.length
+            
         }
-        setRating(total);
-
-    }, [reviews])
-
+    }
 
     const handleClickReview = async () => {
         setShowReviews(!showReviews);
+              try {
+                const rData = { id: publication._id };
+                const response = await reviewsRequest(rData);
+                console.log("responseReviewsRequest", response)
+                if (response.result) dispatch(getArchReview(response.reviews));
+              } catch (error) {
+                console.log("error", error)
+              }        
     }
 
     const handleAdminView = () => {
-        adminProps.setIsAdminView(!adminProps.isAdminView);
+        setIsAdminView(!isAdminView);
     }
 
     return (
@@ -59,42 +62,33 @@ function PublicationLatest({ modalProps, adminProps, setPublicationID, setAuthTy
                     </div>
 
                     <div className="flex justify-center items-center mb-4  bg-white rounded-b-md rounded-tl-md">
-                        <h2 className=" mx-2 my-1  text-3xl text-center">À LA UNE</h2>
+                        <h2 className=" mx-2 my-1  text-3xl text-center">{publication.titre}</h2>
                     </div>
                 </div>
             }
 
             {!user.isAdmin &&
                 <div className="w-[78%] flex justify-center items-center mb-4  bg-white rounded-md">
-                    <h2 className=" mx-2 my-1  text-3xl text-center">À LA UNE</h2>
+                    <h2 className=" mx-2 my-1  text-3xl text-center">{publication.titre}</h2>
                 </div>
             }
-            {adminProps.isAdminView &&
+            {isAdminView &&
                 <div>
-                    <PublicationAdminView modalProps={modalProps}
-                        adminProps={adminProps}
+                    <ArchivedPublicationAdminView modalProps={modalProps}
                         setPublicationID={setPublicationID}
                         setAuthType={setAuthType}
                         setBook={setBook}
+                        isAdminView={isAdminView}
                         setMarketURL={setMarketURL}
-                    />
+                         />
                 </div>
             }
-            {(!adminProps.isAdminView && !publication) &&
-              <img className=" w-[25%] object-contain rounded-md " src="../public/assets/img/mAP_Logo.png" />
-            }
-            {(!adminProps.isAdminView && publication) &&
+            {(!isAdminView && publication) &&
                 <div className="w-[78%]">
                     <div className="flex w-full justify-between ">
 
                         <div className="mr-4">
-                            {publication.img ? (
-                                <img className="object-contain  rounded-md" src={publication.img} alt="couverture du livre Nature Du Réel Réel de la Nature" />
-                            ) : (
-                                <img className="object-contain  rounded-md border border-3 border-red-600 " src="../public/assets/img/mAP_Logo.png" />
-                            )}
-
-
+                            <img className="object-contain  rounded-md" src={publication.img} alt="couverture du livre Nature Du Réel Réel de la Nature" />
                         </div>
 
                         <div className=" flex flex-col justify-between h-[50%] w-[90%]">
@@ -103,9 +97,9 @@ function PublicationLatest({ modalProps, adminProps, setPublicationID, setAuthTy
                                 {!showReviews ? (
                                     <span className="text-md" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(publication.text || "") }} />
                                 ) : (
-                                    <ReviewView modalProps={modalProps}
-                                        setBook={setBook}
-                                        adminProps={adminProps} />
+                                    <ArchivedReviewView modalProps={modalProps} 
+                                                setBook={setBook}
+                                                isAdminView={isAdminView} />
                                 )}
                             </div>
                             <div className='h-[10%]  mt-2 ml-4 p-2 rounded-md flex justify-evenly items-center bg-white'>
@@ -113,15 +107,15 @@ function PublicationLatest({ modalProps, adminProps, setPublicationID, setAuthTy
                                     <div className="flex justify-end gap-1">
                                         <span>{rating.toFixed(1)}</span>
                                         {[...Array(5)].map((_, index) => (
-                                            <svg className="w-4 h-4  "
-                                                fill={(index > 0 && index >= rating - 1) ?
-                                                    "#1F2937" : "#FFD700"
-                                                }
-                                                key={index}
-                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                                <path d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-                                            </svg>
-                                        ))}
+                                        <svg className="w-4 h-4  "
+                                            fill={(index > 0 && index >= rating -1) ?
+                                                "#1F2937" : "#FFD700"
+                                            }
+                                            key={index}
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                            <path d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
+                                        </svg>
+                                    ))}
                                     </div>
                                 </div>
                                 {!showReviews ? (
@@ -160,4 +154,4 @@ function PublicationLatest({ modalProps, adminProps, setPublicationID, setAuthTy
     )
 }
 
-export default PublicationLatest
+export default ArchivedPublication

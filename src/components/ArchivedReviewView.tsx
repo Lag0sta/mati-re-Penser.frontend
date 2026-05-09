@@ -1,46 +1,35 @@
-import { useAppSelector } from "../store/hooks.js"
+    import { useAppSelector } from "../store/hooks.js"
 
-import { formatDateToBelgium } from '../utils/formatDateActions.js';
-import { modalProps, adminProps } from "../types/Props.js";
-import { useState } from "react";
+    import { formatDateToBelgium } from '../utils/formatDateActions.js';
+    import { modalProps } from "../types/Props.js";
+    import { useState } from "react";
 
-import IconDelete from "./IconDelete.js";
-// const Comments = React.lazy(() => import('./Comments.js'));
+    import IconDelete from "./IconDelete.js";
+    // const Comments = React.lazy(() => import('./Comments.js'));
 
-interface props {
-    modalProps: modalProps
-    adminProps: adminProps
-    setBook: (value: string) => any
-}
-
-function ReviewView({ modalProps, adminProps, setBook }: props) {
-
-    const reviews = useAppSelector((state) => state.latestReviews.value);
-    console.log("review", reviews)
-    const publication = useAppSelector((state) => state.publication.value);
-    const pID = publication._id
-    const [keyNumber, setKeyNumber] = useState<number>();
-    console.log("nb of reviews :", reviews.length)
-
-    const handleClickNewReview = () => {
-        setBook(pID)
-        modalProps.setIsModalOpen(true);
-        modalProps.setModalComponent("addReview")
+    interface props {
+        modalProps: modalProps
+        setBook: (value: string) => any
+        isAdminView: boolean
     }
 
-    return (
-        <div className=" flex flex-col justify-center items-center">
-            {!adminProps.isAdminView &&
-                <span className="w-fit px-2 py-1 bg-black text-white border-2 border-black rounded-md hover:bg-gray-200 hover:border-gray-200  hover:text-black cursor-pointer"
-                    aria-label="Boutton pour laisser un avis sur le livre"
-                    onClick={handleClickNewReview}>
-                    Ajouter un Avis
-                </span>
-            }
-            {!adminProps.isAdminView && 
+    function ArchivedReviewView({ modalProps, setBook, isAdminView }: props) {
+
+        const reviews = useAppSelector((state) => state.archReviews.value);
+        console.log("review", reviews)
+        const publication = useAppSelector((state) => state.publication.value);
+        let pID: string;
+        const [keyNumber, setKeyNumber] = useState<number>();
+
+        if (publication) pID = publication._id
+
+
+        return (
+            <div className=" flex flex-col justify-center items-center">
+                {!isAdminView &&
                     <div className='min-h-100'>
-                        {reviews.map((e: any) => (
-                            <div key={e._id} className='w-[18rem] bg-gray-400  rounded-sm my-2'>
+                        {reviews.map((e: any, index: number) => (
+                            <div key={index} className='w-[18rem] bg-gray-400  rounded-sm my-2'>
                                 <div className='px-1 py-1 border-b-2 border-gray-100 flex flex-col justify-between item-center '>
 
                                     <div className='flex justify-between'>
@@ -70,10 +59,9 @@ function ReviewView({ modalProps, adminProps, setBook }: props) {
                             </div>
                         ))}
                     </div>
-            }
-            {adminProps.isAdminView && 
-                    <div className='min-h-100'>
-                        <div className='min-h-100 '>
+                }
+                {isAdminView &&
+                    <div className='min-h-100 '>
                         {reviews.map((e: any, index: number) => (
                             <div key={index} className="flex">
                             <div  className='w-[18rem] bg-gray-400  rounded-sm my-2 border-3 border-red-600 rounded-md'>
@@ -105,23 +93,16 @@ function ReviewView({ modalProps, adminProps, setBook }: props) {
                                 </div>
                             </div>
                             <div className=" flex flex-col justify-center item-center" >
-                            <IconDelete modalProps={modalProps} 
-                            iconOrigin="review" 
-                            keyNumber={keyNumber} 
-                            setKeyNumber={setKeyNumber} 
-                            topic={reviews} 
-                            thread={e} 
-                            index={index}/>
+                            <IconDelete modalProps={modalProps} iconOrigin="review" keyNumber={keyNumber} setKeyNumber={setKeyNumber} topic={reviews} thread={e} index={index}/>
                             </div>
                             </div>
                         ))}
                     </div>
-                    </div>
-            }
+                }
 
-        </div>
+            </div>
 
-    )
-}
+        )
+    }
 
-export default ReviewView
+    export default ArchivedReviewView

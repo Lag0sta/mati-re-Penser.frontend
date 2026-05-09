@@ -7,8 +7,10 @@ import Auth from './Auth.js';
 import Menu from './Menu.js';
 import PublicationArchiveStatus from './PublicationArchiveStatus.js';
 import PublicationMarketEdit from './PublicationMarketEdit.js';
+import ArchivedPublicationMarketEdit from './ArchivedPublicationMarketEdit.js';
+import ArchiveStatus from './ArchiveStatus.js';
 
-import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
+import { msgProps, modalProps, screenActionProps, adminProps } from "../types/Props.js";
 import ReviewDelete from './ReviewDelete.js';
 
 const SignIn = React.lazy(() => import('./SignIn.js'));
@@ -19,6 +21,7 @@ interface Props {
   modalProps: modalProps
   msgProps: msgProps
   screenActionProps: screenActionProps
+  adminProps: adminProps
   authType: string
   setAuthType: (value: string) => any
   setResponse: (value: boolean) => any
@@ -26,7 +29,7 @@ interface Props {
   marketURL: string
 }
 
-function ModalAction({ modalProps, msgProps, screenActionProps, authType, setAuthType, setResponse, book, marketURL }: Props) {
+function ModalAction({ modalProps, msgProps, screenActionProps, adminProps, authType, setAuthType, setResponse, book, marketURL }: Props) {
 
   return (
     <div className="h-screen w-screen  fixed inset-0 flex items-center justify-center z-20 "
@@ -86,8 +89,23 @@ function ModalAction({ modalProps, msgProps, screenActionProps, authType, setAut
               msgProps={msgProps}
             />
           }
+          {modalProps.modalComponent === "aAStatus" &&
+          <ArchiveStatus
+              modalProps={modalProps}
+              msgProps={msgProps}
+              screenActionProps={screenActionProps}
+              adminProps={adminProps}
+            />
+          }
           {modalProps.modalComponent === "editMarketURL" &&
           <PublicationMarketEdit
+          modalProps={modalProps}
+          msgProps={msgProps}
+          setAuthType={setAuthType}
+          marketURL={marketURL}/>
+          }
+          {modalProps.modalComponent === "archivedEditMarketURL" && 
+          <ArchivedPublicationMarketEdit
           modalProps={modalProps}
           msgProps={msgProps}
           setAuthType={setAuthType}

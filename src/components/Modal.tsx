@@ -3,11 +3,12 @@ import ModalText from './ModalText.js';
 import ModalAction from './ModalAction.js';
 import ModalMessage from './ModalMessage.js';
 
-import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
+import { msgProps, modalProps, screenActionProps, adminProps } from "../types/Props.js";
 interface Props {
   modalProps: modalProps
   msgProps: msgProps
   screenActionProps: screenActionProps
+  adminProps: adminProps
   authType: string
   setAuthType: (value: string) => any
   setResponse: (value: boolean) => any
@@ -19,7 +20,7 @@ interface Props {
 }
 
 
-function Modal({ modalProps, msgProps, screenActionProps , authType, setAuthType, setResponse, book, replyTo, setReplyTo, publicationID, marketURL }: Props) {
+function Modal({ modalProps, msgProps, screenActionProps, adminProps, authType, setAuthType, setResponse, book, replyTo, setReplyTo, publicationID, marketURL }: Props) {
 
   return (
     <div>
@@ -27,6 +28,7 @@ function Modal({ modalProps, msgProps, screenActionProps , authType, setAuthType
       <ModalAction modalProps={modalProps}
           msgProps={msgProps}
           screenActionProps={screenActionProps}
+          adminProps={adminProps}
           authType={authType}
           setAuthType={setAuthType}
           setResponse={setResponse}

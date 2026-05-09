@@ -1,16 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  value: [{
+  value: {
     _id: "",
     titre: "",
     text: "",
     img: "",
-    avis: [{ author: "", text: "" }],
     lien: "",
     creationDate: "",
     isArchived: false
-  }]
+  }
 };
 
 const publicationSlice = createSlice({
@@ -19,48 +18,37 @@ const publicationSlice = createSlice({
   reducers: {
     loadPublication: (state, action) => {
       state.value = action.payload
-    },
-
-    addPublication: (state, action) => {
-      // state.value.topicThread.push(action.payload);
-      const updatedPublication = [...state.value, action.payload];
-      state.value = updatedPublication.sort((a, b) => new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime())
     }
     ,
     updatePublicationTxt: (state, action) => {
-      const { _id, text, titre } = action.payload;
-      const publicationToUpdate = state.value.find((t) => t._id === _id)
-
-      if (publicationToUpdate) {
-        publicationToUpdate.text = text
-        publicationToUpdate.titre = titre
-    }
+      const { text, titre } = action.payload;
+      
+        state.value.text = text
+        state.value.titre = titre
+    
   }
     ,
     updatePublicationImg: (state, action) => {
-      const { _id, img } = action.payload;
-      const publicationToUpdate = state.value.find((t) => t._id === _id)
+      const {  img } = action.payload;
 
-      if (publicationToUpdate) publicationToUpdate.img = img
+      state.value.img = img
       
     },
 
     updatePublicationURL: (state, action) => {
-      const { _id, lien } = action.payload;
-      const publicationToUpdate = state.value.find((t) => t._id === _id)
+      const { lien } = action.payload;
 
-      if (publicationToUpdate) publicationToUpdate.lien = lien
+      state.value.lien = lien
       
     }
     ,
-    updateArchiveStatus: (state, action) => {
-      const { _id, isArchived } = action.payload;
-      const publicationToUpdate = state.value.find((t) => t._id === _id)
-
-      if (publicationToUpdate) publicationToUpdate.isArchived = isArchived
+    deletePIV: (state) => {
+      state.value = initialState.value
     }
   },
+
+    
 });
 
-export const { loadPublication, addPublication, updatePublicationTxt, updatePublicationImg, updatePublicationURL, updateArchiveStatus } = publicationSlice.actions;
+export const { loadPublication, updatePublicationTxt, updatePublicationImg, updatePublicationURL, deletePIV } = publicationSlice.actions;
 export default publicationSlice.reducer;

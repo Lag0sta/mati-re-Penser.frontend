@@ -1,9 +1,9 @@
 import { useAppSelector } from "../store/hooks.js"
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from "../store/hooks.js"
-import { updatePublicationImg } from "../store/reducers/publication.js";
+import { updatePublicationsImg } from "../store/reducers/publications.js";
 
-import { editBookImgRequest } from "../utils/newActions.js";
+import { editBookImgRequest } from "../utils/bookActions.js";
 
 import { modalProps, msgProps } from "../types/Props.js";
 
@@ -12,34 +12,23 @@ interface props {
     modalProps: modalProps
     publicationID: string
 }
-function PublicationEditImg({ msgProps, modalProps, publicationID }: props) {
-    const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
-    const [url, setURL] = useState<string>("");
-    let originalURL = ""
-    let p_id = ""
-
-    const publications = useAppSelector((state) => state.publication.value);
-    const publication = publications.find((e) => e.isArchived === false);
+function PublicationEditImg({ msgProps, modalProps }: props) {
+    const publication = useAppSelector((state) => state.publication.value);
     const token = useAppSelector((state) => state.authToken.value);
     const user = useAppSelector((state) => state.user.value);
-    
+
+    const [isButtonLocked, setIsButtonLocked] = useState<boolean>(true);
+    const [url, setURL] = useState<string>(publication.lien ?? "");
+    const originalURL = publication.lien ?? ""
+     
     const dispatch = useAppDispatch();
-
-    if(publication){
-        originalURL = publication.img
-        p_id = publication._id
-    }
-
-    useEffect(() => {
-        if(publication && p_id === publicationID) setURL(publication.img)
-    }, [publicationID, publications])
 
     useEffect(() => {
             setIsButtonLocked(url === originalURL)
     }, [url, originalURL]);
 
     const handleUpdatePublication = async () => {
-        const eBIData = { token, id: publicationID, pseudo: user.pseudo, img: url};
+        const eBIData = { token, id: publication._id, pseudo: user.pseudo, img: url};
         const msg = [];
         try {
             const editBookResponse = await editBookImgRequest( eBIData );
@@ -56,7 +45,7 @@ function PublicationEditImg({ msgProps, modalProps, publicationID }: props) {
                 modalProps.setIsMessageModalOpen(true);
                 return;
             } else {  
-                dispatch(updatePublicationImg(editBookResponse.editedBook))
+                dispatch(updatePublicationsImg(editBookResponse.editedBook))
                 msgProps.setSuccessMessage(editBookResponse.message);
                 modalProps.setIsMessageModalOpen(true);
                 modalProps.setIsTextModalOpen(false);
