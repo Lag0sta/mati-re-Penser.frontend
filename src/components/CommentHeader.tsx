@@ -6,21 +6,21 @@ import { modalProps, msgProps } from "../types/Props.js";
 import IconEdit from "./IconEdit.js";
 import IconDelete from "./IconDelete.js";
 import IconResponse from "./IconResponse.js";
-
+import { adminProps } from "../types/Props.js";
 interface props {
+    adminProps: adminProps
     setPseudo: (value: string) => any
     modalProps: modalProps
     msgProps: msgProps
     setIsNewComment: (value: boolean) => any
     threadRef: any
     setReplyTo: (value: any) => any
-    setAuthType: (value: string) => any
     setQuoteID: (value: any) => any
     index: number
     thread: any
 }
 
-function CommentHeader({ index, thread, setPseudo, modalProps, msgProps, setIsNewComment, threadRef, setReplyTo, setAuthType, setQuoteID }: props) {
+function CommentHeader({ adminProps, index, thread, setPseudo, modalProps, msgProps, setIsNewComment, threadRef, setReplyTo, setQuoteID,  }: props) {
     const [deleteHover, setDeleteHover] = useState<boolean>(false);
     const [responseType, setResponseType] = useState<string>("");
     const [keyNumber, setKeyNumber] = useState<number>();
@@ -28,7 +28,7 @@ function CommentHeader({ index, thread, setPseudo, modalProps, msgProps, setIsNe
     const dispatch = useAppDispatch()
     const token = useAppSelector((state) => state.authToken.value);
     const topic: any = useAppSelector((state) => state.topic.value);
-
+    const user = useAppSelector((state) => state.user.value);
     const handleMouseEnterDelete = (index: number, isTrue: boolean) => {
         setDeleteHover(isTrue)
         setKeyNumber(index)
@@ -77,7 +77,16 @@ function CommentHeader({ index, thread, setPseudo, modalProps, msgProps, setIsNe
                 thread={thread} />
 
             {/* Icône Delete */}
-            <IconDelete modalProps={modalProps} iconOrigin={iconOrigin} keyNumber={keyNumber} setKeyNumber={setKeyNumber} topic={topic} thread={thread} index={index}/>
+            {(user.isAdmin && adminProps.isAdminView) && 
+                        <IconDelete modalProps={modalProps} 
+                        iconOrigin={iconOrigin} 
+                        keyNumber={keyNumber} 
+                        setKeyNumber={setKeyNumber} 
+                        topic={topic} 
+                        thread={thread} 
+                        index={index}
+                        />
+            }
             
         </div>
     )

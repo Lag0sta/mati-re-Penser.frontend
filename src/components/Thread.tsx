@@ -9,8 +9,9 @@ import CommentHeader from './CommentHeader.js';
 
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
 
-import { modalProps, msgProps } from "../types/Props.js";
+import { modalProps, msgProps, adminProps } from "../types/Props.js";
 interface props {
+    adminProps: adminProps
     setPseudo: (value: string) => any
     modalProps: modalProps
     msgProps: msgProps
@@ -23,7 +24,7 @@ interface props {
     setQuoteID: (value: any) => any
 }
 
-function Thread({ setPseudo, modalProps, msgProps, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID }: props) {
+function Thread({ adminProps, setPseudo, modalProps, msgProps, setIsNewComment, threadRef, setReplyTo, pageSize, currentPage, setAuthType, setQuoteID }: props) {
     const token = useAppSelector((state) => state.authToken.value);
     const topic: any = useAppSelector((state) => state.topic.value);
 
@@ -46,7 +47,9 @@ function Thread({ setPseudo, modalProps, msgProps, setIsNewComment, threadRef, s
                     transition={{ duration: 0.3 }}
                     className="w-[85%] max-w-[85%] px-2 py-2"
                 >
-                    <div className="flex bg-gray-100 rounded-md mt-1 border-2 border-gray-800">
+                    <div className={adminProps.isAdminView
+                        ? 'flex bg-gray-100 rounded-md mt-1 border-2 border-red-600'
+                        : 'flex bg-gray-100 rounded-md mt-1 bg-gray-800'}>
 
                         {/* UI Utilisateur à gauche */}
                         <CommentUserUI thread={thread} />
@@ -66,7 +69,7 @@ function Thread({ setPseudo, modalProps, msgProps, setIsNewComment, threadRef, s
                                             setIsNewComment={setIsNewComment}
                                             threadRef={threadRef}
                                             setReplyTo={setReplyTo}
-                                            setAuthType={setAuthType}
+                                            adminProps={adminProps}
                                             setQuoteID={setQuoteID} />
                                     }
                                 </div>

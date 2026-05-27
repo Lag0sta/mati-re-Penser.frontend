@@ -1,15 +1,17 @@
 import { useAppSelector } from "../store/hooks.js"
-import { useState, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import '../styles/TopicThreads.css';
 
-
+import TopicThreadPrint from "./TopicThreadPrint.js";
 import Topic from "./Topic.js";
 import Thread from "./Thread.js";
 import CommentNew from "./CommentNew.js";
 
 import { msgProps, modalProps } from "../types/Props.js";
+import { adminProps } from "../types/Props.js";
 
 interface props {
+    adminProps: adminProps
     replyTo: string
     setReplyTo: (value: string) => any
     modalProps: modalProps
@@ -17,7 +19,7 @@ interface props {
     setAuthType: (value: string) => any
 }
 
-function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }: props) {
+function TopicThread({ adminProps, replyTo, setReplyTo, modalProps, msgProps, setAuthType }: props) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [isNewComment, setIsNewComment] = useState<boolean>(false);
@@ -30,8 +32,7 @@ function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }:
 
     const topic: any = useAppSelector((state) => state.topic.value);
 
-    
-
+   
     // Calcule et initialisation du nombre de pages
     const pageSize = 15;
     const pagesNumber = useMemo(() => {
@@ -40,8 +41,11 @@ function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }:
     }, [topic.topicThread.length]);
 
     return (
-        <div className="w-full  flex justify-center pt-24 pb-6 ">
-            <div className='w-[65%] py-4 flex flex-col justify-start items-center bg-gray-800 rounded-md'>
+        <div className="w-full  flex justify-center  pb-6  ">
+            <div className= {adminProps.isAdminView
+      ? 'py-4 flex flex-col justify-start items-center bg-gray-800 border-2 border-red-600 rounded-md print:hidden'
+      : 'py-4 flex flex-col justify-start items-center bg-gray-800 rounded-md print:hidden'}>
+                 
                 <Topic modalProps={modalProps}
                     setAuthType={setAuthType}
                     setIsNewComment={setIsNewComment}
@@ -53,6 +57,7 @@ function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }:
                 <Thread setPseudo={setPseudo}
                     modalProps={modalProps}
                     msgProps={msgProps}
+                    adminProps={adminProps}
                     setIsNewComment={setIsNewComment}
                     threadRef={threadRef}
                     setReplyTo={setReplyTo}
@@ -76,7 +81,7 @@ function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }:
                         />
                     )}
                 </div>
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-4 ">
                     {pagesNumber.map((num) => (
                         <button
                             key={num}
@@ -89,6 +94,7 @@ function TopicThread({ replyTo, setReplyTo, modalProps, msgProps, setAuthType }:
                     ))}
                 </div>
             </div>
+
         </div>
     )
 }

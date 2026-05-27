@@ -111,7 +111,7 @@ function Header({ screenActionProps, modalProps }: props) {
               onClick={() => handleScroll(screenActionProps.mainRef, "about")}
               aria-label="Faire apparaitre et défiler l'écrant jusqu'à la section à propos de l'auteur"
             >
-              A propos
+              À propos
             </button>
             <button className="mx-1 px-2 py-1 bg-black text-white border border-white rounded-md hover:bg-white hover:text-black cursor-pointer"
               onClick={handleContactScroll}

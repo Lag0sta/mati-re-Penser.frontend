@@ -24,40 +24,46 @@ interface props {
 function TextEditor({ rQValue, setRQValue, replyTo, onInserted, mode }: props) {
   const quillRef = useRef<ReactQuill>(null);
 
+  function cleanQuill(html: string) {
+    return html
+      .replace(/<p><br><\/p>/g, '')
+      .replace(/<p>&nbsp;<\/p>/g, '')
+  }
+
   useEffect(() => {
-  // On est en édition, ne pas insérer de quote
-  if (mode === 'editComment' || mode === 'editTopic' || mode === "editPublication") return;
-    
-  if (!replyTo || !quillRef.current) return;
-  const quill = quillRef.current.getEditor();
+    // On est en édition, ne pas insérer de quote
+    if (mode === 'editComment' || mode === 'editTopic' || mode === "editPublication") return;
 
-  // Supprime l'ancien blot ReplyQuote si existant
-  const delta = quill.getContents();
-  const ops = delta.ops?.filter((op: any) => !(op.insert && op.insert.replyQuote)) ?? [];
-  quill.setContents({ ops });
+    if (!replyTo || !quillRef.current) return;
+    const quill = quillRef.current.getEditor();
 
-   // replyTo peut déjà être un tableau de citations
-  const previousQuotes = Array.isArray(replyTo) ? replyTo : [];
+    // Supprime l'ancien blot ReplyQuote si existant
+    const delta = quill.getContents();
+    const ops = delta.ops?.filter((op: any) => !(op.insert && op.insert.replyQuote)) ?? [];
+    quill.setContents({ ops });
 
-  /// Sanitize toutes les citations existantes
-  const safeQuoteArr = previousQuotes.map(q => ({
-    pseudo: DOMPurify.sanitize(q.pseudo),
-    text: DOMPurify.sanitize(q.text),
-  }));
+    // replyTo peut déjà être un tableau de citations
+    const previousQuotes = Array.isArray(replyTo) ? replyTo : [];
 
-  // Vide le contenu et insère le blot avec toutes les quotes
-  quill.setContents([]);
-  quill.insertEmbed(0, 'replyQuote', { quoteArr: safeQuoteArr });
+    /// Sanitize toutes les citations existantes
+    const safeQuoteArr = previousQuotes.map(q => ({
+      pseudo: DOMPurify.sanitize(q.pseudo),
+      text: DOMPurify.sanitize(q.text),
+    }));
 
-  // Ligne vide après le bloc pour continuer à écrire
-  quill.insertText(safeQuoteArr.length * 2, '\n', 'user');
+    // Vide le contenu et insère le blot avec toutes les quotes
+    quill.setContents([]);
+    quill.insertEmbed(0, 'replyQuote', { quoteArr: safeQuoteArr });
 
-  // Place le curseur après le bloc
-  quill.setSelection(safeQuoteArr.length * 2 + 1, 0);
-  quill.focus();
+    // Ligne vide après le bloc pour continuer à écrire
+    quill.insertText(safeQuoteArr.length * 2, '\n', 'user');
 
-  onInserted?.();
-}, [replyTo, onInserted]);
+    // Place le curseur après le bloc
+    quill.setSelection(safeQuoteArr.length * 2 + 1, 0);
+    quill.focus();
+
+    onInserted?.();
+  }, [replyTo, onInserted]);
 
   return (
     <div className="w-full bg">
@@ -65,7 +71,7 @@ function TextEditor({ rQValue, setRQValue, replyTo, onInserted, mode }: props) {
         ref={quillRef}
         theme="snow"
         value={rQValue}
-        onChange={setRQValue}
+        onChange={(value) => setRQValue(cleanQuill(value))}
         className="my-editor"
       />
     </div>

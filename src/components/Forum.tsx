@@ -3,8 +3,10 @@ import { useAppDispatch, useAppSelector } from "../store/hooks.js"
 
 import { getTopic } from "../store/reducers/topic.js"
 
+import { topicsRequest } from "../utils/forumActions.js"
 import { topicThreadRequest } from "../utils/topicActions.js"
 import { formatDateToBelgium } from "../utils/formatDateActions.js";
+
 
 import { msgProps, modalProps, screenActionProps } from "../types/Props.js";
 
@@ -22,13 +24,15 @@ function Forum({ screenActionProps, modalProps, msgProps }: props) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
         const fetchData = async () => {
             try {
-                const response = await fetch(`${API_URL}/topics/topicsWithThreadCounts`)
-                const data = await response.json()
-                setForum(data.threadsInTopic)
+                const response = await topicsRequest()
+                console.log("response topicsRequest", response)
+                if(response.success) {
+                    setForum(response.threadsInTopic)
+
+                }
             } catch (error) {
                 console.error(error)
             } finally {
@@ -66,9 +70,13 @@ function Forum({ screenActionProps, modalProps, msgProps }: props) {
         } catch (error) {
             msgProps.setErrorMessage(error as string);
         }
-
-
     }
+
+    const handleReload = () => {
+        console.log("highclickyeah")
+        topicsRequest();
+    }
+
     return (
         <div className="h-full w-full  flex flex-col items-center mt-24 mb-6">
             <div className="flex justify-center items-center mt-4 mb-4 w-[75%] bg-white rounded-md">
@@ -77,11 +85,14 @@ function Forum({ screenActionProps, modalProps, msgProps }: props) {
             <div className="w-[75%] flex flex-col justify-center items-center px-3 py-1 bg-white rounded-md my-1">
 
                 <div className="w-full flex justify-between items-center">
-                    <button className="ml-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black rounded-md px-2 py-1"
+                    <button className="ml-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black rounded-md px-2 py-1 hover:cursor-pointer"
                         onClick={createNewTopic}>
                         Nouveau Sujet:
                     </button>
-                    <button className="mr-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black rounded-md px-2 py-1">Actualiser</button>
+                    <button className="mr-4 my-4 bg-black text-white border-2 border-black hover:bg-white hover:text-black hover:cursor-pointer rounded-md px-2 py-1"
+                            onClick = {handleReload}>
+                        Actualiser
+                    </button>
                 </div>
 
 

@@ -52,10 +52,19 @@ function PublicationLatest({ modalProps, adminProps, setPublicationID, setAuthTy
             {user.isAdmin &&
                 <div className="w-[78%] flex flex-col justify-start item-center" >
                     <div className="flex justify-end item-end">
-                        <button className="px-2 bg-red-600  rounded-t-md text-xs text-white hover:bg-red-100 hover:text-red-600"
+                        {!adminProps.isAdminView &&
+                         <button className="px-2 bg-red-600  rounded-t-md text-xs text-white hover:bg-red-100 hover:text-red-600"
                             onClick={handleAdminView}>
                             Admin View
                         </button>
+                        }
+                        {adminProps.isAdminView &&
+                         <button className="px-2 bg-red-600  rounded-t-md text-xs text-white hover:bg-red-100 hover:text-red-600"
+                            onClick={handleAdminView}>
+                            Close Admin View
+                        </button>
+                        }
+                       
                     </div>
 
                     <div className="flex justify-center items-center mb-4  bg-white rounded-b-md rounded-tl-md">

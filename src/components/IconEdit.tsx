@@ -17,6 +17,8 @@ interface props {
 }
 
 function IconEdit({ msgProps, modalProps, iconOrigin, setKeyNumber, token, index, setReplyTo, topic, keyNumber, thread }: props) {
+        
+    
     const [hover, setHover] = useState<boolean>(false);
     let style;
     let mouseEnter : any;

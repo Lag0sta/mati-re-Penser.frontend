@@ -61,7 +61,7 @@ function IconResponse({ modalProps, iconOrigin, keyNumber, setKeyNumber, topic, 
                     viewBox="0 0 24 24"
                     fill="currentColor"
                     className="size-6 m-1 cursor-pointer rounded-full"
-                    style={iconOrigin === "review" ? { color: hover && keyNumber === index ? '#f87171' : " #dc2626" } : { color: hover && keyNumber === index ? '#9CA3AF' : " #1F2937" }}
+                    style={iconOrigin === "review" ? { color: hover && keyNumber === index ? '#f87171' : " #dc2626" } : { color: hover && keyNumber === index ? '#f87171' : " #dc2626"  }}
                     clipRule="evenodd"
                     onMouseEnter={() => handleMouseEnter(index, true)}
                     onMouseLeave={() => handleMouseEnter(index, false)}
