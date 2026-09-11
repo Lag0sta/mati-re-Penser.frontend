@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAppDispatch } from '../store/hooks.js'
+import { Link } from 'react-router-dom'
 
 import { saveToken } from '../store/reducers/auth.js'
 import { loginUser } from '../store/reducers/user.js'
@@ -26,7 +27,6 @@ function SignIn({ modalProps, msgProps }: props) {
             msgProps.setSuccessMessage("")
 
             const signInResponse = await signInRequest( sIData )
-
             if (signInResponse.result) {
                 setEmail("");
                 setPassword("");
@@ -37,13 +37,7 @@ function SignIn({ modalProps, msgProps }: props) {
                 msgProps.setSuccessMessage(signInResponse.message);
                 modalProps.setIsMessageModalOpen(true);
             } else {
-                // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
-                const errors = JSON.parse(signInResponse.error);
-
-                for (const err of errors) {
-                    msg.push(err.message)                
-                }
-                msgProps.setErrorMessage(msg.join(", "));
+                msgProps.setErrorMessage(signInResponse.message);
                 modalProps.setIsMessageModalOpen(true);
             }
         } catch (error) {
@@ -105,7 +99,8 @@ function SignIn({ modalProps, msgProps }: props) {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <p className="text-sm text-center text-blue-600">Mot de passe oublié?</p>
+                <Link to="/reset-password" className='text-sm text-center text-blue-600 font-bold italic'>Mot de passe oublié?</Link>
+
                 <button className="w-fit bg-black border-2 rounded-md px-2 py-1 mt-3 mb-6 border-black text-white hover:bg-white hover:text-black hover:cursor-pointer " onClick={handleSignIn}>
                     Se Connecter
                 </button>

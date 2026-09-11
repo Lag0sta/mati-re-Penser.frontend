@@ -44,13 +44,8 @@ function SignUp({ modalProps, msgProps }: props) {
                 msgProps.setSuccessMessage(signUpResponse.success);
                 modalProps.setIsMessageModalOpen(true);
             } else {
-                 // signInResponse.error n'est pas juste un string et à besoin d'être JSON.parse
-                const errors = JSON.parse(signUpResponse.error);
-
-                for (const err of errors) {
-                    msg.push(err.message)
-                }
-                msgProps.setErrorMessage(msg.join(", "));
+                
+                msgProps.setErrorMessage(signUpResponse.message);
                 modalProps.setIsMessageModalOpen(true)
             }
         } catch (error) {

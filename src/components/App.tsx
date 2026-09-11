@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks.js';
+import { Routes, Route } from 'react-router-dom'
+
 import { loadPublications } from '../store/reducers/publications.js';
 import { loadPublication } from '../store/reducers/publication.js';
 import Header from './Header.js';
@@ -10,8 +12,10 @@ import TopicThreadPrint from './TopicThreadPrint.js';
 import { getLatestReview } from '../store/reducers/latestReviews.js';
 import { getBooksRequest } from '../utils/bookActions.js'
 import { reviewsRequest } from '../utils/reviewActions.js';
+import ForgotPassword from '../pages/forgotPassword.js';
+import ResetPasswordPage from '../pages/resetPassword.js';
 
-function App() {
+function Home() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
   const [modalComponent, setModalComponent] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -85,28 +89,28 @@ function App() {
     <main className="max-w-screen mx-auto grid grid-rows-[auto_1fr_auto] grid-cols-4 bg-gray-200 min-h-screen">
 
       {/* Header */}
-        <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed w-full print:hidden">
-          <Suspense fallback={<div>Chargement...</div>}>
-            <Header screenActionProps={screenActionProps}
-              modalProps={modalProps} />
-          </Suspense>
-        </header>
-      
+      <header className="row-start-1 row-end-2 col-start-1 col-end-5 z-10 fixed w-full print:hidden">
+        <Suspense fallback={<div>Chargement...</div>}>
+          <Header screenActionProps={screenActionProps}
+            modalProps={modalProps} />
+        </Suspense>
+      </header>
+
 
       {/* Accueil Banderole */}
-        <div ref={acceuilRef}
-          className={`row-start-1 row-end-2 col-start-1 col-end-5 print:hidden`}
-          style={{ paddingTop: `${headerHeight}px` }}>
-          <div
-            className="w-full flex flex-col justify-center items-center h-[calc(100vh-80px)]  bg-cover bg-center bg-no-repeat "
-            style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}>
-            <h1 className="text-7xl text-white">MATIÈRE À PENSER</h1>
-            <h2 className="w-[60%] font-bold text-center text-large mt-4 text-white ">
-              Matière à penser est un espace consacré à la réflexion philosophique autour des questions du réel, de la nature, de la connaissance et de l’expérience humaine
-            </h2>
-          </div>
+      <div ref={acceuilRef}
+        className={`row-start-1 row-end-2 col-start-1 col-end-5 print:hidden`}
+        style={{ paddingTop: `${headerHeight}px` }}>
+        <div
+          className="w-full flex flex-col justify-center items-center h-[calc(100vh-80px)]  bg-cover bg-center bg-no-repeat "
+          style={{ backgroundImage: "url(../assets/img/2aaad4_83b9b366fcc24f808c1f0d9beeef546d~mv2.avif)" }}>
+          <h1 className="text-7xl text-white">MATIÈRE À PENSER</h1>
+          <h2 className="w-[60%] font-bold text-center text-large mt-4 text-white ">
+            Matière à penser est un espace consacré à la réflexion philosophique autour des questions du réel, de la nature, de la connaissance et de l’expérience humaine
+          </h2>
         </div>
-      
+      </div>
+
 
 
       {/* Main */}
@@ -124,13 +128,13 @@ function App() {
       />
 
       {/* Footer */}
-        <footer ref={contactRef}
-          className="row-start-3 row-end-4 col-start-1 col-end-5 pt-24 print:hidden">
-          <Suspense fallback={<div>Chargement...</div>}>
-            <Contact />
-          </Suspense>
-        </footer>
-      
+      <footer ref={contactRef}
+        className="row-start-3 row-end-4 col-start-1 col-end-5 pt-24 print:hidden">
+        <Suspense fallback={<div>Chargement...</div>}>
+          <Contact />
+        </Suspense>
+      </footer>
+
 
 
       {/* Modals */}
@@ -154,4 +158,16 @@ function App() {
   );
 }
 
-export default App;
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/reset-password" element={<ForgotPassword />} />
+      <Route path="/resetPassword/:token" element={<ResetPasswordPage />}
+      />
+    </Routes>
+  )
+}
+
+export default App
