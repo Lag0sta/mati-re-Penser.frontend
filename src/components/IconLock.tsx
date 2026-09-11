@@ -10,7 +10,6 @@ interface props {
 
 function IconLock({ modalProps, setAuthType, iconOrigin }: props) {
     const [lockHover, setLockHover] = useState<boolean>(false);
-
     const isLocked = useAppSelector((state) => state.topic.value.isLocked);
 
     const handleLockTopic = async () => {

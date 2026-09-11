@@ -20,6 +20,7 @@ interface props {
 }
 
 function IconResponse({ setIsNewComment, modalProps, msgProps, setResponseType, threadRef, iconOrigin, keyNumber, setKeyNumber, topic, setReplyTo, setQuoteID, setPseudo, thread, index }: props) {
+    
     const [hover, setHover] = useState<boolean>(false);
     let stroke;
     let mouseEnter : any;
