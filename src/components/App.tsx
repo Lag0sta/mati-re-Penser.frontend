@@ -96,7 +96,6 @@ function Home() {
         </Suspense>
       </header>
 
-
       {/* Accueil Banderole */}
       <div ref={acceuilRef}
         className={`row-start-1 row-end-2 col-start-1 col-end-5 print:hidden`}
