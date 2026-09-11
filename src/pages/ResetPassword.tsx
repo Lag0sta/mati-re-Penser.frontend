@@ -7,6 +7,7 @@ const ResetPasswordPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 const { token } = useParams<{ token: string }>();  const [error, setError] = useState('');
+console.log("token", token)
   const [successMessage, setSuccessMessage] = useState('');
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks.js';
 import { Routes, Route } from 'react-router-dom'
-
+import { useParams } from 'react-router-dom';
 import { loadPublications } from '../store/reducers/publications.js';
 import { loadPublication } from '../store/reducers/publication.js';
 import Header from './Header.js';
@@ -31,6 +31,8 @@ function Home() {
   const [book, setBook] = useState<string>("");
   const [marketURL, setMarketURL] = useState<string>("");
   const [isAdminView, setIsAdminView] = useState(false);
+  const { token } = useParams<{ token: string }>();  const [error, setError] = useState('');
+console.log("token", token)
 
   const headerHeight = 80; // Ajuste à la hauteur réelle de ton header en px
   let pID: string = "";
