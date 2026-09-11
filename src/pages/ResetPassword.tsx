@@ -1,63 +1,91 @@
-import { useState } from "react"
-import { useNavigate } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import React from 'react';
 
-export default function ResetPassword() {
-    const [email, setEmail] = useState<string>('')
-    const [message, setMessage] = useState<string>('')
-    const navigate = useNavigate();
+const ResetPasswordPage = () => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
+  const resetPasswordToken = new URLSearchParams(window.location.search).get('token'); // Access the dynamic token from the URL
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-    function returnHome() {
-        navigate('/');
+  const { token } = useParams<{ token: string }>();
+// console.log(router.query.token)
+console.log(successMessage)
+
+  function handleResetPassword(e: React.MouseEvent<HTMLButtonElement>) {
+
+    console.log("click")
+    e.preventDefault(); // Empêche la soumission du formulaire par défaut
+
+    // Réinitialise les messages d'erreur et de succès
+    setError('');
+    setSuccessMessage('');
+
+    if (!resetPasswordToken) {
+      setError("Token invalide ou expiré.");
+      return
     }
 
-    const handleSubmit = async () => {
-        try {
-            console.log("start", email);
-            const response = await fetch(`${API_URL}/auths/forgotPassword`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
-            });
+    if (!newPassword || !confirmPassword) {
+      setError("Veuillez remplir tous les champs.");
+      return
+    }
 
-            const data = await response.json();
-            console.log("data", data);
-            if (data.result) {
-                setMessage('Email envoyé pour réinitialisation de mot de passe.');
-                console.log('Email envoyé pour réinitialisation de mot de passe.');
-            } else {
-                setMessage(data.error || 'Une erreur est survenue.');
-                console.error(data.error || 'Une erreur est survenue.');
-            }
-        } catch (error) {
-            setMessage('Impossible d’envoyer l’email.');
-            console.error('Impossible d’envoyer l’email.', error);
+    if (newPassword !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
+
+    fetch(`http://localhost:3000/users/resetPassword/${token}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({newPassword, confirmPassword }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.result) {
+          setError(data.message);
+        } else 
+          setSuccessMessage('Mot de passe réinitialisé avec succès.');
         }
+      )
+      .catch((err) => {
+        setError('Erreur du serveur. Veuillez réessayer.');
+        console.error(err);      
+      });
+  }
 
-    }
+  function returnHome() {
+    navigate('/');
+  }
 
-    return (
-        <div className="w-screen h-screen flex flex-col justify-center items-center bg-gray-800">
-            <div className="bg-blue-800 p-4 rounded-md mb-6">
-                <h1 className="text-3xl text-blue-200 font-bold mb-4">Réinitialiser le mot de passe</h1>
-            </div>
-            <input
-                className="h-10 w-56 mt-2"
-                type="email"
-                placeholder="Entrez votre email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <div className='w-56 flex justify-between mt-1'>
-                <button className='h-9 w-20 rounded rounded-md hover:bg-yellow-400 hover:text-white text-sm'
-                    onClick={returnHome}>Retour</button>
-                <button className="h-9 w-32 rounded rounded-md hover:bg-yellow-400 hover:text-white text-sm"
-                    onClick={handleSubmit}>
-                    Envoyer
-                </button>
-            </div>
-        </div>
-    );
-}
+  return (
+    <div className='h-screen w-screen flex flex-col items-center'>
+      <h1 className='m-8'>Reset Password</h1>
+      <div className='flex flex-col justify-center items-center '>
+        <input type="password" placeholder="Nouveau Mot de passe" onChange={(e) => setNewPassword(e.target.value)} />
+        <input type="password" placeholder="Confirmation" onChange={(e) => setConfirmPassword(e.target.value)} />
+      </div>
+      <div className='m-4 flex flex-col justify-center items-center'>
+      <button className='h-8 w-24 rounded-md'
+              onClick={handleResetPassword}>Reset Password</button>
+
+      {error && <p className='text-sm text-red-500'>{error}</p>}
+      {successMessage && <p className='text-sm text-green-500'>{successMessage}</p>}
+      
+      </div>
+      
+      <div>
+        <button className='h-8 w-16 rounded-md'
+                onClick={returnHome}>Retour</button>
+      </div>
+
+    </div>
+  );
+};
+
+export default ResetPasswordPage;
