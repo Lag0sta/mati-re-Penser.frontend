@@ -6,11 +6,10 @@ const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
-  const resetPasswordToken = new URLSearchParams(window.location.search).get('token'); // Access the dynamic token from the URL
-  const [error, setError] = useState('');
+const { token } = useParams<{ token: string }>();  const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
-  const { token } = useParams<{ token: string }>();
 // console.log(router.query.token)
 console.log(successMessage)
 
@@ -23,7 +22,7 @@ console.log(successMessage)
     setError('');
     setSuccessMessage('');
 
-    if (!resetPasswordToken) {
+    if (!token) {
       setError("Token invalide ou expiré.");
       return
     }
@@ -38,7 +37,7 @@ console.log(successMessage)
       return;
     }
 
-    fetch(`http://localhost:3000/users/resetPassword/${token}`, {
+    fetch(`${API_URL}/users/resetPassword/${token}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
