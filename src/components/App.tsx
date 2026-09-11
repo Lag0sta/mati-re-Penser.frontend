@@ -12,8 +12,8 @@ import TopicThreadPrint from './TopicThreadPrint.js';
 import { getLatestReview } from '../store/reducers/latestReviews.js';
 import { getBooksRequest } from '../utils/bookActions.js'
 import { reviewsRequest } from '../utils/reviewActions.js';
-import ForgotPassword from '../pages/forgotPassword.js';
-import ResetPasswordPage from '../pages/resetPassword.js';
+import ForgotPassword from '../pages/ForgotPassword.js';
+import ResetPasswordPage from '../pages/ResetPassword.js';
 
 function Home() {
   const [mainComponent, setMainComponent] = useState<string>('acceuil');
